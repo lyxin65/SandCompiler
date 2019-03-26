@@ -1,5 +1,2 @@
 # SandCompiler
-A C compiler.
-# SandCompiler
-# SandCompiler
-# SandCompiler
+A Mx\* compiler.
