@@ -23,7 +23,7 @@ public class LiteralExpr extends Expr {
                 typeName = "bool";
                 value = token.getText();
                 break;
-            default:    //case CSTRING:
+            default:    // case CSTRING:
                 typeName = "string";
                 value = escape(token.getText());
         }

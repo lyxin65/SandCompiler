@@ -12,7 +12,7 @@ public class FuncSymbol {
     public VarType returnType;
     public List<VarType> parameterTypes;
     public List<String> parameterNames;
-    public SymbolTable FuncSymbolTable;
+    public SymbolTable funcSymbolTable;
     public HashSet<VarSymbol> usedGlobalVars;
     public boolean isGlobalFunc;
     public boolean withSideEffect;

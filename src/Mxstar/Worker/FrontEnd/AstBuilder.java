@@ -2,7 +2,6 @@ package Mxstar.Worker.FrontEnd;
 
 import Mxstar.AST.*;
 import Mxstar.Parser.*;
-import Mxstar.Symbol.ArrayType;
 import Mxstar.Worker.ErrorRecorder;
 
 import java.util.*;
@@ -65,7 +64,7 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
 		}
 		return parameters;
 	}
-	@Override public Object visitClassDef(MxstarParser.ClassDefContext ctx) {
+	@Override public ClassDef visitClassDef(MxstarParser.ClassDefContext ctx) {
 		ClassDef classDef = new ClassDef();
 		classDef.name = ctx.ID().getSymbol().getText();
 		classDef.location = new TokenLocation(ctx);
@@ -73,28 +72,34 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
 		classDef.fields = new LinkedList<>();
 
 		// constructor
-		for (ConstructDefContext c: ctx.constructDef()) {
-			if (classDef.constructor == null) {
-				classDef.constructor = visitConstructDef(ctx.constructDef(0));
-			} else {
-				recorder.addRecord(new TokenLocation(c), "class can have at most one constructor");
+		if (ctx.constructDef() != null) {
+			for (ConstructDefContext c : ctx.constructDef()) {
+				if (classDef.constructor == null) {
+					classDef.constructor = visitConstructDef(ctx.constructDef(0));
+				} else {
+					recorder.addRecord(new TokenLocation(c), "class can have at most one constructor");
+				}
 			}
 		}
 
 		// fields
-		for (VarDefContext c: ctx.varDef()) {
-			classDef.fields.add(visitVarDef(c));
+		if (ctx.varDef() != null) {
+			for (VarDefContext c : ctx.varDef()) {
+				classDef.fields.add(visitVarDef(c));
+			}
 		}
 
 		// methods
-		for (FuncDefContext c: ctx.funcDef()) {
-			classDef.methods.add(visitFuncDef(c));
+		if (ctx.funcDef() != null) {
+			for (FuncDefContext c : ctx.funcDef()) {
+				classDef.methods.add(visitFuncDef(c));
+			}
 		}
 
 		return classDef;
 	}
 	@Override public FuncDef visitConstructDef(MxstarParser.ConstructDefContext ctx) {
-		FuncDef con = new FuncDef;
+		FuncDef con = new FuncDef();
 		con.location = new TokenLocation(ctx);
 		con.retTypeNode = new BaseTypeNode("void");
 		con.name = ctx.ID().getSymbol().getText();
@@ -110,7 +115,7 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
 		varDef.init = null;
 		return varDef;
 	}
-	@Override public BaseTypeNode visitBaseType(MxstarParser.BaseTypeContext ctx) {
+	@Override public TypeNode visitBaseType(MxstarParser.BaseTypeContext ctx) {
 		BaseTypeNode baseTypeNode = new BaseTypeNode();
 		baseTypeNode.location = new TokenLocation(ctx);
 		baseTypeNode.name = ctx.getText();
@@ -118,35 +123,25 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
 	}
 	@Override public TypeNode visitExType(MxstarParser.ExTypeContext ctx) {
     	if (!ctx.getText().contains("[")) {
-			if (ctx.baseType() == null) {
-				ClassTypeNode node = new ClassTypeNode();
-				node.className = ctx.getText();
-				node.location = new TokenLocation(ctx);
-				return node;
-			} else {
-				return visitBaseType(ctx.baseType());
-			}
+    		return visitAtomType(ctx.atomType());
+
 		} else {
     		// array type
 			ArrayTypeNode node = new ArrayTypeNode();
 			node.location = new TokenLocation(ctx);
-			node.baseType = null;
-			if (ctx.baseType() == null) {
-				ClassTypeNode basenode = new ClassTypeNode();
-				basenode.className = ctx.getText();
-				basenode.location = new TokenLocation(ctx);
-				node.baseType = basenode;
-			} else {
-				node.baseType = visitBaseType(ctx.baseType());
-			}
-			int cnt = 0;
-			for (char c: ctx.getText()) {
-				if (c == '[') {
-					cnt++;
-				}
-			}
-			node.dimension = cnt;
+			node.baseType = visitAtomType(ctx.atomType());
+			node.dimension = ctx.empty().size();
 			return node;
+		}
+	}
+	@Override public TypeNode visitAtomType(MxstarParser.AtomTypeContext ctx) {
+		if (ctx.baseType() == null) {
+			ClassTypeNode node = new ClassTypeNode();
+			node.className = ctx.type.getText();
+			node.location = new TokenLocation(ctx);
+			return node;
+		} else {
+			return visitBaseType(ctx.baseType());
 		}
 	}
 	@Override public List<Stmt> visitBlock(MxstarParser.BlockContext ctx) {
@@ -160,6 +155,7 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
 				}
 			}
 		}
+    	return stmts;
 	}
 	@Override public List<Stmt> visitBlockStmt(MxstarParser.BlockStmtContext ctx) {
     	return visitBlock(ctx.block());
@@ -230,53 +226,146 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
 	}
 	@Override public List<Expr> visitExprList(MxstarParser.ExprListContext ctx) {
     	List<Expr> exprs = new LinkedList<>();
-    	for (ExprContext c: ctx.expr()) {
-    		exprs.add((Expr) c.accept(this));
+    	if (ctx.expr() != null) {
+			for (ExprContext c : ctx.expr()) {
+				exprs.add((Expr) c.accept(this));
+			}
 		}
     	return exprs;
 	}
-	@Override public Object visitNewExpr(MxstarParser.NewExprContext ctx) {
-    	NewExpr newExpr = new NewExpr();
-    	newExpr.location = new TokenLocation(ctx);
-    	newExpr.typeNode = visitExType(ctx.);
+	@Override public Expr visitNewExpr(MxstarParser.NewExprContext ctx) {
+    	return visitNewObject(ctx.newObject());
+
+	}
+	@Override public Expr visitNewObject(MxstarParser.NewObjectContext ctx) {
+		NewExpr newExpr = new NewExpr();
+		newExpr.location = new TokenLocation(ctx);
+		newExpr.typeNode = visitAtomType(ctx.atomType());
+		newExpr.exprDimensions = new LinkedList<>();
+		if (ctx.expr() != null) {
+			for (ExprContext c : ctx.expr()) {
+				newExpr.exprDimensions.add((Expr) c.accept(this));
+			}
+		}
+		if (ctx.empty() != null) {
+			newExpr.restDemension = ctx.empty().size();
+		} else {
+			newExpr.restDemension = 0;
+		}
+		return newExpr;
 	}
 
-	@Override public Object visitThisExpr(MxstarParser.ThisExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitThisExpr(MxstarParser.ThisExprContext ctx) {
+    	return new ID(ctx.token);
+	}
 
-	@Override public Object visitMemberExpr(MxstarParser.MemberExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitMemberExpr(MxstarParser.MemberExprContext ctx) {
+		MemberExpr memberExpr = new MemberExpr();
+		memberExpr.object = (Expr) ctx.expr().accept(this);
+		if (ctx.funcCall() != null) {
+			memberExpr.methodCall = visitFuncCall(ctx.funcCall());
+		} else {
+			memberExpr.fieldAccess = new ID(ctx.ID().getSymbol());
+		}
+		return memberExpr;
+	}
 
-	@Override public Object visitSuffixExpr(MxstarParser.SuffixExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitSuffixExpr(MxstarParser.SuffixExprContext ctx) {
+    	SuffixExpr suffixExpr = new SuffixExpr();
+    	suffixExpr.location = new TokenLocation(ctx);
+    	suffixExpr.expr = (Expr) ctx.expr().accept(this);
+    	switch(ctx.op.getText()) {
+			case "++":
+				suffixExpr.op = "v++";
+				break;
+			case "--":
+				suffixExpr.op = "v--";
+				break;
+			default:
+				suffixExpr.op = ctx.op.getText();
+		}
+		return suffixExpr;
+	}
 
-	@Override public Object visitBinaryExpr(MxstarParser.BinaryExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitBinaryExpr(MxstarParser.BinaryExprContext ctx) {
+    	BinaryExpr binaryExpr = new BinaryExpr();
+    	binaryExpr.location = new TokenLocation(ctx);
+    	binaryExpr.lhs = (Expr) ctx.expr(0).accept(this);
+		binaryExpr.rhs = (Expr) ctx.expr(1).accept(this);
+		binaryExpr.op = ctx.op.getText();
+		return binaryExpr;
+	}
 
-	@Override public Object visitFuncCallExpr(MxstarParser.FuncCallExprContext ctx) { return visitChildren(ctx); }
+	@Override public FuncCallExpr visitFuncCallExpr(MxstarParser.FuncCallExprContext ctx) {
+    	return visitFuncCall(ctx.funcCall());
+	}
 
-	@Override public Object visitSubExpr(MxstarParser.SubExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitSubExpr(MxstarParser.SubExprContext ctx) {
+     	return (Expr) ctx.accept(this);
+	}
 
-	@Override public Object visitVarExpr(MxstarParser.VarExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitVarExpr(MxstarParser.VarExprContext ctx) {
+    	return new ID(ctx.token);
+	}
 
-	@Override public Object visitPrefixExpr(MxstarParser.PrefixExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitPrefixExpr(MxstarParser.PrefixExprContext ctx) {
+		PrefixExpr prefixExpr = new PrefixExpr();
+		prefixExpr.location = new TokenLocation(ctx);
+		prefixExpr.expr = (Expr) ctx.expr().accept(this);
+		switch(ctx.op.getText()) {
+			case "++":
+				prefixExpr.op = "++v";
+				break;
+			case "--":
+				prefixExpr.op = "--v";
+				break;
+			default:
+				prefixExpr.op = ctx.op.getText();
+		}
+		return prefixExpr;
+	}
 
-	@Override public Object visitLiteralExpr(MxstarParser.LiteralExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitLiteralExpr(MxstarParser.LiteralExprContext ctx) {
+    	return visitLiteral(ctx.literal());
+	}
 
-	@Override public Object visitLogicExpr(MxstarParser.LogicExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitLogicExpr(MxstarParser.LogicExprContext ctx) {
+		LogicExpr logicExpr = new LogicExpr();
+		logicExpr.location = new TokenLocation(ctx);
+		logicExpr.lhs = (Expr) ctx.expr(0).accept(this);
+		logicExpr.rhs = (Expr) ctx.expr(1).accept(this);
+		logicExpr.op = ctx.op.getText();
+		return logicExpr;
+	}
 
-	@Override public Object visitArrExpr(MxstarParser.ArrExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitArrExpr(MxstarParser.ArrExprContext ctx) {
+    	ArrayExpr arrayExpr = new ArrayExpr();
+    	arrayExpr.location = new TokenLocation(ctx);
+    	arrayExpr.address = (Expr) ctx.expr(0).accept(this);
+    	if (arrayExpr.address instanceof NewExpr && ctx.expr(0).stop.getText().equals("]")) {
+    		recorder.addRecord(arrayExpr.address.location, "can not use new a[n][i] to express (new a[n])[i]");
+		}
+    	arrayExpr.index = (Expr) ctx.expr(1).accept(this);
+    	return arrayExpr;
+	}
 
-	@Override public Object visitAssignExpr(MxstarParser.AssignExprContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitAssignExpr(MxstarParser.AssignExprContext ctx) {
+    	AssignExpr assignExpr = new AssignExpr();
+    	assignExpr.location = new TokenLocation(ctx);
+    	assignExpr.lhs = (Expr) ctx.expr(0).accept(this);
+		assignExpr.rhs = (Expr) ctx.expr(1).accept(this);
+		return assignExpr;
+	}
 
-	@Override public Object visitErrorObject(MxstarParser.ErrorObjectContext ctx) { return visitChildren(ctx); }
+	@Override public FuncCallExpr visitFuncCall(MxstarParser.FuncCallContext ctx) {
+    	FuncCallExpr funcCallExpr = new FuncCallExpr();
+    	funcCallExpr.location = new TokenLocation(ctx);
+    	funcCallExpr.funcName = ctx.ID().getSymbol().getText();
+    	funcCallExpr.arguments = visitExprList(ctx.exprList());
+    	return funcCallExpr;
+	}
 
-	@Override public Object visitArrayObject(MxstarParser.ArrayObjectContext ctx) { return visitChildren(ctx); }
-
-	@Override public Object visitSingleObject(MxstarParser.SingleObjectContext ctx) { return visitChildren(ctx); }
-
-	@Override public Object visitFuncCall(MxstarParser.FuncCallContext ctx) { return visitChildren(ctx); }
-
-	@Override public Object visitConstInt(MxstarParser.ConstIntContext ctx) { return visitChildren(ctx); }
-
-	@Override public Object visitConstString(MxstarParser.ConstStringContext ctx) { return visitChildren(ctx); }
-
-	@Override public Object visitBoolLiteral(MxstarParser.BoolLiteralContext ctx) { return visitChildren(ctx); }
-	@Override public Object visitNullLiteral(MxstarParser.NullLiteralContext ctx) { return visitChildren(ctx); }
+	@Override public Expr visitLiteral(MxstarParser.LiteralContext ctx) {
+    	return new LiteralExpr(ctx.token);
+	}
 }

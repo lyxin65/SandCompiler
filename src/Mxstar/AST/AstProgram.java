@@ -25,6 +25,11 @@ public class AstProgram extends AstNode {
         definitions.add(a);
     }
 
+    public void add(VarDef a) {
+        globalVars.add(a);
+        definitions.add(a);
+    }
+
     public void addAll(List<VarDef> a) {
         globalVars.addAll(a);
         definitions.addAll(a);

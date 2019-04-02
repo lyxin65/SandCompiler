@@ -13,9 +13,9 @@ constructDef: ID '(' paraList? ')' block;
 
 para: exType ID;
 
-baseType: type=(BOOL | INT | STRING | VOID);
+baseType: type=(BOOL | INT | VOID);
 
-atomType: ID | baseType;
+atomType: baseType | type=ID | type=STRING;
 
 exType: atomType ('[' empty ']')* ;
 
@@ -23,7 +23,7 @@ block: '{' stmt* '}';
 
 stmt: block                                                         # blockStmt
     | expr ';'                                                      # exprStmt
-    | varDef                                                       # varDefStmt
+    | varDef                                                        # varDefStmt
     | IF '(' expr ')' stmt (ELSE stmt)?                             # ifStmt
     | FOR '(' init=expr? ';' cond=expr? ';' outit=expr? ')' stmt    # forStmt
     | WHILE '(' expr ')' stmt                                       # whileStmt
@@ -38,12 +38,12 @@ empty: ;
 exprList: expr (',' expr)* ;
 
 expr: '(' expr ')'                                                  # subExpr
-    | 'this'                                                        # thisExpr
-    | ID                                                            # varExpr
-    | funcCall                                                     # funcCallExpr
+    | token='this'                                                  # thisExpr
+    | token=ID                                                      # varExpr
+    | funcCall                                                      # funcCallExpr
     | literal                                                       # literalExpr
-    | expr '.' (ID | funcCall)                                     # memberExpr
-    | NEW newObject                                                # newExpr
+    | expr '.' (ID | funcCall)                                      # memberExpr
+    | NEW newObject                                                 # newExpr
     | expr '[' expr ']'                                             # arrExpr
     | expr op=('++' | '--')                                         # suffixExpr
     | op=('+' | '-' | '++' | '--') expr                             # prefixExpr
@@ -66,10 +66,10 @@ newObject
 
 funcCall: ID '(' exprList? ')' ;
 
-literal: CINT                                                       # constInt
-    | CSTRING                                                       # constString
-    | BOOL_LITERAL                                                  # boolLiteral
-    | NULL_LITERAL                                                  # nullLiteral
+literal: token=CINT
+    | token=CSTRING
+    | token=BOOL_LITERAL
+    | token=NULL_LITERAL
     ;
 
 BOOL_LITERAL: 'true' | 'false' ;

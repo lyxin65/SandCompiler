@@ -9,7 +9,7 @@ public class ID extends Expr {
     public VarSymbol symbol;
 
     public ID(Token token) {
-        if(token != null) {
+        if (token != null) {
             this.name = token.getText();
             this.location = new TokenLocation(token);
         }

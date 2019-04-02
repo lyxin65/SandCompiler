@@ -59,6 +59,12 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBaseType(MxstarParser.BaseTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MxstarParser#atomType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAtomType(MxstarParser.AtomTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MxstarParser#exType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -140,6 +146,12 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPassStmt(MxstarParser.PassStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MxstarParser#empty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmpty(MxstarParser.EmptyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MxstarParser#exprList}.
 	 * @param ctx the parse tree
@@ -238,26 +250,11 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignExpr(MxstarParser.AssignExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code errorObject}
-	 * labeled alternative in {@link MxstarParser#newObject}.
+	 * Visit a parse tree produced by {@link MxstarParser#newObject}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitErrorObject(MxstarParser.ErrorObjectContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code arrayObject}
-	 * labeled alternative in {@link MxstarParser#newObject}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArrayObject(MxstarParser.ArrayObjectContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code singleObject}
-	 * labeled alternative in {@link MxstarParser#newObject}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSingleObject(MxstarParser.SingleObjectContext ctx);
+	T visitNewObject(MxstarParser.NewObjectContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MxstarParser#funcCall}.
 	 * @param ctx the parse tree
@@ -265,31 +262,9 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFuncCall(MxstarParser.FuncCallContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code constInt}
-	 * labeled alternative in {@link MxstarParser#literal}.
+	 * Visit a parse tree produced by {@link MxstarParser#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitConstInt(MxstarParser.ConstIntContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code constString}
-	 * labeled alternative in {@link MxstarParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstString(MxstarParser.ConstStringContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code boolLiteral}
-	 * labeled alternative in {@link MxstarParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBoolLiteral(MxstarParser.BoolLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code nullLiteral}
-	 * labeled alternative in {@link MxstarParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNullLiteral(MxstarParser.NullLiteralContext ctx);
+	T visitLiteral(MxstarParser.LiteralContext ctx);
 }
