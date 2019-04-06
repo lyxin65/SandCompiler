@@ -8,7 +8,7 @@ funcDef: result=exType name=ID '(' paraList? ')' block;
 
 paraList: para (',' para)*;
 classDef: CLASS name=ID '{' (funcDef | constructDef | varDef)* '}';
-
+lyxin65
 constructDef: ID '(' paraList? ')' block;
 
 para: exType ID;

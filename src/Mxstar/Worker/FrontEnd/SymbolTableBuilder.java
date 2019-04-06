@@ -34,35 +34,39 @@ public class SymbolTableBuilder implements IAstVisitor {
         assert(currentSymbolTable != null);
     }
     private VarType resolveVarType(TypeNode node) {
-        if(node instanceof BaseTypeNode) {
+        if (node instanceof BaseTypeNode) {
             BaseSymbol symbol = globalSymbolTable.getBaseSymbol(((BaseTypeNode) node).name);
-            if(symbol != null)
+            if (symbol != null) {
                 return new BaseType(symbol.name, symbol);
-            else
+            } else {
                 return null;
-        } else if(node instanceof ClassTypeNode) {
+            }
+        } else if (node instanceof ClassTypeNode) {
             ClassSymbol symbol = globalSymbolTable.getClassSymbol(((ClassTypeNode) node).className);
-            if(symbol != null)
+            if (symbol != null) {
                 return new ClassType(symbol.name, symbol);
-            else
+            } else {
                 return null;
-        } else if(node instanceof ArrayTypeNode) {
+            }
+        } else if (node instanceof ArrayTypeNode) {
             ArrayTypeNode oldArray = (ArrayTypeNode)node;
             VarType baseType;
-            if(oldArray.dimension == 1) {
+            if (oldArray.dimension == 1) {
                 baseType = resolveVarType(oldArray.baseType);
-                if(oldArray.baseType instanceof BaseTypeNode && ((BaseTypeNode) oldArray.baseType).name.equals("void"))
+                if (oldArray.baseType instanceof BaseTypeNode && ((BaseTypeNode) oldArray.baseType).name.equals("void")) {
                     errorRecorder.addRecord(oldArray.location, "can not create an array with type void");
+                }
             } else {
                 ArrayTypeNode newArray = new ArrayTypeNode();
                 newArray.baseType = oldArray.baseType;
                 newArray.dimension = oldArray.dimension - 1;
                 baseType = resolveVarType(newArray);
             }
-            if(baseType != null)
+            if (baseType != null) {
                 return new ArrayType(baseType);
-            else
+            } else {
                 return null;
+            }
         } else {
             assert false;
             return null;
@@ -71,13 +75,14 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     private VarSymbol resolveVarSymbol(String name, SymbolTable symbolTable) {
         VarSymbol symbol = symbolTable.getVarSymbol(name);
-        if(symbol != null) {
+        if (symbol != null) {
             return symbol;
         } else {
-            if(symbolTable.parent != null)
+            if (symbolTable.parent != null) {
                 return resolveVarSymbol(name, symbolTable.parent);
-            else
+            } else {
                 return null;
+            }
         }
     }
     private VarSymbol resolveVarSymbol(String name) {
@@ -85,13 +90,14 @@ public class SymbolTableBuilder implements IAstVisitor {
     }
     private FuncSymbol resolveFuncSymbol(String name, SymbolTable symbolTable) {
         FuncSymbol symbol = symbolTable.getFuncSymbol(name);
-        if(symbol != null) {
+        if (symbol != null) {
             return symbol;
         } else {
-            if(symbolTable.parent != null)
+            if (symbolTable.parent != null) {
                 return resolveFuncSymbol(name, symbolTable.parent);
-            else
+            } else {
                 return null;
+            }
         }
     }
     private FuncSymbol resolveFuncSymbol(String name) {
@@ -100,11 +106,11 @@ public class SymbolTableBuilder implements IAstVisitor {
     }
 
     private void registerClass(ClassDef classDef) {
-        if(globalSymbolTable.getClassSymbol(classDef.name) != null) {
+        if (globalSymbolTable.getClassSymbol(classDef.name) != null) {
             errorRecorder.addRecord(classDef.location, "the class has been defined");
             return;
         }
-        if(globalSymbolTable.getFuncSymbol(classDef.name) != null) {
+        if (globalSymbolTable.getFuncSymbol(classDef.name) != null) {
             errorRecorder.addRecord(classDef.location, "the class name conflict with the name of a func");
             return;
         }
@@ -119,34 +125,34 @@ public class SymbolTableBuilder implements IAstVisitor {
     private void registerClassFuncs(ClassDef classDef) {
         ClassSymbol symbol = globalSymbolTable.getClassSymbol(classDef.name);
         enter(symbol.classSymbolTable);
-        if(classDef.constructor != null)
+        if (classDef.constructor != null)
             registerFunc(classDef.constructor, symbol);
-        for(FuncDef d : classDef.methods)
+        for (FuncDef d : classDef.methods)
             registerFunc(d, symbol);
         leave();
     }
     private void defineClassFields(ClassDef classDef) {
         ClassSymbol symbol = globalSymbolTable.getClassSymbol(classDef.name);
         enter(symbol.classSymbolTable);
-        for(VarDef d : classDef.fields)
+        for (VarDef d : classDef.fields)
             defineVar(d);
         leave();
     }
     private void defineClassFuncs(ClassDef classDef) {
         ClassSymbol symbol = globalSymbolTable.getClassSymbol(classDef.name);
         enter(symbol.classSymbolTable);
-        if(classDef.constructor != null)
+        if (classDef.constructor != null)
             defineFunc(classDef.constructor, symbol);
-        for(FuncDef d : classDef.methods)
+        for (FuncDef d : classDef.methods)
             defineFunc(d, symbol);
         leave();
     }
     private void registerFunc(FuncDef funcDef, ClassSymbol classSymbol) {
-        if(currentSymbolTable.getFuncSymbol(funcDef.name) != null) {
+        if (currentSymbolTable.getFuncSymbol(funcDef.name) != null) {
             errorRecorder.addRecord(funcDef.location, "the func has been defined");
             return;
         }
-        if(classSymbol == null && globalSymbolTable.getClassSymbol(funcDef.name) != null) {
+        if (classSymbol == null && globalSymbolTable.getClassSymbol(funcDef.name) != null) {
             errorRecorder.addRecord(funcDef.location, "the function conflicts with the name of class");
             return;
         }
@@ -155,17 +161,18 @@ public class SymbolTableBuilder implements IAstVisitor {
         symbol.isGlobalFunc = (classSymbol == null);
         symbol.location = funcDef.location;
         symbol.returnType = resolveVarType(funcDef.retTypeNode);
-        if(symbol.returnType == null)
+        if (symbol.returnType == null) {
             errorRecorder.addRecord(funcDef.retTypeNode.location, "can not resolve type");
+        }
         symbol.funcSymbolTable = null;
-        if(classSymbol != null) {
+        if (classSymbol != null) {
             symbol.parameterNames.add("this");
             symbol.parameterTypes.add(new ClassType(classSymbol.name, classSymbol));
         }
-        for(VarDef d : funcDef.parameters) {
+        for (VarDef d : funcDef.parameters) {
             symbol.parameterNames.add(d.name);
             VarType type = resolveVarType(d.typeNode);
-            if(type == null) {
+            if (type == null) {
                 errorRecorder.addRecord(d.location, "can not resolve the type of parameter");
             }
             symbol.parameterTypes.add(type);
@@ -175,20 +182,20 @@ public class SymbolTableBuilder implements IAstVisitor {
     }
     private void defineVar(VarDef d) {
         VarType type = resolveVarType(d.typeNode);
-        if(d.init != null)
+        if (d.init != null)
             d.init.accept(this);
-        if(type != null) {
-            if(currentSymbolTable.getVarSymbol(d.name) != null) {
+        if (type != null) {
+            if (currentSymbolTable.getVarSymbol(d.name) != null) {
                 errorRecorder.addRecord(d.location, "the variable has been defined");
             } else {
-                if(type instanceof BaseType && ((BaseType) type).name.equals("void")
+                if (type instanceof BaseType && ((BaseType) type).name.equals("void")
                         || type instanceof ClassType && ((ClassType) type).name.equals("null"))
                     errorRecorder.addRecord(d.location, "can not define a class with type null or void");
                 boolean isClassField = symbolTableToClassSymbol.containsKey(currentSymbolTable);
                 boolean isGlobalVar = currentSymbolTable == globalSymbolTable;
                 d.symbol = new VarSymbol(d.name, type, d.location, isClassField, isGlobalVar);
                 currentSymbolTable.putVarSymbol(d.name, d.symbol);
-                if(isGlobalVar && d.init != null)
+                if (isGlobalVar && d.init != null)
                     globalSymbolTable.globalInitUsedVars.add(d.symbol);
             }
         } else {
@@ -201,11 +208,11 @@ public class SymbolTableBuilder implements IAstVisitor {
 
         funcSymbol.funcSymbolTable = new SymbolTable(currentSymbolTable);
         enter(funcSymbol.funcSymbolTable);
-        if(classSymbol != null)
+        if (classSymbol != null)
             defineVar(new VarDef(new ClassTypeNode(classSymbol.name), "this", null));
-        for(VarDef d: funcDef.parameters)
+        for (VarDef d: funcDef.parameters)
             defineVar(d);
-        for(Stmt s: funcDef.body)
+        for (Stmt s: funcDef.body)
             s.accept(this);
         leave();
         curFunc = null;
@@ -214,29 +221,29 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     @Override
     public void visit(AstProgram node) {
-        for(ClassDef d : node.classes)
+        for (ClassDef d : node.classes)
             registerClass(d);
-        for(ClassDef d : node.classes)
+        for (ClassDef d : node.classes)
             registerClassFuncs(d);
-        for(FuncDef d : node.funcs)
+        for (FuncDef d : node.funcs)
             registerFunc(d, null);
-        if(errorRecorder.errorOccured()) return;
-        for(ClassDef d : node.classes)
+        if (errorRecorder.errorOccured()) return;
+        for (ClassDef d : node.classes)
             defineClassFields(d);
-        for(Definition d : node.definitions) {
-            if(d instanceof VarDef)
+        for (Definition d : node.definitions) {
+            if (d instanceof VarDef)
                 defineVar((VarDef)d);
-            else if(d instanceof ClassDef)
+            else if (d instanceof ClassDef)
                 defineClassFuncs((ClassDef)d);
             else
                 defineFunc((FuncDef) d, null);
         }
         /*
-        for(VarDef d : node.globalVars)
+        for (VarDef d : node.globalVars)
             defineVar(d);
-        for(ClassDef d : node.classes)
+        for (ClassDef d : node.classes)
             defineClassFuncs(d);
-        for(FuncDef d : node.funcs)
+        for (FuncDef d : node.funcs)
             defineFunc(d, null);
         */
     }
@@ -269,9 +276,9 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     @Override
     public void visit(ForStmt node) {
-        if(node.initStmt != null) node.initStmt.accept(this);
-        if(node.condition != null) node.condition.accept(this);
-        if(node.updateStmt != null) node.updateStmt.accept(this);
+        if (node.initStmt != null) node.initStmt.accept(this);
+        if (node.condition != null) node.condition.accept(this);
+        if (node.updateStmt != null) node.updateStmt.accept(this);
         node.body.accept(this);
     }
 
@@ -285,8 +292,9 @@ public class SymbolTableBuilder implements IAstVisitor {
     public void visit(IfStmt node) {
         node.condition.accept(this);
         node.thenStmt.accept(this);
-        if(node.elseStmt != null)
+        if (node.elseStmt != null) {
             node.elseStmt.accept(this);
+        }
     }
 
     @Override
@@ -299,15 +307,16 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     @Override
     public void visit(ReturnStmt node) {
-        if(node.retExpr != null)
+        if (node.retExpr != null) {
             node.retExpr.accept(this);
+        }
     }
 
     @Override
     public void visit(BlockStmt node) {
         SymbolTable symbolTable = new SymbolTable(currentSymbolTable);
         enter(symbolTable);
-        for(Stmt s : node.statements)
+        for (Stmt s : node.statements)
             s.accept(this);
         leave();
     }
@@ -330,15 +339,15 @@ public class SymbolTableBuilder implements IAstVisitor {
     @Override
     public void visit(ID node) {
         VarSymbol symbol = resolveVarSymbol(node.name);
-        if(symbol == null) {
+        if (symbol == null) {
             errorRecorder.addRecord(node.location, "can not resolve variable '" + node.name + "'");
             node.type = null;
             return;
         }
         node.symbol = symbol;
         node.type = symbol.type;
-        if(symbol.isGlobalVar) {
-            if(curFunc == null) {
+        if (symbol.isGlobalVar) {
+            if (curFunc == null) {
                 globalSymbolTable.globalInitUsedVars.add(symbol);
             } else {
                 curFunc.usedGlobalVars.add(symbol);
@@ -349,7 +358,7 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     @Override
     public void visit(LiteralExpr node) {
-        switch(node.typeName) {
+        switch (node.typeName) {
             case "int":
                 node.type = new BaseType("int", globalSymbolTable.getBaseSymbol("int"));
                 break;
@@ -371,7 +380,7 @@ public class SymbolTableBuilder implements IAstVisitor {
     public void visit(ArrayExpr node) {
         node.address.accept(this);
         node.index.accept(this);
-        if(node.address.type instanceof ArrayType)
+        if (node.address.type instanceof ArrayType)
             node.type = ((ArrayType) node.address.type).baseType;
         else {
             node.type = null;
@@ -382,46 +391,50 @@ public class SymbolTableBuilder implements IAstVisitor {
     @Override
     public void visit(FuncCallExpr node) {
         FuncSymbol funcSymbol = resolveFuncSymbol(node.funcName);
-        if(funcSymbol == null) {
+        if (funcSymbol == null) {
             errorRecorder.addRecord(node.location, "can not resolve func '" + node.funcName + "'");
             return;
         }
-        for(Expr e : node.arguments)
+        for (Expr e : node.arguments) {
             e.accept(this);
+        }
         node.type = funcSymbol.returnType;
         node.funcSymbol = funcSymbol;
-        if(curFunc != null)
+        if (curFunc != null) {
             curFunc.calleeSet.add(funcSymbol);
+        }
     }
 
     @Override
     public void visit(NewExpr node) {
-        for(Expr e : node.exprDimensions)
+        for (Expr e : node.exprDimensions)
             e.accept(this);
         int dimension = node.exprDimensions.size() + node.restDemension;
         node.type = resolveVarType(node.typeNode);
-        if(node.type == null) {
+        if (node.type == null) {
             errorRecorder.addRecord(node.typeNode.location, "can not resolve the type");
             node.type = null;
             return;
         }
-        if(dimension == 0 && node.typeNode instanceof BaseTypeNode && ((BaseTypeNode) node.typeNode).name.equals("void"))
+        if (dimension == 0 && node.typeNode instanceof BaseTypeNode && ((BaseTypeNode) node.typeNode).name.equals("void")) {
             errorRecorder.addRecord(node.location, "can not new a void");
-        for (int i = 0; i < dimension; i++)
+        }
+        for (int i = 0; i < dimension; i++) {
             node.type = new ArrayType(node.type);
+        }
     }
 
     @Override
     public void visit(MemberExpr node) {
         node.object.accept(this);
-        if(node.object.type instanceof BaseType) {
+        if (node.object.type instanceof BaseType) {
             errorRecorder.addRecord(node.object.location, "the expression is not a class instance");
             node.type = null;
             return;
         }
-        if(node.object.type instanceof ArrayType) {
+        if (node.object.type instanceof ArrayType) {
             ArrayType arrayType = (ArrayType)node.object.type;
-            if(node.methodCall == null || !node.methodCall.funcName.equals("size")) {
+            if (node.methodCall == null || !node.methodCall.funcName.equals("size")) {
                 errorRecorder.addRecord(node.methodCall.location, "array type can only call size method");
                 node.type = null;
             } else {
@@ -429,7 +442,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             }
         } else {
             ClassType classType = (ClassType) node.object.type;
-            if(classType == null) return;
+            if (classType == null) return;
             if (node.fieldAccess != null) {
                 node.fieldAccess.symbol = resolveVarSymbol(node.fieldAccess.name, classType.symbol.classSymbolTable);
                 if (node.fieldAccess.symbol == null) {
@@ -473,7 +486,7 @@ public class SymbolTableBuilder implements IAstVisitor {
     }
 
     private boolean isRelationOperator(String op) {
-        switch(op) {
+        switch (op) {
             case "==": case "!=": case "<": case "<=": case ">": case ">=":
                 return true;
             default:
@@ -484,10 +497,11 @@ public class SymbolTableBuilder implements IAstVisitor {
     public void visit(BinaryExpr node) {
         node.lhs.accept(this);
         node.rhs.accept(this);
-        if(isRelationOperator(node.op))
+        if (isRelationOperator(node.op)) {
             node.type = new BaseType("bool", globalSymbolTable.getBaseSymbol("bool"));
-        else
+        } else {
             node.type = node.lhs.type;
+        }
     }
 
     @Override
