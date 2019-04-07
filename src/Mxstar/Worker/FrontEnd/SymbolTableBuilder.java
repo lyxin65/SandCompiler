@@ -276,25 +276,34 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     @Override
     public void visit(ForStmt node) {
+        SymbolTable symbolTable = new SymbolTable(currentSymbolTable);
+        enter(symbolTable);
         if (node.initStmt != null) node.initStmt.accept(this);
         if (node.condition != null) node.condition.accept(this);
         if (node.updateStmt != null) node.updateStmt.accept(this);
         node.body.accept(this);
+        leave();
     }
 
     @Override
     public void visit(WhileStmt node) {
+        SymbolTable symbolTable = new SymbolTable(currentSymbolTable);
+        enter(symbolTable);
         node.condition.accept(this);
         node.body.accept(this);
+        leave();
     }
 
     @Override
     public void visit(IfStmt node) {
+        SymbolTable symbolTable = new SymbolTable(currentSymbolTable);
+        enter(symbolTable);
         node.condition.accept(this);
         node.thenStmt.accept(this);
         if (node.elseStmt != null) {
             node.elseStmt.accept(this);
         }
+        leave();
     }
 
     @Override
