@@ -505,6 +505,17 @@ public class SymbolTableBuilder implements IAstVisitor {
     }
 
     @Override
+    public void visit(LogicExpr node) {
+        node.lhs.accept(this);
+        node.rhs.accept(this);
+        if (isRelationOperator(node.op)) {
+            node.type = new BaseType("bool", globalSymbolTable.getBaseSymbol("bool"));
+        } else {
+            node.type = node.lhs.type;
+        }
+    }
+
+    @Override
     public void visit(AssignExpr node) {
         node.lhs.accept(this);
         node.rhs.accept(this);

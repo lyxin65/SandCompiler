@@ -232,11 +232,11 @@ public class SemanticChecker implements IAstVisitor {
                     if(!isInt && !isString)
                         typeError = true;
                     break;
-                //  for bool
-                case "&&": case "||":
-                    if(!isBool)
-                        typeError = true;
-                    break;
+//                //  for bool
+//                case "&&": case "||":
+//                    if(!isBool)
+//                        typeError = true;
+//                    break;
                 //  for anything
                 case "==": case "!=":
                     break;
@@ -261,17 +261,12 @@ public class SemanticChecker implements IAstVisitor {
         if(node.object.type instanceof ArrayType) {
             node.modifiable = false;
         } else {
-            if (node.methodCall == null) {
+            if (node.methodCall != null) {
+                node.methodCall.accept(this);
+                node.modifiable = node.methodCall.modifiable;
+            } else {
                 node.modifiable = true;
             }
-        }
-
-        if (node.fieldAccess != null) {
-            node.fieldAccess.accept(this);
-        }
-        if (node.methodCall != null) {
-            node.methodCall.accept(this);
-            node.modifiable = node.methodCall.modifiable;
         }
     }
 
@@ -365,6 +360,33 @@ public class SemanticChecker implements IAstVisitor {
 
     @Override
     public void visit(LiteralExpr node) {
+        node.modifiable = false;
+    }
+
+    @Override
+    public void visit(LogicExpr node) {
+        node.lhs.accept(this);
+        node.rhs.accept(this);
+        if(!node.lhs.type.match(node.rhs.type)) {
+            recorder.addRecord(node.location, "type conflict of the binary operands");
+        } else {
+            boolean isInt = isIntType(node.lhs.type);
+            boolean isBool = isBoolType(node.lhs.type);
+            boolean isString = isStringType(node.lhs.type);
+            boolean typeError = false;
+            switch(node.op) {
+                //  for bool
+                case "&&": case "||":
+                    if(!isBool)
+                        typeError = true;
+                    break;
+                default:
+                    assert false;
+            }
+            if(typeError) {
+                recorder.addRecord(node.location, "the type can not do this operation");
+            }
+        }
         node.modifiable = false;
     }
 

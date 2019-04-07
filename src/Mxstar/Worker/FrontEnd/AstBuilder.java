@@ -3,7 +3,10 @@ package Mxstar.Worker.FrontEnd;
 import Mxstar.AST.*;
 import Mxstar.Parser.*;
 import Mxstar.Worker.ErrorRecorder;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
+import javax.swing.text.html.parser.Parser;
 import java.util.*;
 
 import static Mxstar.Parser.MxstarParser.*;
@@ -23,14 +26,16 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
     }
 
     @Override public Object visitProgram(MxstarParser.ProgramContext ctx) {
-        for (VarDefContext c: ctx.varDef()) {
-            astProgram.add(visitVarDef(c));
-        }
-        for (FuncDefContext c: ctx.funcDef()) {
-            astProgram.add(visitFuncDef(c));
-        }
-        for (ClassDefContext c: ctx.classDef()) {
-            astProgram.add(visitClassDef(c));
+        for (ParserRuleContext c: ctx.getRuleContexts(ParserRuleContext.class)) {
+            if (c instanceof VarDefContext) {
+                astProgram.add(visitVarDef((VarDefContext)c));
+            } else if (c instanceof FuncDefContext) {
+                astProgram.add(visitFuncDef((FuncDefContext)c));
+            } else if (c instanceof ClassDefContext) {
+                astProgram.add(visitClassDef((ClassDefContext)c));
+            } else {
+                assert false;
+            }
         }
         return null;
     }
@@ -204,12 +209,15 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
         WhileStmt whileStmt = new WhileStmt();
         whileStmt.location = new TokenLocation(ctx);
         whileStmt.condition = (Expr) ctx.expr().accept(this);
+        whileStmt.body = (Stmt) ctx.stmt().accept(this);
         return whileStmt;
     }
     @Override public Stmt visitReturnStmt(MxstarParser.ReturnStmtContext ctx) {
         ReturnStmt returnStmt = new ReturnStmt();
         returnStmt.location = new TokenLocation(ctx);
-        returnStmt.retExpr = (Expr) ctx.expr().accept(this);
+        if (ctx.expr() != null) {
+            returnStmt.retExpr = (Expr) ctx.expr().accept(this);
+        }
         return returnStmt;
     }
     @Override public Stmt visitBreakStmt(MxstarParser.BreakStmtContext ctx) {
@@ -293,9 +301,9 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
     @Override public Expr visitBinaryExpr(MxstarParser.BinaryExprContext ctx) {
         BinaryExpr binaryExpr = new BinaryExpr();
         binaryExpr.location = new TokenLocation(ctx);
+        binaryExpr.op = ctx.op.getText();
         binaryExpr.lhs = (Expr) ctx.expr(0).accept(this);
         binaryExpr.rhs = (Expr) ctx.expr(1).accept(this);
-        binaryExpr.op = ctx.op.getText();
         return binaryExpr;
     }
 
@@ -304,7 +312,7 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
     }
 
     @Override public Expr visitSubExpr(MxstarParser.SubExprContext ctx) {
-        return (Expr) ctx.accept(this);
+        return (Expr) ctx.expr().accept(this);
     }
 
     @Override public Expr visitVarExpr(MxstarParser.VarExprContext ctx) {
@@ -364,7 +372,11 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
         FuncCallExpr funcCallExpr = new FuncCallExpr();
         funcCallExpr.location = new TokenLocation(ctx);
         funcCallExpr.funcName = ctx.ID().getSymbol().getText();
-        funcCallExpr.arguments = visitExprList(ctx.exprList());
+        if (ctx.exprList() != null) {
+            funcCallExpr.arguments = visitExprList(ctx.exprList());
+        } else {
+            funcCallExpr.arguments = new LinkedList<>();
+        }
         return funcCallExpr;
     }
 

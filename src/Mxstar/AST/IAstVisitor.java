@@ -35,6 +35,7 @@ public interface IAstVisitor {
     void visit(PrefixExpr node);
     void visit(SuffixExpr node);
     void visit(BinaryExpr node);
+    void visit(LogicExpr node);
     void visit(AssignExpr node);
     void visit(EmptyStmt node);
 }

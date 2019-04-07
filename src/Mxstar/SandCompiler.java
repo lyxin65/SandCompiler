@@ -33,9 +33,9 @@ public class SandCompiler {
             exit(1);
         }
 
-//        System.out.println("LISP:");
-//        System.out.println(tree.toStringTree(parser));
-//        System.out.println();
+        System.out.println("LISP:");
+        System.out.println(tree.toStringTree(parser));
+        System.out.println();
 
         // build AST
         AstBuilder astBuilder = new AstBuilder(recorder);
