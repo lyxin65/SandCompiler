@@ -1,0 +1,83 @@
+package Mxstar.IR.Instruction;
+
+import Mxstar.IR.BasicBlock;
+import Mxstar.IR.IIRVisitor;
+import Mxstar.IR.Operand.*;
+
+import java.util.HashMap;
+import Java.util.LinkedList;
+
+import static Mxstar.IR.RegisterSet.vrax;
+import static Mxstar.IR.RegisterSet.vrdx;
+
+public class BinaryInstruction extends IRInstruction {
+    public enum BinaryOp {
+        ADD, SUB, MUL, DIV, MOD, SAL, SAR, AND, OR, XOR
+    }
+    public BinaryOp op;
+    public Address dest;
+    public Operand src;
+
+    public BinaryInstruction(BasicBlock bb, BinaryOp op, Address dest, Operand src) {
+        super(bb);
+        this.op = op;
+        this.dest = dest;
+        this.src = src;
+    }
+
+    @Override
+    public void renameUseReg(HashMap<Register, Register> renameMap) {
+        if (src instanceof Memory) {
+            src = ((Memory)(src)).copy();
+            ((Memory)(src)).renameUseReg(renameMap);
+        } else if (src instanceof Register && renameMap.containsKey(src)) {
+            src = renameMap.get(src);
+        }
+        if (dest instanceof Memory) {
+            dest = ((Memory)(dest)).copy();
+            ((Memory)(dest)).renameUseReg(renameMap);
+        } else if (dest instanceof Register && renameMap.containsKey(dest)) {
+            dest = renameMap.get(dest);
+        }
+    }
+
+    @Override
+    public void renameDefReg(HashMap<Register, Register> renameMap) {
+        if (dest instanceof Register && renameMap.containsKey(dest)) {
+            dest = renameMap.get(dest);
+        }
+    }
+
+    @Override
+    public LinkedList<Register> getUseRegs() {
+        LinkedList<Register> regs = new LinkedList<>();
+        if (src instanceof Memory) {
+            regs.addAll(((Memory)src).getUseRegs());
+        } else {
+            regs.add((Register)src);
+        }
+        if (dest instanceof Memory) {
+            regs.addAll(((Memory)dest).getUseRegs());
+        } else {
+            regs.add((Register)dest);
+        }
+        if (op == BinaryOp.MUL) {
+            if (!regs.contains(vrax)) {
+                regs.add(vrax);
+            }
+        } else if (op == BinaryOp.DIV || op == BinaryOp.MOD) {
+            if (!regs.contains(vrax)) {
+                regs.add(vrax);
+            }
+            if (!regs.contains(vrdx)) {
+                regs.add(vrdx);
+            }
+        }
+        return regs;
+    }
+
+    @Override
+    public LinkedList<StackSlot> getStackSlots() {
+    }
+
+}
