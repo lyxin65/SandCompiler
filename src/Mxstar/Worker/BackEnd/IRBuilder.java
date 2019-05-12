@@ -5,7 +5,7 @@ import javafx.util.Pair;
 
 enum VarDefStatus { GlobalVar, FuncParam, ClassObj, LocalVar }
 
-public class IRBuilder extends IAstVisitor {
+public class IRBuilder implements IAstVisitor {
     public LinearIR linearCode;
 
     private FuncFrame curFunc;

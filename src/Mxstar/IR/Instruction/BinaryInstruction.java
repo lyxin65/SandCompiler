@@ -78,6 +78,27 @@ public class BinaryInstruction extends IRInstruction {
 
     @Override
     public LinkedList<StackSlot> getStackSlots() {
+        return defaultGetStackSlots(dest, src);
     }
 
+    @Override
+    public LinkedList<Register> getDefRegs() {
+        LinkedList<Register> regs = new LinkedList<>();
+        if (dest instanceof Register)
+            regs.add((Register)dest);
+        if (op == BinaryOp.MUL || op == BinaryOp.DIV || op == BinaryOp.MOD) {
+            if (!regs.contains(vrax)) {
+                regs.add(vrax);
+            }
+            if (!regs.contains(vrdx)) {
+                regs.add(vrdx);
+            }
+        }
+        return regs;
+    }
+
+    @Override
+    public void accept(IIRVisitor visitor) {
+        visitor.visit(this);
+    }
 }

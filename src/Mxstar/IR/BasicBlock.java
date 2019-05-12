@@ -16,8 +16,8 @@ public class BasicBlock {
     public LinkedList<BasicBlock> pred = null;
     public LinkedList<BasicBlock> succ = null;
 
-    private static int globalBlockID = 0;
-    public int blockID;
+    private static int tot = 0;
+    public int id;
 
     public BasicBlock(Function function, String hint) {
         this.function = function;
@@ -25,7 +25,7 @@ public class BasicBlock {
         this.pred = new LinkedList<>();
         this.succ = new LinkedList<>();
         function.basicblocks.add(this);
-        blockID = globalBlockID++;
+        id = tot++;
     }
 
     public void prepend(IRInstruction inst) {
