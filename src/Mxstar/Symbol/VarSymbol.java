@@ -9,6 +9,7 @@ public class VarSymbol {
     
     public boolean isClassField;
     public boolean isGlobalVar;
+    public VirtualRegister virtualRegister;
     
     public VarSymbol(String name, VarType type, TokenLocation location, boolean isClassField, boolean isGlobalVar) {
         this.name = name;

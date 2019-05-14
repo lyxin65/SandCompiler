@@ -5,10 +5,10 @@ public class BaseTypeNode extends TypeNode {
 
     public BaseTypeNode() {
     }
+
     public BaseTypeNode(String name) {
         this.name = name;
     }
-
 
     @Override public void accept(IAstVisitor visitor) {
         visitor.visit(this);

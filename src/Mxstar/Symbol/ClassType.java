@@ -17,14 +17,16 @@ public class ClassType extends VarType {
 
     @Override
     public boolean match(VarType other) {
-        if(other instanceof ClassType) {
+        if (other instanceof ClassType) {
             String otherName = ((ClassType)(other)).name;
-            if((otherName.equals("null") && name.equals("string")) || (otherName.equals("string") && name.equals("null")))
+            if ((otherName.equals("null") && name.equals("string")) || (otherName.equals("string") && name.equals("null"))) {
                 return false;
-            else
+            } else {
                 return otherName.equals("null") || name.equals("null") || ((ClassType)(other)).name.equals(name);
-        } else
+            }
+        } else {
             return false;
+        }
     }
 
     @Override

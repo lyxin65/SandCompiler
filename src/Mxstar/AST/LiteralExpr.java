@@ -10,7 +10,7 @@ public class LiteralExpr extends Expr {
 
     public LiteralExpr(Token token) {
         location = new TokenLocation(token);
-        switch(token.getType()) {
+        switch (token.getType()) {
             case CINT:
                 typeName = "int";
                 value = token.getText();
@@ -32,11 +32,11 @@ public class LiteralExpr extends Expr {
     private String escape(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         int length = string.length();
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             char c = string.charAt(i);
-            if(c == '\\') {
+            if (c == '\\') {
                 char nc = string.charAt(i + 1);
-                switch(nc) {
+                switch (nc) {
                     case 'n':
                         stringBuilder.append('\n');
                         break;

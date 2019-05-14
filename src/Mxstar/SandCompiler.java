@@ -3,11 +3,13 @@ package Mxstar;
 import Mxstar.Symbol.SymbolTable;
 import Mxstar.Worker.ErrorRecorder;
 import Mxstar.Worker.FrontEnd.*;
+import Mxstar.Worker.BackEnd.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import Mxstar.Parser.*;
 import Mxstar.AST.*;
 import Mxstar.Symbol.*;
+import Mxstar.IR.*;
 import java.io.*;
 
 import static java.lang.System.err;
@@ -15,7 +17,6 @@ import static java.lang.System.exit;
 
 public class SandCompiler {
     public static void main(String[] args) throws IOException {
-//        System.out.println("begin");
         InputStream is = System.in;
         ANTLRInputStream input = new ANTLRInputStream(is);
         MxstarLexer lexer = new MxstarLexer(input);
@@ -33,10 +34,6 @@ public class SandCompiler {
             exit(1);
         }
 
-//        System.out.println("LISP:");
-//        System.out.println(tree.toStringTree(parser));
-//        System.out.println();
-
         // build AST
         AstBuilder astBuilder = new AstBuilder(recorder);
         astBuilder.visit(tree);
@@ -47,31 +44,51 @@ public class SandCompiler {
             exit(1);
         }
 
-        AstProgram astProgram = astBuilder.getAstProgram();
+        AstProgram ast = astBuilder.getAstProgram();
 
         // build symbol table
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(recorder);
-        astProgram.accept(symbolTableBuilder);
+        ast.accept(symbolTableBuilder);
 
         if (recorder.errorOccured()) {
             recorder.printTo(System.err);
             exit(1);
         }
 
+        // semantic check
         GlobalSymbolTable globalSymbolTable = symbolTableBuilder.globalSymbolTable;
         SemanticChecker semanticChecker = new SemanticChecker(globalSymbolTable, recorder);
 
-        astProgram.accept(semanticChecker);
+        ast.accept(semanticChecker);
 
-        if(recorder.errorOccured()) {
+        if (recorder.errorOccured()) {
             recorder.printTo(System.out);
             exit(1);
         }
 
+        // build IR with VirtualRegister
+        IRBuilder irBuilder = new IRBuilder(globalSymbolTable);
+        ast.accept(irBuilder);
+        IRProgram ir = irBuilder.ir;
+        
+        IRCorrector irCorrector = new IRCorrector();
+        ir.accept(irCorrector);
 
-//        System.out.println("Listener:");
-//        ParseTreeWalker walker = new ParseTreeWalker();
-//        Evaluator evalByListener = new Evaluator();
-//        walker.walk(evalByListener, tree);
+        //  IR with VirtualRegister -> IR with PhysicalRegister
+        SimpleGraphAllocator simpleGraphAllocator = new SimpleGraphAllocator(irProgram);
+        simpleGraphAllocator.run();
+
+        // IR with PhysicalRegister and StackFrame
+        StackFrameBuilder stackFrameBuilder = new StackFrameBuilder(ir);
+        stackFrameBuilder.run();
+
+        if (Config.printToAsmFile) {
+            IRPrinter irPrinter = new IRPrinter();
+            irPrinter.showNasm = true;
+            irPrinter.showHeader = true;
+            irPrinter.visit(ir);
+            irPrinter.printTo(new PrintStream("program.asm"));
+        }
+
     }
 }

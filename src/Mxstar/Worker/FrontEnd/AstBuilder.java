@@ -259,9 +259,9 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
             }
         }
         if (ctx.empty() != null) {
-            newExpr.restDemension = ctx.empty().size();
+            newExpr.restDimension = ctx.empty().size();
         } else {
-            newExpr.restDemension = 0;
+            newExpr.restDimension = 0;
         }
         return newExpr;
     }
