@@ -8,6 +8,7 @@ import Mxstar.IR.Operand.*;
 import Mxstar.IR.RegisterSet;
 import Mxstar.Worker.BackEnd.LivenessAnalyzer.Graph;
 
+import java.lang.*;
 import java.util.*; 
 
 public class SimpleGraphAllocator {
@@ -80,6 +81,7 @@ public class SimpleGraphAllocator {
             }
         }
         simpleSet.remove(reg);
+//         System.err.println(reg.id);
         selectStack.addFirst(reg);
     }
 
@@ -98,11 +100,22 @@ public class SimpleGraphAllocator {
         }
         graph.delRegister(todo);
         spillSet.remove(todo);
+
+        assert todo != null;
+//        System.err.println(todo.id);
         selectStack.addFirst(todo);
     }
 
     private void assignColors() {
+//        for (VirtualRegister vr: selectStack) {
+//            if (vr != null) {
+//                System.err.println(vr.id);
+//            } else {
+//                System.err.println("null");
+//            }
+//        }
         for (VirtualRegister vr: selectStack) {
+            // System.err.println(vr.id);
             if (vr.allocatedPhysicalRegister != null) {
                 colors.put(vr, vr.allocatedPhysicalRegister);
             }
@@ -139,7 +152,7 @@ public class SimpleGraphAllocator {
         HashMap<VirtualRegister, Memory> spillPlaces = new HashMap<>();
         for (VirtualRegister vr: spilledRegs) {
             if (vr.spillPlace != null) {
-                spillPlaces.put(vr,  vr.spillPlace);
+                spillPlaces.put(vr, vr.spillPlace);
             } else {
                 spillPlaces.put(vr, new StackSlot(vr.hint));
             }

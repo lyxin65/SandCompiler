@@ -25,6 +25,9 @@ public class LivenessAnalyzer {
 
         void addRegister(VirtualRegister vr) {
             if (!g.containsKey(vr)) {
+                if (vr == null) {
+                    System.err.println("fuck");
+                }
                 g.put(vr, new HashSet<>());
             }
         }
@@ -60,9 +63,9 @@ public class LivenessAnalyzer {
             return g.containsKey(a) ? g.get(a).size() : 0;
         }
 
-        boolean isLinked(VirtualRegister a, VirtualRegister b) {
-            return g.containsKey(a) && g.get(a).contains(b);
-        }
+        // boolean isLinked(VirtualRegister a, VirtualRegister b) {
+        //     return g.containsKey(a) && g.get(a).contains(b);
+        // }
 
         void clear() {
             g.clear();
@@ -177,7 +180,9 @@ public class LivenessAnalyzer {
         
         for (BasicBlock bb: function.basicblocks) {
             for (IRInstruction inst = bb.head; inst != null; inst = inst.next) {
+                // System.err.println("use_reg");
                 inferGraph.addRegs(trans(inst.getUseRegs()));
+                // System.err.println("def_reg");
                 inferGraph.addRegs(trans(inst.getDefRegs()));
             }
         }

@@ -53,12 +53,12 @@ public class BinaryInst extends IRInstruction {
         LinkedList<Register> regs = new LinkedList<>();
         if (src instanceof Memory) {
             regs.addAll(((Memory)src).getUseRegs());
-        } else {
+        } else if (src instanceof Register) {
             regs.add((Register)src);
         }
         if (dest instanceof Memory) {
             regs.addAll(((Memory)dest).getUseRegs());
-        } else {
+        } else if (dest instanceof Register) {
             regs.add((Register)dest);
         }
         if (op == BinaryOp.MUL) {

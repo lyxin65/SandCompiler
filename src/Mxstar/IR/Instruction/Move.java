@@ -27,7 +27,7 @@ public class Move extends IRInstruction {
             regs.addAll(((Memory)dest).getUseRegs());
         }
         if (src instanceof Memory) {
-            regs.addAll(((Memory)dest).getUseRegs());
+            regs.addAll(((Memory)src).getUseRegs());
         } else if (src instanceof Register) {
             regs.add((Register)src);
         }

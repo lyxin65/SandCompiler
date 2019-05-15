@@ -908,27 +908,69 @@ L_033:
 
 ;=====================================================================
 	 section .text
-_f:
+_main:
 	b0:
 	push rbp
 	mov rbp, rsp
-	mov rax, 1
-	b1:
-	leave
-	ret 
-_main:
+	push r12
+	push r15
+	push r13
+	mov rdi, g_0
+	call __println
+	mov r13, 5
+	mov r12, 0
+	cmp r12, 0
+	je b1
 	b2:
-	push rbp
-	mov rbp, rsp
-	call _f
+	mov rax, r13
+	cdq
+	idiv r12
+	mov rcx, rax
+	cmp rcx, 1
+	je b1
+	jmp b3
+	b1:
+	mov r15, 20
+	jmp b4
 	b3:
+	mov r15, 10
+	b4:
+	cmp r15, 10
+	jne b5
+	b6:
+	mov rax, r13
+	cdq
+	idiv r12
+	mov rcx, rax
+	cmp rcx, 0
+	jne b5
+	b7:
+	cmp r13, 5
+	jne b5
+	jmp b8
+	b5:
+	mov r15, 30
+	b8:
+	mov rdi, r15
+	call __toString
+	mov r13, rax
+	mov rdi, r13
+	call __println
+	mov rax, r15
+	b9:
+	pop r13
+	pop r15
+	pop r12
 	leave
 	ret 
 __init:
-	b4:
+	b10:
 	push rbp
 	mov rbp, rsp
 	call _main
 	leave
 	ret 
 	section .data
+g_0:
+	dq 7
+	db 67H, 74H, 6DH, 64H, 6CH, 79H, 78H, 00H
