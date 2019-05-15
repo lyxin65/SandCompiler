@@ -71,6 +71,9 @@ public class SandCompiler {
         IRBuilder irBuilder = new IRBuilder(globalSymbolTable);
         ast.accept(irBuilder);
         IRProgram ir = irBuilder.ir;
+        
+        IRCorrector irCorrector = new IRCorrector();
+        ir.accept(irCorrector);
 
         if (Config.printIR) {
             IRPrinter irPrinter = new IRPrinter();
@@ -79,9 +82,6 @@ public class SandCompiler {
             irPrinter.visit(ir);
             irPrinter.printTo(System.err);
         }
-        
-        IRCorrector irCorrector = new IRCorrector();
-        ir.accept(irCorrector);
 
         //  IR with VirtualRegister -> IR with PhysicalRegister
         SimpleGraphAllocator simpleGraphAllocator = new SimpleGraphAllocator(ir);

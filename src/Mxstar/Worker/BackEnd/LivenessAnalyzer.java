@@ -2,130 +2,115 @@ package Mxstar.Worker.BackEnd;
 
 import Mxstar.IR.BasicBlock;
 import Mxstar.IR.Function;
-import Mxstar.IR.Instruction.*;
-import Mxstar.IR.Operand.*;
+import Mxstar.IR.IRProgram;
+import Mxstar.IR.Instruction.Call;
+import Mxstar.IR.Instruction.IRInstruction;
+import Mxstar.IR.Instruction.Move;
+import Mxstar.IR.Operand.Register;
+import Mxstar.IR.Operand.VirtualRegister;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import static java.lang.System.exit;
 
 public class LivenessAnalyzer {
+
     public static class Graph {
-        private HashMap<VirtualRegister, HashSet<VirtualRegister>> g;
+        HashMap<VirtualRegister,HashSet<VirtualRegister>> graph;
 
         Graph() {
-            g = new HashMap<>();
+            graph = new HashMap<>();
         }
-
-        Graph(Graph graph) {
-            g = new HashMap<>();
-            for (VirtualRegister vr: graph.getAllRegisters()) {
-                g.put(vr, new HashSet<>(graph.getAdj(vr)));
-            }
+        Graph(Graph g) {
+            graph = new HashMap<>();
+            for(VirtualRegister reg : g.getAllRegisters())
+                graph.put(reg, new HashSet<>(g.getAdjacents(reg)));
         }
-
-        void addRegister(VirtualRegister vr) {
-            if (!g.containsKey(vr)) {
-                if (vr == null) {
-                    System.err.println("fuck");
-                }
-                g.put(vr, new HashSet<>());
-            }
+        void addRegiser(VirtualRegister vr) {
+            if(graph.containsKey(vr)) return;
+            graph.put(vr, new HashSet<>());
         }
-
-        void addRegs(Collection<VirtualRegister> vrs) {
-            for (VirtualRegister vr: vrs) {
-                addRegister(vr);
-            }
+        void addRegisers(Collection<VirtualRegister> vrs) {
+            for(VirtualRegister reg : vrs)
+                addRegiser(reg);
         }
-
         void addEdge(VirtualRegister a, VirtualRegister b) {
-            if (a != b) {
-                g.get(a).add(b);
-                g.get(b).add(a);
-            }
+            if(a == b) return;
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
-
         void delEdge(VirtualRegister a, VirtualRegister b) {
-            if (g.containsKey(a) && g.containsKey(b)) {
-                g.get(a).remove(b);
-                g.get(b).remove(a);
+            if(graph.containsKey(a) && graph.get(a).contains(b)) {
+                graph.get(a).remove(b);
+                graph.get(b).remove(a);
             }
         }
-
-        void delRegister(VirtualRegister a) {
-            for (VirtualRegister b: getAdj(a)) {
-                g.get(b).remove(a);
-            }
-            g.remove(a);
+        void delRegister(VirtualRegister vr) {
+            for(VirtualRegister reg : getAdjacents(vr))
+                graph.get(reg).remove(vr);
+            graph.remove(vr);
         }
-
         int getDegree(VirtualRegister a) {
-            return g.containsKey(a) ? g.get(a).size() : 0;
+            return graph.containsKey(a) ? graph.get(a).size() : 0;
         }
-
-        // boolean isLinked(VirtualRegister a, VirtualRegister b) {
-        //     return g.containsKey(a) && g.get(a).contains(b);
-        // }
-
+        boolean isLinked(VirtualRegister a, VirtualRegister b) {
+            return graph.containsKey(a) && graph.get(a).contains(b);
+        }
         void clear() {
-            g.clear();
+            graph.clear();
         }
-
-        void forEach(BiConsumer<VirtualRegister, VirtualRegister> consumer) {
-            for (VirtualRegister a: g.keySet()) {
-                for (VirtualRegister b: g.get(a)) {
-                    consumer.accept(a, b);
-                }
-            }
+        void forEach(BiConsumer<VirtualRegister,VirtualRegister> consumer) {
+            for(VirtualRegister reg1 : graph.keySet())
+                for(VirtualRegister reg2 : graph.get(reg1))
+                    consumer.accept(reg1, reg2);
         }
-
-        Collection<VirtualRegister> getAdj(VirtualRegister a) {
-            return g.getOrDefault(a, new HashSet<>());
+        Collection<VirtualRegister> getAdjacents(VirtualRegister a) {
+            return graph.getOrDefault(a, new HashSet<>());
         }
-
         Collection<VirtualRegister> getAllRegisters() {
-            return g.keySet();
+            return graph.keySet();
         }
-    }
 
+    }
     public HashMap<BasicBlock, HashSet<VirtualRegister>> liveOut;
-    public HashMap<BasicBlock, HashSet<VirtualRegister>> usedRegs;
-    public HashMap<BasicBlock, HashSet<VirtualRegister>> definedRegs;
+    public HashMap<BasicBlock, HashSet<VirtualRegister>> usedRegisters;
+    public HashMap<BasicBlock, HashSet<VirtualRegister>> definedRegisters;
 
-    private void init(Mxstar.IR.Function function) {
+    private void init(Function function) {
         liveOut = new HashMap<>();
-        usedRegs = new HashMap<>();
-        definedRegs = new HashMap<>();
-        for (BasicBlock bb : function.basicblocks) {
+        usedRegisters = new HashMap<>();
+        definedRegisters = new HashMap<>();
+        for(BasicBlock bb : function.basicblocks) {
             liveOut.put(bb, new HashSet<>());
-            usedRegs.put(bb, new HashSet<>());
-            definedRegs.put(bb, new HashSet<>());
+            usedRegisters.put(bb, new HashSet<>());
+            definedRegisters.put(bb, new HashSet<>());
         }
     }
-
-    private void initUsedAndDefinedRegs(BasicBlock bb, boolean nowAfteAllocate) {
-        HashSet<VirtualRegister> bbUsedRegs = new HashSet<>();
-        HashSet<VirtualRegister> bbDefinedRegs = new HashSet<>();
-        for (IRInstruction inst = bb.head; inst != null; inst = inst.next) {
-            LinkedList<Register> used;
-            if (inst instanceof Call && !nowAfteAllocate) {
-                used = ((Call)inst).getCallUsed();
-            } else {
-                used = inst.getUseRegs();
-            }
-            for (VirtualRegister reg: trans(used)) {
-                if (!bbDefinedRegs.contains(reg)) {
-                    bbUsedRegs.add(reg);
-                }
-            }
-            bbDefinedRegs.addAll(trans(inst.getDefRegs()));
+    private void initUsedAndDefinedRegisters(BasicBlock bb, boolean nowAfterAllocate) {
+        HashSet<VirtualRegister> bbUsedRegisters = new HashSet<>();
+        HashSet<VirtualRegister> bbDefinedRegisters = new HashSet<>();
+        for(IRInstruction inst = bb.head; inst != null; inst = inst.next) {
+            LinkedList<Register> usedRegs;
+            if(inst instanceof Call && !nowAfterAllocate)
+                usedRegs = ((Call) inst).getCallUsed();
+            else
+                usedRegs = inst.getUseRegs();
+            for(VirtualRegister reg : trans(usedRegs))
+                if(!bbDefinedRegisters.contains(reg))
+                    bbUsedRegisters.add(reg);
+            bbDefinedRegisters.addAll(trans(inst.getDefRegs()));
         }
-        usedRegs.put(bb, bbUsedRegs);
-        definedRegs.put(bb, bbDefinedRegs);
+        definedRegisters.put(bb, bbDefinedRegisters);
+        usedRegisters.put(bb, bbUsedRegisters);
     }
 
-    private boolean isMoveBetweenRegs(IRInstruction inst) {
-        if (inst instanceof Move) {
+    private boolean isMoveBetweenRegisters(IRInstruction inst) {
+        if(inst instanceof Move) {
             Move move = (Move)inst;
             return move.dest instanceof VirtualRegister && move.src instanceof VirtualRegister;
         } else {
@@ -133,72 +118,72 @@ public class LivenessAnalyzer {
         }
     }
 
-    public LinkedList<VirtualRegister> trans(Collection<Register> regs) {
-        LinkedList<VirtualRegister> res = new LinkedList<>();
-        for (Register reg: regs) {
-            res.add((VirtualRegister)reg);
+    public LinkedList<VirtualRegister> trans(Collection<Register> registers) {
+        LinkedList<VirtualRegister> virtualRegisters = new LinkedList<>();
+        for(Register reg : registers) {
+            virtualRegisters.add((VirtualRegister) reg);
         }
-        return res;
+        return virtualRegisters;
     }
 
-    private void calcLiveOut(Mxstar.IR.Function function, boolean nowAfteAllocate) {
+    private void calcLiveOut(Function function, boolean nowAfterAllocate) {
         init(function);
 
-        for (BasicBlock bb: function.basicblocks) {
-            initUsedAndDefinedRegs(bb, nowAfteAllocate);
-        }
+        for(BasicBlock bb : function.basicblocks)
+            initUsedAndDefinedRegisters(bb, nowAfterAllocate);
 
-        boolean flag = true;
-        while (flag) {
-            flag = false;
-            LinkedList<BasicBlock> bbs = function.rPostOrderOnrCFG;
-            for (BasicBlock bb: bbs) {
+        /* calculate the liveOut set of each BasicBlock */
+        boolean changed = true;
+        while(changed) {
+            changed = false;
+            LinkedList<BasicBlock> basicBlocks = function.rPostOrderOnrCFG;
+            for(BasicBlock bb : basicBlocks) {
                 int oldSize = liveOut.get(bb).size();
-                for (BasicBlock s: bb.succ) {
-                    HashSet<VirtualRegister> regs = new HashSet<>(liveOut.get(s));
-                    regs.removeAll(definedRegs.get(s));
-                    regs.addAll(usedRegs.get(s));
+                for(BasicBlock succ : bb.succ) {
+                    HashSet<VirtualRegister> regs = new HashSet<>(liveOut.get(succ));
+                    regs.removeAll(definedRegisters.get(succ));
+                    regs.addAll(usedRegisters.get(succ));
                     liveOut.get(bb).addAll(regs);
                 }
-                flag = flag || liveOut.get(bb).size() != oldSize;
+                changed = changed || liveOut.get(bb).size() != oldSize;
             }
         }
     }
 
-    public HashMap<BasicBlock, HashSet<VirtualRegister>> getLiveOut(Function function) {
+    public HashMap<BasicBlock,HashSet<VirtualRegister>> getLiveOut(Function function) {
         calcLiveOut(function, false);
         return liveOut;
     }
 
-    public void getInferenceGraph(Function function, Graph inferGraph, Graph moveGraph) {
+    public void getInferenceGraph(Function function,
+                                  Graph inferenceGraph,
+                                  Graph moveGraph
+    ) {
         calcLiveOut(function, true);
 
-        inferGraph.clear();
-        if (moveGraph != null) {
+        inferenceGraph.clear();
+        if(moveGraph != null)
             moveGraph.clear();
-        }
-        
-        for (BasicBlock bb: function.basicblocks) {
-            for (IRInstruction inst = bb.head; inst != null; inst = inst.next) {
-                // System.err.println("use_reg");
-                inferGraph.addRegs(trans(inst.getUseRegs()));
-                // System.err.println("def_reg");
-                inferGraph.addRegs(trans(inst.getDefRegs()));
+
+        for(BasicBlock bb : function.basicblocks) {
+            for(IRInstruction inst = bb.head; inst != null; inst = inst.next) {
+                inferenceGraph.addRegisers(trans(inst.getDefRegs()));
+                inferenceGraph.addRegisers(trans(inst.getUseRegs()));
             }
         }
 
-        // calulate
-        for (BasicBlock bb: function.basicblocks) {
+        /* calculate the inference graph and move graph when needed */
+        for(BasicBlock bb : function.basicblocks) {
             HashSet<VirtualRegister> liveNow = new HashSet<>(liveOut.get(bb));
-            for (IRInstruction inst = bb.head; inst != null; inst = inst.next) {
-                boolean isMBR = isMoveBetweenRegs(inst);
-                for (VirtualRegister a: trans(inst.getDefRegs())) {
-                    for (VirtualRegister b: liveNow) {
-                        if (isMBR && moveGraph != null && ((Move)inst).src == a) {
-                            moveGraph.addEdge(a, b);
-                        } else {
-                            inferGraph.addEdge(a, b);
+            for(IRInstruction inst = bb.tail; inst != null; inst = inst.prev) {
+                boolean isMBR = isMoveBetweenRegisters(inst);
+                for(VirtualRegister reg1 : trans(inst.getDefRegs())) {
+                    for(VirtualRegister reg2 : liveNow) {
+                        if(isMBR && moveGraph != null && ((Move)inst).src == reg1) {
+                            moveGraph.addEdge(reg1, reg2);
+                            continue;
                         }
+                        inferenceGraph.addEdge(reg1, reg2);
                     }
                 }
                 liveNow.removeAll(trans(inst.getDefRegs()));
@@ -206,9 +191,9 @@ public class LivenessAnalyzer {
             }
         }
 
-        if (moveGraph != null) {
-            inferGraph.forEach(moveGraph::delEdge);
+        /* remove some invalid <reg,reg> in move graph */
+        if(moveGraph != null) {
+            inferenceGraph.forEach(moveGraph::delEdge);
         }
     }
-
 }
