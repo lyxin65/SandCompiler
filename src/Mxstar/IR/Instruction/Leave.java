@@ -8,8 +8,8 @@ import Mxstar.IR.Operand.StackSlot;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Cdq extends IRInstruction {
-    public Cdq(BasicBlock bb) {
+public class Leave extends IRInstruction {
+    public Leave(BasicBlock bb) {
         super(bb);
     }
 

@@ -1,5 +1,15 @@
 package Mxstar.IR.Instruction;
 
+import Mxstar.IR.BasicBlock;
+import Mxstar.IR.IIRVisitor;
+import Mxstar.IR.Operand.Operand;
+import Mxstar.IR.Operand.Register;
+import Mxstar.IR.Operand.StackSlot;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+
+
 public abstract class IRInstruction {
     public BasicBlock bb;
     public IRInstruction prev;

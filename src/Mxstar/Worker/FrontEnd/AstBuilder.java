@@ -4,9 +4,7 @@ import Mxstar.AST.*;
 import Mxstar.Parser.*;
 import Mxstar.Worker.ErrorRecorder;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 
-import javax.swing.text.html.parser.Parser;
 import java.util.*;
 
 import static Mxstar.Parser.MxstarParser.*;
@@ -176,7 +174,7 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
     }
     @Override public Stmt visitVarDefStmt(MxstarParser.VarDefStmtContext ctx) {
         VarDefStmt varDefStmt = new VarDefStmt();
-        varDefStmt.def = visitVarDef(ctx.varDef());
+        varDefStmt.varDef = visitVarDef(ctx.varDef());
         varDefStmt.location = new TokenLocation(ctx);
         return varDefStmt;
     }
@@ -281,8 +279,24 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
         return memberExpr;
     }
 
+    @Override public Expr visitPrefixExpr(MxstarParser.PrefixExprContext ctx) {
+        UnaryExpr prefixExpr = new UnaryExpr();
+        prefixExpr.location = new TokenLocation(ctx);
+        prefixExpr.expr = (Expr) ctx.expr().accept(this);
+        switch(ctx.op.getText()) {
+            case "++":
+                prefixExpr.op = "++v";
+                break;
+            case "--":
+                prefixExpr.op = "--v";
+                break;
+            default:
+                prefixExpr.op = ctx.op.getText();
+        }
+        return prefixExpr;
+    }
     @Override public Expr visitSuffixExpr(MxstarParser.SuffixExprContext ctx) {
-        SuffixExpr suffixExpr = new SuffixExpr();
+        UnaryExpr suffixExpr = new UnaryExpr();
         suffixExpr.location = new TokenLocation(ctx);
         suffixExpr.expr = (Expr) ctx.expr().accept(this);
         switch(ctx.op.getText()) {
@@ -302,8 +316,8 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
         BinaryExpr binaryExpr = new BinaryExpr();
         binaryExpr.location = new TokenLocation(ctx);
         binaryExpr.op = ctx.op.getText();
-        binaryExpr.lhs = (Expr) ctx.expr(0).accept(this);
-        binaryExpr.rhs = (Expr) ctx.expr(1).accept(this);
+        binaryExpr.lhs = (Expr)ctx.expr(0).accept(this);
+        binaryExpr.rhs = (Expr)ctx.expr(1).accept(this);
         return binaryExpr;
     }
 
@@ -312,34 +326,18 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
     }
 
     @Override public Expr visitSubExpr(MxstarParser.SubExprContext ctx) {
-        return (Expr) ctx.expr().accept(this);
+        return (Expr)ctx.expr().accept(this);
     }
 
     @Override public Expr visitVarExpr(MxstarParser.VarExprContext ctx) {
         return new ID(ctx.token);
     }
 
-    @Override public Expr visitPrefixExpr(MxstarParser.PrefixExprContext ctx) {
-        PrefixExpr prefixExpr = new PrefixExpr();
-        prefixExpr.location = new TokenLocation(ctx);
-        prefixExpr.expr = (Expr) ctx.expr().accept(this);
-        switch(ctx.op.getText()) {
-            case "++":
-                prefixExpr.op = "++v";
-                break;
-            case "--":
-                prefixExpr.op = "--v";
-                break;
-            default:
-                prefixExpr.op = ctx.op.getText();
-        }
-        return prefixExpr;
-    }
 
     @Override public Expr visitLiteralExpr(MxstarParser.LiteralExprContext ctx) {
         return visitLiteral(ctx.literal());
     }
-
+/*
     @Override public Expr visitLogicExpr(MxstarParser.LogicExprContext ctx) {
         LogicExpr logicExpr = new LogicExpr();
         logicExpr.location = new TokenLocation(ctx);
@@ -348,23 +346,23 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
         logicExpr.op = ctx.op.getText();
         return logicExpr;
     }
-
-    @Override public Expr visitArrExpr(MxstarParser.ArrExprContext ctx) {
+*/
+    @Override public Expr visitArrayExpr(MxstarParser.ArrayExprContext ctx) {
         ArrayExpr arrayExpr = new ArrayExpr();
         arrayExpr.location = new TokenLocation(ctx);
-        arrayExpr.address = (Expr) ctx.expr(0).accept(this);
+        arrayExpr.address = (Expr)ctx.expr(0).accept(this);
         if (arrayExpr.address instanceof NewExpr && ctx.expr(0).stop.getText().equals("]")) {
             recorder.addRecord(arrayExpr.address.location, "can not use new a[n][i] to express (new a[n])[i]");
         }
-        arrayExpr.index = (Expr) ctx.expr(1).accept(this);
+        arrayExpr.index = (Expr)ctx.expr(1).accept(this);
         return arrayExpr;
     }
 
     @Override public Expr visitAssignExpr(MxstarParser.AssignExprContext ctx) {
         AssignExpr assignExpr = new AssignExpr();
         assignExpr.location = new TokenLocation(ctx);
-        assignExpr.lhs = (Expr) ctx.expr(0).accept(this);
-        assignExpr.rhs = (Expr) ctx.expr(1).accept(this);
+        assignExpr.lhs = (Expr)ctx.expr(0).accept(this);
+        assignExpr.rhs = (Expr)ctx.expr(1).accept(this);
         return assignExpr;
     }
 

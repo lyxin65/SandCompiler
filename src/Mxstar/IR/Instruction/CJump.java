@@ -7,7 +7,7 @@ import Mxstar.IR.Operand.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import static Mstar.IR.Instruction.CJump.CompareOp.*;
+import static Mxstar.IR.Instruction.CJump.CompareOp.*;
 
 public class CJump extends IRInstruction {
     public enum CompareOp {
@@ -40,7 +40,7 @@ public class CJump extends IRInstruction {
             case L: r = (v1 < v2); break;
             case G: r = (v1 > v2); break;
             case E: r = (v1 == v2); break;
-            default: assert(false);
+            default: r = false; assert(false);
         }
         return r ? thenBB : elseBB;
     }
@@ -53,7 +53,7 @@ public class CJump extends IRInstruction {
             case GE: return L;
             case LE: return G;
             case NE: return NE;
-            default: assert(false);
+            default: assert(false); return E;
         }
     }
 
@@ -65,7 +65,7 @@ public class CJump extends IRInstruction {
             case L: return GE;
             case G: return LE;
             case E: return NE;
-            default: assert(false);
+            default: assert(false); return E;
         }
 
     }

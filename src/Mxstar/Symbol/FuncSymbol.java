@@ -13,7 +13,7 @@ public class FuncSymbol {
     public List<VarType> parameterTypes;
     public List<String> parameterNames;
     public SymbolTable funcSymbolTable;
-    public HashSet<VarSymbol> usedGlobalVars;
+    public HashSet<VarSymbol> usedGV;
     public boolean isGlobalFunc;
     public boolean withSideEffect;
     public HashSet<FuncSymbol> calleeSet;
@@ -23,7 +23,7 @@ public class FuncSymbol {
     public FuncSymbol() {
         this.parameterTypes = new LinkedList<>();
         this.parameterNames = new LinkedList<>();
-        this.usedGlobalVars = new HashSet<>();
+        this.usedGV = new HashSet<>();
         this.calleeSet = new HashSet<>();
         this.visited = new HashSet<>();
     }

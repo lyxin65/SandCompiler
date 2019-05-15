@@ -2,14 +2,17 @@ package Mxstar.Worker.BackEnd;
 
 import Mxstar.IR.BasicBlock;
 import Mxstar.IR.Function;
+import Mxstar.IR.IRProgram;
 import Mxstar.IR.Instruction.*;
 import Mxstar.IR.Operand.*;
+import Mxstar.IR.RegisterSet;
+import Mxstar.Worker.BackEnd.LivenessAnalyzer.Graph;
 
 import java.util.*; 
 
-public SimpleGraphAllocator {
+public class SimpleGraphAllocator {
     private IRProgram ir;
-    private LinkedList<PhysicalRegister> generealRegisters = new LinkedList<>();
+    private LinkedList<PhysicalRegister> generalRegisters = new LinkedList<>();
     private int K;
 
     private static LivenessAnalyzer livenessAnalyzer = new LivenessAnalyzer();
@@ -20,35 +23,35 @@ public SimpleGraphAllocator {
             if (pr.name.equals("rsp") || pr.name.equals("rbp")) {
                 continue;
             }
-            generealRegisters.add(pr);
+            generalRegisters.add(pr);
         }
-        K = generealRegisters.size();
+        K = generalRegisters.size();
     }
 
     private LinkedList<VirtualRegister> trans(LinkedList<Register> regs) {
         LinkedList<VirtualRegister> res = new LinkedList<>();
-        for (VirtualRegister reg: regs) {
+        for (Register reg: regs) {
             res.add((VirtualRegister)reg);
         }
         return res;
     }
 
     public void run() {
-        for (Function function: ir.function) {
+        for (Function function: ir.functions) {
             this.function = function;
             processFunction();
         }
     }
 
-    Function function;
-    Graph originGraph;
-    Graph graph;
+    private Function function;
+    private Graph originGraph;
+    private Graph graph;
 
-    HashSet<VirtualRegister> simpleSet;
-    HashSet<VirtualRegister> spillSet;
-    HashSet<VirtualRegister> spilledRegs;
-    LinkedList<VirtualRegister> selectStack;
-    HashMap<VirtualRegister, PhysicalRegister> colors;
+    private HashSet<VirtualRegister> simpleSet;
+    private HashSet<VirtualRegister> spillSet;
+    private HashSet<VirtualRegister> spilledRegs;
+    private LinkedList<VirtualRegister> selectStack;
+    private HashMap<VirtualRegister, PhysicalRegister> colors;
 
     private void init() {
         simpleSet = new HashSet<>();
@@ -57,7 +60,7 @@ public SimpleGraphAllocator {
         selectStack = new LinkedList<>();
         colors = new HashMap<>();
         for (VirtualRegister vr: graph.getAllRegisters()) {
-            if (graph.getDegree() < K) {
+            if (graph.getDegree(vr) < K) {
                 simpleSet.add(vr);
             } else {
                 spillSet.add(vr);
@@ -109,13 +112,13 @@ public SimpleGraphAllocator {
                 continue;
             }
             HashSet<PhysicalRegister> okColors = new HashSet<>(generalRegisters);
-            for (VirtualRegister neighbor: orignGraph.getAdjacents(vr)) {
+            for (VirtualRegister neighbor: originGraph.getAdj(vr)) {
                 if (colors.containsKey(neighbor)) {
                     okColors.remove(colors.get(neighbor));
                 }
             }
             if (okColors.isEmpty()) {
-                spilledRegisers.add(vr);
+                spilledRegs.add(vr);
             } else {
                 PhysicalRegister pr = null;
                 for (PhysicalRegister reg : RegisterSet.callerSave) {
@@ -134,7 +137,7 @@ public SimpleGraphAllocator {
 
     private void rewriteFunction() {
         HashMap<VirtualRegister, Memory> spillPlaces = new HashMap<>();
-        for (VirtualRegister vr: spilledRegisers) {
+        for (VirtualRegister vr: spilledRegs) {
             if (vr.spillPlace != null) {
                 spillPlaces.put(vr,  vr.spillPlace);
             } else {
@@ -146,8 +149,8 @@ public SimpleGraphAllocator {
                 LinkedList<VirtualRegister> used = new LinkedList<>(trans(inst.getUseRegs()));
                 LinkedList<VirtualRegister> defined = new LinkedList<>(trans(inst.getDefRegs()));
                 HashMap<Register, Register> renameMap = new HashMap<>();
-                used.retainAll(spilledRegisers);
-                defined.retainAll(spilledRegisers);
+                used.retainAll(spilledRegs);
+                defined.retainAll(spilledRegs);
                 for (VirtualRegister reg: used) {
                     if (!renameMap.containsKey(reg)) renameMap.put(reg, new VirtualRegister(""));
                 }
@@ -181,17 +184,17 @@ public SimpleGraphAllocator {
     }
 
     private void processFunction() {
-        orignGraph = new Graph();
+        originGraph = new Graph();
         while (true) {
-            livenessAnalyzer.getInferenceGraph(function, orignGraph, null);
-            graph = new Graph(orignGraph);
+            livenessAnalyzer.getInferenceGraph(function, originGraph, null);
+            graph = new Graph(originGraph);
             init();
             do {
-                if (!simplifyWorklist.isEmpty()) simplify();
-                else if (!spillWorklist.isEmpty()) spill();
-            } while (!simplifyWorklist.isEmpty() || !spillWorklist.isEmpty());
+                if (!simpleSet.isEmpty()) simpleWork();
+                else if (!spillSet.isEmpty()) spill();
+            } while (!simpleSet.isEmpty() || !spillSet.isEmpty());
             assignColors();
-            if (!spilledRegisers.isEmpty()) {
+            if (!spilledRegs.isEmpty()) {
                 rewriteFunction();
             } else {
                 replaceRegisers();

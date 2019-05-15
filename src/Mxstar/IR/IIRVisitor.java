@@ -1,7 +1,7 @@
-package Mstar.IR;
+package Mxstar.IR;
 
-import Mstar.IR.Instruction.*;
-import Mstar.IR.Operand.*;
+import Mxstar.IR.Instruction.*;
+import Mxstar.IR.Operand.*;
 
 public interface IIRVisitor {
     void visit(IRProgram program);
@@ -28,4 +28,3 @@ public interface IIRVisitor {
     void visit(Cdq inst);
     void visit(FunctionAddress operand);
 }
-

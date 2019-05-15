@@ -44,7 +44,7 @@ expr: '(' expr ')'                                                  # subExpr
     | literal                                                       # literalExpr
     | expr '.' (ID | funcCall)                                      # memberExpr
     | NEW newObject                                                 # newExpr
-    | expr '[' expr ']'                                             # arrExpr
+    | expr '[' expr ']'                                             # arrayExpr
     | expr op=('++' | '--')                                         # suffixExpr
     | op=('+' | '-' | '++' | '--') expr                             # prefixExpr
     | op=('~' | '!') expr                                           # prefixExpr
@@ -56,8 +56,8 @@ expr: '(' expr ')'                                                  # subExpr
     | expr op='&' expr                                              # binaryExpr
     | expr op='^' expr                                              # binaryExpr
     | expr op='|' expr                                              # binaryExpr
-    | expr op='&&' expr                                             # logicExpr
-    | expr op='||' expr                                             # logicExpr 
+    | expr op='&&' expr                                             # binaryExpr
+    | expr op='||' expr                                             # binaryExpr 
     | <assoc=right> expr '=' expr                                   # assignExpr
     ;
 

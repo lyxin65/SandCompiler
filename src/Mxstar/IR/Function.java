@@ -81,7 +81,7 @@ public class Function {
         for (BasicBlock bb: node.pred) {
             dfsrPostOrderonrCFG(bb);
         }
-        rPostOrderOnrCFG.add(bb);
+        rPostOrderOnrCFG.add(node);
     }
 
     private void dfsAllUsedGV(Function node) {
@@ -152,6 +152,14 @@ public class Function {
         dfsAllUsedGV(this);
     }
 
+    private LinkedList<PhysicalRegister> trans(LinkedList<Register> regs) {
+        LinkedList<PhysicalRegister> res = new LinkedList<>();
+        for(Register r : regs) {
+            res.add((PhysicalRegister)r);
+        }
+        return res;
+    }
+
     public void finishAllocate() {
         for (BasicBlock bb : basicblocks) {
             for (IRInstruction inst = bb.head; inst != null; inst = inst.next) {
@@ -160,7 +168,7 @@ public class Function {
                 }
                 if (inst instanceof Call) {
                     usedPR.addAll(RegisterSet.callerSave);
-                } else if (inst instanceof BinaryInst && isSpecialBinaryOp(((BinaryInst)inst).op) {
+                } else if (inst instanceof BinaryInst && isSpecialBinaryOp(((BinaryInst)inst).op)) {
                     if (((BinaryInst)inst).src instanceof Register) {
                         usedPR.add((PhysicalRegister)((BinaryInst)inst).src);
                     }

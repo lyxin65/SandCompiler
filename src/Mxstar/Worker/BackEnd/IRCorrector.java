@@ -10,11 +10,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class IRCorrector implements IIRVisitor {
-    IRProgram irProgram;
+    IRProgram ir;
 
     @Override
     public void visit(IRProgram program) {
-        this.irProgram = program;
+        this.ir = program;
         for (Function f: program.functions)
             f.accept(this);
     }
@@ -96,7 +96,7 @@ public class IRCorrector implements IIRVisitor {
             inst.prepend(new Move(inst.bb, vr, inst.src));
             inst.src = vr;
         }  else {
-            if (Config.allocator == Config.Allocator.NaiveAllocator) {
+            /*if (Config.allocator == Config.Allocator.NaiveAllocator) {
                 PhysicalRegister pdest = getPhysical(inst.dest);
                 PhysicalRegister psrc = getPhysical(inst.src);
                 if (pdest != null && inst.src instanceof Memory) {
@@ -108,7 +108,7 @@ public class IRCorrector implements IIRVisitor {
                     inst.prepend(new Move(inst.bb, vr, inst.dest));
                     inst.dest= vr;
                 }
-            }
+            }*/
         }
 
     }
@@ -145,7 +145,6 @@ public class IRCorrector implements IIRVisitor {
 
     @Override
     public void visit(Lea inst) {
-
     }
 
     @Override
@@ -157,8 +156,8 @@ public class IRCorrector implements IIRVisitor {
     public void visit(Call inst) {
         Function caller = inst.bb.function;
         Function callee = inst.func;
-        HashSet<VarSymbol> callerUsed = caller.usedGlobalVars;
-        HashSet<VarSymbol> calleeUsed = callee.recursiveUsedGlobalVars;
+        HashSet<VarSymbol> callerUsed = caller.usedGV;
+        HashSet<VarSymbol> calleeUsed = callee.allUsedGV;
         for (VarSymbol vs: callerUsed) {
             if (calleeUsed.contains(vs)) {
                 inst.prepend(new Move(inst.bb, vs.virtualRegister.spillPlace, vs.virtualRegister));

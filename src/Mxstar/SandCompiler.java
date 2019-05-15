@@ -75,7 +75,7 @@ public class SandCompiler {
         ir.accept(irCorrector);
 
         //  IR with VirtualRegister -> IR with PhysicalRegister
-        SimpleGraphAllocator simpleGraphAllocator = new SimpleGraphAllocator(irProgram);
+        SimpleGraphAllocator simpleGraphAllocator = new SimpleGraphAllocator(ir);
         simpleGraphAllocator.run();
 
         // IR with PhysicalRegister and StackFrame

@@ -74,7 +74,7 @@ public class Memory extends Address {
     }
 
     @Override
-    public void accept(IIRvisitor visitor) {
+    public void accept(IIRVisitor visitor) {
         visitor.visit(this);
     }
 

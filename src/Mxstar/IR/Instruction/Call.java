@@ -64,8 +64,8 @@ public class Call extends IRInstruction {
         LinkedList<StackSlot> slots = new LinkedList<>();
         slots.addAll(defaultGetStackSlots(dest));
         for (Operand opr: args) {
-            if (Opr instanceof StackSlot) {
-                slots.add((StackSlot)Opr);
+            if (opr instanceof StackSlot) {
+                slots.add((StackSlot)opr);
             }
         }
         return slots;

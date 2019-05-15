@@ -6,6 +6,7 @@ import Mxstar.IR.Instruction.*;
 import Mxstar.IR.Operand.*;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class LivenessAnalyzer {
     public static class Graph {
@@ -17,8 +18,8 @@ public class LivenessAnalyzer {
 
         Graph(Graph graph) {
             g = new HashMap<>();
-            for (VirtualRegister vr: graph.getAllRegsiters()) {
-                g.put(vr, new HashSet<>(g.getAdj(vr)));
+            for (VirtualRegister vr: graph.getAllRegisters()) {
+                g.put(vr, new HashSet<>(graph.getAdj(vr)));
             }
         }
 
@@ -60,7 +61,7 @@ public class LivenessAnalyzer {
         }
 
         boolean isLinked(VirtualRegister a, VirtualRegister b) {
-            return g.containsKey(a) && g.get(a).containsKey(b);
+            return g.containsKey(a) && g.get(a).contains(b);
         }
 
         void clear() {
@@ -76,11 +77,11 @@ public class LivenessAnalyzer {
         }
 
         Collection<VirtualRegister> getAdj(VirtualRegister a) {
-            return graph.getOrDefault(a, new HashSet<>());
+            return g.getOrDefault(a, new HashSet<>());
         }
 
         Collection<VirtualRegister> getAllRegisters() {
-            return graph.keySet();
+            return g.keySet();
         }
     }
 
@@ -114,7 +115,7 @@ public class LivenessAnalyzer {
                     bbUsedRegs.add(reg);
                 }
             }
-            bbDefinedRegs.addAll(trans(inst.getDefRegs));
+            bbDefinedRegs.addAll(trans(inst.getDefRegs()));
         }
         usedRegs.put(bb, bbUsedRegs);
         definedRegs.put(bb, bbDefinedRegs);
@@ -131,7 +132,7 @@ public class LivenessAnalyzer {
 
     public LinkedList<VirtualRegister> trans(Collection<Register> regs) {
         LinkedList<VirtualRegister> res = new LinkedList<>();
-        for (VirtualRegister reg: regs) {
+        for (Register reg: regs) {
             res.add((VirtualRegister)reg);
         }
         return res;

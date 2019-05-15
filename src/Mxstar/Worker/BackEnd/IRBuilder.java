@@ -110,16 +110,19 @@ public class IRBuilder implements IAstVisitor {
     }
 
     private boolean isVoidType(VarType type) {
-        return type instanceof BaseType && ((BaseType)type).name.equals("void");
+        return type instanceof BaseType && ((BaseType) type).name.equals("void");
     }
+
     private boolean intType(VarType type) {
-        return type instanceof BaseType && ((BaseType)type).name.equals("int");
+        return type instanceof BaseType && ((BaseType) type).name.equals("int");
     }
+
     private boolean isBoolType(VarType type) {
-        return type instanceof BaseType && ((BaseType)type).name.equals("bool");
+        return type instanceof BaseType && ((BaseType) type).name.equals("bool");
     }
+
     private boolean isStringType(VarType type) {
-        return type instanceof ClassType && ((ClassType)type).name.equals("string");
+        return type instanceof ClassType && ((ClassType) type).name.equals("string");
     }
 
     private void buildInitFunction(AstProgram node) {
@@ -128,22 +131,22 @@ public class IRBuilder implements IAstVisitor {
         library_init.usedGV = new HashSet<>(gst.globalInitUsedVars);
         BasicBlock enterBB = new BasicBlock(curFunction, "enterBB");
         curBB = curFunction.enterBB = enterBB;
-        for (VarDef vd: node.globalVars) {
+        for (VarDef vd : node.globalVars) {
             if (vd.init == null) {
                 continue;
             }
-            assign(vd.init, vd.symbol.VirtualRegister);
+            assign(vd.init, vd.symbol.virtualRegister);
         }
         curBB.append(new Call(curBB, vrax, functionMap.get("main")));
         curBB.append(new Return(curBB));
-        curFunction.leaveBB =  curBB;
+        curFunction.leaveBB = curBB;
         curFunction.finishBuild();
     }
 
     @Override
     public void visit(AstProgram node) {
         // VR for global vars
-        for (VarDef vd: node.globalVars) {
+        for (VarDef vd : node.globalVars) {
             StaticData data = new StaticData(vd.name, Config.REGISTER_WIDTH);
             VirtualRegister vr = new VirtualRegister(vd.name);
             vr.spillPlace = new Memory(data);
@@ -154,79 +157,72 @@ public class IRBuilder implements IAstVisitor {
         // define function
         LinkedList<FuncDef> funcDefs = new LinkedList<>();
         funcDefs.addAll(node.functions);
-        for (ClassDef cd: node.classes) {
+        for (ClassDef cd : node.classes) {
             if (cd.constructor != null) {
                 funcDefs.add(cd.constructor);
             }
             funcDefs.addAll(cd.methods);
         }
-        for (FuncDef fd: funcDefs) {
+        for (FuncDef fd : funcDefs) {
             funcDefMap.put(fd.symbol.name, fd);
         }
-        for (FuncDef fd: funcDefs) {
-            if (functionMap.containsKey(fd.symbol.name)) {
+        for (FuncDef fd : funcDefs) {
+            if (functionMap.containsKey(fd.symbol.name)) { // lib functions
                 continue;
             }
-            functionMap.put(fd.symbol.name, new Function(Function.Type.UserDefined, fd.symbol.returnType));
+            functionMap.put(fd.symbol.name, new Function(Function.Type.UserDefined, fd.symbol.name, !isVoidType(fd.symbol.returnType)));
         }
-        for (FuncDef fd: node.funcs) {
+        for (FuncDef fd : node.functions) {
             fd.accept(this);
         }
-        for (ClassDef cd: node.classes) {
-            cd.visit(this);
+        for (ClassDef cd : node.classes) {
+            cd.accept(this);
         }
 
-        for (Function func: functionMap.values()) {
+        for (Function func : functionMap.values()) {
             if (func.type == Function.Type.UserDefined) {
                 func.finishBuild();
             }
         }
 
         // add back opt
-        // for (FuncDef fd: node.funcs) {
-        //     if (deserveBackOptimization(fd)) {
-        //         addValueBackOptimizeCode(fd);
-        //     }
+        // for (FuncDef fd: node.functions) {
+        // if (deserveBackOptimization(fd)) {
+        // addValueBackOptimizeCode(fd);
+        // }
         // }
 
         buildInitFunction(node);
     }
 
     /*
-       private boolean deserveBackOptimization(FuncDef funcDef) {
-       Function function = functionMap.get(funcDef.symbol.name);
-       if (funcDef.name.equals("func")) return false;   //  hack it!
-       return  Config.useBackupOptimization
-       && funcDef.symbol.isGlobalFunction
-       && !function.hasOutput
-       && function.recursiveUsedGlobalVariables.isEmpty()
-       && function.parameters.size() == 1
-       && intType(funcDef.parameters.get(0).symbol.type);
-       }
-
-       private void addValueBackOptimizeCode(FuncDef funcDef) {
-       if (!deserveBackOptimization(funcDef)) return;
-       Function function = functionMap.get(funcDef.symbol.name);
-       BasicBlock bb = new BasicBlock(function, "backopt_entry");
-       BasicBlock hitBB = new BasicBlock(function, "backopt_hit");
-       VirtualRegister argu = new VirtualRegister("");
-       bb.append(new Push(bb, vrdi));
-       bb.append(new Move(bb, argu, vrdi));
-       bb.append(new Call(bb, vrax, library_hasValue, new FunctionAddress(function), argu));
-       bb.append(new Pop(bb, vrdi));
-       bb.append(new CJump(bb, vrax, CJump.CompareOp.NE, new Immediate(0), hitBB, function.enterBB));
-       hitBB.append(new Call(hitBB, vrax, library_getValue, new FunctionAddress(function), argu));
-       hitBB.append(new Jump(hitBB, function.leaveBB));
-       BasicBlock leaveBB = function.leaveBB;
-       leaveBB.prepend(new Call(leaveBB, vrax, library_setValue, new FunctionAddress(function), argu, vrax));
-       function.enterBB = bb;
-       function.finishBuild();
-       }
-       */
+     * private boolean deserveBackOptimization(FuncDef funcDef) { Function function
+     * = functionMap.get(funcDef.symbol.name); if (funcDef.name.equals("func"))
+     * return false; // hack it! return Config.useBackupOptimization &&
+     * funcDef.symbol.isGlobalFunction && !function.hasOutput &&
+     * function.recursiveUsedGlobalVariables.isEmpty() && function.parameters.size()
+     * == 1 && intType(funcDef.parameters.get(0).symbol.type); }
+     * 
+     * private void addValueBackOptimizeCode(FuncDef funcDef) { if
+     * (!deserveBackOptimization(funcDef)) return; Function function =
+     * functionMap.get(funcDef.symbol.name); BasicBlock bb = new
+     * BasicBlock(function, "backopt_entry"); BasicBlock hitBB = new
+     * BasicBlock(function, "backopt_hit"); VirtualRegister argu = new
+     * VirtualRegister(""); bb.append(new Push(bb, vrdi)); bb.append(new Move(bb,
+     * argu, vrdi)); bb.append(new Call(bb, vrax, library_hasValue, new
+     * FunctionAddress(function), argu)); bb.append(new Pop(bb, vrdi));
+     * bb.append(new CJump(bb, vrax, CJump.CompareOp.NE, new Immediate(0), hitBB,
+     * function.enterBB)); hitBB.append(new Call(hitBB, vrax, library_getValue, new
+     * FunctionAddress(function), argu)); hitBB.append(new Jump(hitBB,
+     * function.leaveBB)); BasicBlock leaveBB = function.leaveBB;
+     * leaveBB.prepend(new Call(leaveBB, vrax, library_setValue, new
+     * FunctionAddress(function), argu, vrax)); function.enterBB = bb;
+     * function.finishBuild(); }
+     */
 
     @Override
     public void visit(Definition node) {
-        assert(false);
+        assert false;
     }
 
     @Override
@@ -236,7 +232,7 @@ public class IRBuilder implements IAstVisitor {
         if (node.constructor != null) {
             node.constructor.accept(this);
         }
-        for (FuncDef fd: node.functions) {
+        for (FuncDef fd : node.methods) {
             fd.accept(this);
         }
         inClassDef = false;
@@ -248,13 +244,11 @@ public class IRBuilder implements IAstVisitor {
         curBB = curFunction.enterBB = new BasicBlock(curFunction, "enter");
 
         /**
-         *  Processes in a function:
-         *  save arguments in physical registers to virtual registers
-         *  load global variables in memory to virtual registers
-         *  function body
-         *  save global variables in virtual registers to memory
+         * Processes in a function: save arguments in physical registers to virtual
+         * registers load global variables in memory to virtual registers function body
+         * save global variables in virtual registers to memory
          *
-         *  callee and caller register saving code are added in StackFrameBuilder
+         * callee and caller register saving code are added in StackFrameBuilder
          */
 
         /** declare virtual registers for parameters */
@@ -264,7 +258,7 @@ public class IRBuilder implements IAstVisitor {
             curThisPointer = vthis;
         }
         inParameter = true;
-        for (VarDef vd: node.parameters) {
+        for (VarDef vd : node.parameters) {
             vd.accept(this);
         }
         inParameter = false;
@@ -279,12 +273,12 @@ public class IRBuilder implements IAstVisitor {
         }
 
         /* load global variable at first */
-        for (VarSymbol vs: node.symbol.usedGV) {
+        for (VarSymbol vs : node.symbol.usedGV) {
             curBB.append(new Move(curBB, vs.virtualRegister, vs.virtualRegister.spillPlace));
         }
 
         /* add default return */
-        for (Stmt stmt: node.body) {
+        for (Stmt stmt : node.body) {
             stmt.accept(this);
         }
         if (!(curBB.tail instanceof Return)) {
@@ -298,15 +292,15 @@ public class IRBuilder implements IAstVisitor {
 
         /* gather all return instructions to one */
         LinkedList<Return> returnInsts = new LinkedList<>();
-        for (BasicBlock bb: curFunction.basicblocks) {
+        for (BasicBlock bb : curFunction.basicblocks) {
             for (IRInstruction inst = bb.head; inst != null; inst = inst.next) {
                 if (inst instanceof Return)
-                    returnInsts.add((Return)inst);
+                    returnInsts.add((Return) inst);
             }
         }
 
         BasicBlock leaveBB = new BasicBlock(curFunction, "leaveBB");
-        for (Return retInst: returnInsts) {
+        for (Return retInst : returnInsts) {
             retInst.prepend(new Jump(retInst.bb, leaveBB));
             retInst.remove();
         }
@@ -315,7 +309,7 @@ public class IRBuilder implements IAstVisitor {
 
         /* save global variable */
         IRInstruction retInst = curFunction.leaveBB.tail;
-        for (VarSymbol vs: node.symbol.usedGV) {
+        for (VarSymbol vs : node.symbol.usedGV) {
             retInst.prepend(new Move(retInst.bb, vs.virtualRegister.spillPlace, vs.virtualRegister));
         }
 
@@ -352,10 +346,10 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(VarDef node) {
-        assert(curFunction != null);
+        assert curFunction != null;
         VirtualRegister vr = new VirtualRegister(node.name);
         if (inInline) {
-            inlineVariableRegisterStack.getLast().put(node.symbol.vr);
+            inlineVariableRegisterStack.getLast().put(node.symbol, vr);
             if (node.init != null) {
                 assign(node.init, vr);
             }
@@ -375,27 +369,27 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(TypeNode node) {
-        assert(false);
+        assert false;
     }
 
     @Override
-    public void visit(ArrayType node) {
-        assert(false);
+    public void visit(ArrayTypeNode node) {
+        assert false;
     }
 
     @Override
-    public void visit(BaseType node) {
-        assert(false);
+    public void visit(BaseTypeNode node) {
+        assert false;
     }
 
     @Override
-    public void visit(ClassType node) {
-        assert(false);
+    public void visit(ClassTypeNode node) {
+        assert false;
     }
 
     @Override
     public void visit(Stmt node) {
-        assert(false);
+        assert false;
     }
 
     @Override
@@ -455,8 +449,7 @@ public class IRBuilder implements IAstVisitor {
     public void visit(IfStmt node) {
         BasicBlock thenBB = new BasicBlock(curFunction, "ifThenBB");
         BasicBlock afterBB = new BasicBlock(curFunction, "ifAfterBB");
-        BasicBlock elseBB = node.elseStmt == null ? afterBB
-            : new BasicBlock(curFunction, "ifElseBB");
+        BasicBlock elseBB = node.elseStmt == null ? afterBB : new BasicBlock(curFunction, "ifElseBB");
         trueBBMap.put(node.condition, thenBB);
         falseBBMap.put(node.condition, elseBB);
         node.condition.accept(this);
@@ -485,7 +478,7 @@ public class IRBuilder implements IAstVisitor {
     public void visit(ReturnStmt node) {
         if (node.retExpr != null) {
             if (isBoolType(node.retExpr.type)) {
-                boolAssign(node.retExpr.vrax);
+                boolAssign(node.retExpr, vrax);
             } else {
                 node.retExpr.accept(this);
                 curBB.append(new Move(curBB, vrax, exprMap.get(node.retExpr)));
@@ -500,10 +493,10 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(BlockStmt node) {
-        for (Stmt stmt: node.stmts) {
+        for (Stmt stmt : node.statements) {
             stmt.accept(this);
         }
-        assert(false);
+        assert false;
     }
 
     @Override
@@ -518,17 +511,17 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(Expr node) {
-        assert(false);
+        assert false;
     }
 
     @Override
     public void visit(ID node) {
         Operand operand;
-        if (node.name.equals("this")) {  //  this pointer
+        if (node.name.equals("this")) { // this pointer
             operand = curThisPointer;
-        } else if (node.symbol.isClassField) {   //  this.xxx
+        } else if (node.symbol.isClassField) { // this.xxx
             String fieldName = node.name;
-            int offset = curClassSymbol.classSymbolTable.getVariableOffset(fieldName);
+            int offset = curClassSymbol.classSymbolTable.getVarOffset(fieldName);
             operand = new Memory(curThisPointer, new Immediate(offset));
         } else {
             if (inInline) {
@@ -536,40 +529,40 @@ public class IRBuilder implements IAstVisitor {
             } else {
                 operand = node.symbol.virtualRegister;
             }
-            if (node.symbol.isGlobalVariable) {
+            if (node.symbol.isGlobalVar) {
                 curFunction.usedGV.add(node.symbol);
             }
         }
         if (trueBBMap.containsKey(node)) {
-            curBB.append(new CJump(curBB, operand, CJump.CompareOp.NE,
-                        new Immediate(0), trueBBMap.get(node), falseBBMap.get(node)));
+            curBB.append(new CJump(curBB, operand, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node),
+                    falseBBMap.get(node)));
         } else {
             exprMap.put(node, operand);
-        } 
+        }
     }
 
     @Override
     public void visit(LiteralExpr node) {
         Operand operand;
         switch (node.typeName) {
-            case "int":
-                operand = new Immediate(Integer.valueOf(node.value));
-                break;
-            case "string": // TODO
-                StaticData data = new StaticData("staticString", node.value);
-                ir.staticData.add(data);
-                operand = data;
-                break;
-            case "bool":
-                curBB.append(new Jump(curBB, node.value.equals("true") ? trueBBMap.get(node)
-                            : falseBBMap.get(node)));
-                break;
-            case "null":
-                operand = new Immediate(0);
-                break;
-            default:
-                assert(false);
-                break;
+        case "int":
+            operand = new Immediate(Integer.valueOf(node.value));
+            break;
+        case "string": // TODO
+            StaticData data = new StaticData("staticString", node.value);
+            ir.staticData.add(data);
+            operand = data;
+            break;
+        case "bool":
+            curBB.append(new Jump(curBB, node.value.equals("true") ? trueBBMap.get(node) : falseBBMap.get(node)));
+            return;
+        case "null":
+            operand = new Immediate(0);
+            break;
+        default:
+            assert false;
+            operand = null;
+            break;
         }
         exprMap.put(node, operand);
     }
@@ -583,7 +576,7 @@ public class IRBuilder implements IAstVisitor {
 
         VirtualRegister base;
         if (baseAddr instanceof Register) {
-            base = (VirtualRegister)baseAddr;
+            base = (VirtualRegister) baseAddr;
         } else {
             base = new VirtualRegister("");
             curBB.append(new Move(curBB, base, baseAddr));
@@ -591,25 +584,28 @@ public class IRBuilder implements IAstVisitor {
         Memory memory;
 
         if (index instanceof Immediate) {
-            memory = new Memory(base, new Immediate(((Immediate)index).value * Config.REGISTER_WIDTH + Config.REGISTER_WIDTH));
+            memory = new Memory(base,
+                    new Immediate(((Immediate) index).value * Config.REGISTER_WIDTH + Config.REGISTER_WIDTH));
         } else if (index instanceof Register) {
-            memory = new Memory(base, (Register)index, Config.REGISTER_WIDTH, new Immediate(Config.REGISTER_WIDTH));
+            memory = new Memory(base, (Register) index, Config.REGISTER_WIDTH, new Immediate(Config.REGISTER_WIDTH));
         } else if (index instanceof Memory) {
             VirtualRegister vr = new VirtualRegister("");
             curBB.append(new Move(curBB, vr, index));
             memory = new Memory(base, vr, Config.REGISTER_WIDTH, new Immediate(Config.REGISTER_WIDTH));
         } else {
             memory = null;
-            assert(false);
+            assert false;
         }
         if (trueBBMap.containsKey(node)) {
-            curBB.append(new CJump(curBB, memory, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node), falseBBMap.get(node)));
+            curBB.append(new CJump(curBB, memory, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node),
+                    falseBBMap.get(node)));
         } else {
             exprMap.put(node, memory);
         }
     }
 
-    @Override public void visit(FuncCallExpr node) {
+    @Override
+    public void visit(FuncCallExpr node) {
         LinkedList<Operand> args = new LinkedList<>();
         if (!node.funcSymbol.isGlobalFunc) {
             args.add(curThisPointer);
@@ -625,7 +621,8 @@ public class IRBuilder implements IAstVisitor {
             curBB.append(new Call(curBB, vrax, functionMap.get(node.funcSymbol.name), args));
         }
         if (trueBBMap.containsKey(node)) {
-            curBB.append(new CJump(curBB, vrax, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node), falseBBMap.get(node)));
+            curBB.append(new CJump(curBB, vrax, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node),
+                    falseBBMap.get(node)));
         } else {
             if (!isVoidType(node.funcSymbol.returnType)) {
                 VirtualRegister vr = new VirtualRegister("");
@@ -646,12 +643,14 @@ public class IRBuilder implements IAstVisitor {
                 if (constructor != null) {
                     curBB.append(new Call(curBB, vrax, constructor, retAddr));
                 } else {
-                    if  (baseBytes == Config.REGISTER_WIDTH) {
+                    if (baseBytes == Config.REGISTER_WIDTH) {
                         curBB.append(new Move(curBB, new Memory(retAddr), new Immediate(0)));
                     } else if (baseBytes == Config.REGISTER_WIDTH * 2) {
-                        curBB.append(new BinaryInst(curBB, BinaryInst.BinaryOp.ADD, retAddr, new Immediate(Config.REGISTER_WIDTH)));
+                        curBB.append(new BinaryInst(curBB, BinaryInst.BinaryOp.ADD, retAddr,
+                                new Immediate(Config.REGISTER_WIDTH)));
                         curBB.append(new Move(curBB, new Memory(retAddr), new Immediate(0)));
-                        curBB.append(new BinaryInst(curBB, BinaryInst.BinaryOp.SUB, retAddr, new Immediate(Config.REGISTER_WIDTH)));
+                        curBB.append(new BinaryInst(curBB, BinaryInst.BinaryOp.SUB, retAddr,
+                                new Immediate(Config.REGISTER_WIDTH)));
                     } else {
                     }
                 }
@@ -662,7 +661,8 @@ public class IRBuilder implements IAstVisitor {
             VirtualRegister size = new VirtualRegister("");
             VirtualRegister bytes = new VirtualRegister("");
             curBB.append(new Move(curBB, size, dims.get(0)));
-            curBB.append(new Lea(curBB, bytes, new Memory(size, Config.REGISTER_WIDTH), new Immediate(Config.REGISTER_WIDTH)));
+            curBB.append(new Lea(curBB, bytes, new Memory(size, Config.REGISTER_WIDTH,
+                    new Immediate(Config.REGISTER_WIDTH))));
             curBB.append(new Call(curBB, vrax, external_malloc, bytes));
             curBB.append(new Move(curBB, addr, vrax));
             curBB.append(new Move(curBB, new Memory(addr), size));
@@ -677,7 +677,7 @@ public class IRBuilder implements IAstVisitor {
 
             if (dims.size() == 1) {
                 Operand pointer = allocateArray(new LinkedList<>(), baseBytes, constructor);
-                curBB.append(new Move(curBB, new Memory(addr, size, Config.REGISTER_WIDTH), pointer)); 
+                curBB.append(new Move(curBB, new Memory(addr, size, Config.REGISTER_WIDTH), pointer));
             } else {
                 LinkedList<Operand> remainDims = new LinkedList<>();
                 for (int i = 1; i < dims.size(); i++) {
@@ -698,7 +698,7 @@ public class IRBuilder implements IAstVisitor {
         Function constructor;
         if (node.restDimension == 0) {
             if (node.type instanceof ClassType) {
-                ClassType classType = (ClassType)node.type;
+                ClassType classType = (ClassType) node.type;
                 if (classType.name.equals("string")) {
                     constructor = null;
                 } else {
@@ -716,16 +716,17 @@ public class IRBuilder implements IAstVisitor {
             constructor = null;
         }
         LinkedList<Operand> dims = new LinkedList<>();
-        for (Expr expr: node.exprDimensions) {
+        for (Expr expr : node.exprDimensions) {
             expr.accept(this);
             dims.add(exprMap.get(expr));
         }
-        if (node.restDimension > 0 || node.typeNode instanceof BaseType) {
+        if (node.restDimension > 0 || node.typeNode instanceof BaseTypeNode) {
             Operand pointer = allocateArray(dims, 0, null);
             exprMap.put(node, pointer);
         } else {
-            int bytes = node.type instanceof ClassType && ((ClassType)node.type).names.equals("string")
-                ? Config.REGISTER_WIDTH : node.type.getBytes();
+            int bytes = node.type instanceof ClassType && ((ClassType) node.type).name.equals("string")
+                    ? Config.REGISTER_WIDTH
+                    : node.type.getBytes();
             Operand pointer = allocateArray(dims, bytes, constructor);
             exprMap.put(node, pointer);
         }
@@ -737,8 +738,10 @@ public class IRBuilder implements IAstVisitor {
             count += countOperations(expr);
         return count;
     }
+
     private int countOperations(Expr expr) {
-        if (expr == null) return 0;
+        if (expr == null)
+            return 0;
         int count = 0;
         if (expr instanceof ArrayExpr) {
             count += countOperations(((ArrayExpr) expr).address);
@@ -768,7 +771,8 @@ public class IRBuilder implements IAstVisitor {
     }
 
     private int countOperations(Stmt stmt) {
-        if (stmt == null) return 0;
+        if (stmt == null)
+            return 0;
         int count = 0;
         if (stmt instanceof IfStmt) {
             count += countOperations(((IfStmt) stmt).thenStmt);
@@ -782,18 +786,19 @@ public class IRBuilder implements IAstVisitor {
             count += countOperations(((ForStmt) stmt).updateStmt);
             count += countOperations(((ForStmt) stmt).body);
         } else if (stmt instanceof BlockStmt) {
-            count += countOperations(((BlockStmt) stmt).stmts);
+            count += countOperations(((BlockStmt) stmt).statements);
         } else if (stmt instanceof ReturnStmt) {
             count += countOperations(((ReturnStmt) stmt).retExpr);
         } else if (stmt instanceof ExprStmt) {
             count += countOperations(((ExprStmt) stmt).expr);
-        } else if (stmt instanceof VarDeclStmt) {
-            count += countOperations(((VarDeclStmt) stmt).declaration.init);
+        } else if (stmt instanceof VarDefStmt) {
+            count += countOperations(((VarDefStmt) stmt).varDef.init);
         } else {
             count += 1;
         }
         return count;
     }
+
     private int countOperations(List<Stmt> stmts) {
         int count = 0;
         for (Stmt s : stmts)
@@ -802,22 +807,25 @@ public class IRBuilder implements IAstVisitor {
     }
 
     private boolean deserveInline(String name) {
-        if (!Config.useInlineOptimization) return false;
-        if (!funcDefMap.containsKey(name))   //  library function
+        if (!Config.useInlineOptimization)
+            return false;
+        if (!funcDefMap.containsKey(name)) // library function
             return false;
         FuncDef funcDef = funcDefMap.get(name);
-        if (!funcDef.symbol.usedGlobalVariables.isEmpty())   //  used global variable
+        if (!funcDef.symbol.usedGV.isEmpty()) // used global variable
             return false;
-        if (!funcDef.symbol.isGlobalFunction)    //  is a method
+        if (!funcDef.symbol.isGlobalFunc) // is a method
             return false;
         List<Stmt> body = funcDef.body;
         if (!operationsCountMap.containsKey(funcDef.symbol))
             operationsCountMap.put(funcDef.symbol, countOperations(body));
-        if (operationsCountMap.get(funcDef.symbol) >= Config.inlineOperationsThreshold) return false;
+        if (operationsCountMap.get(funcDef.symbol) >= Config.inlineOperationsThreshold)
+            return false;
         if (inlineVariableRegisterStack.size() >= Config.inlineMaxDepth)
             return false;
         return true;
     }
+
     private void doInline(String name, LinkedList<Operand> arguments) {
         FuncDef funcDef = funcDefMap.get(name);
         inlineVariableRegisterStack.addLast(new HashMap<>());
@@ -862,17 +870,17 @@ public class IRBuilder implements IAstVisitor {
         node.object.accept(this);
         curBB.append(new Move(curBB, baseAddr, exprMap.get(node.object)));
 
-        if (node.object.type instanceof ArrayType) { //  for size
+        if (node.object.type instanceof ArrayType) { // for size
             exprMap.put(node, new Memory(baseAddr));
         } else if (node.object.type instanceof ClassType) {
             ClassType classType = (ClassType) node.object.type;
             Operand operand;
             if (node.fieldAccess != null) {
                 String fieldName = node.fieldAccess.name;
-                int offset = classType.symbol.classSymbolTable.getVariableOffset(fieldName);
+                int offset = classType.symbol.classSymbolTable.getVarOffset(fieldName);
                 operand = new Memory(baseAddr, new Immediate(offset));
             } else {
-                Function function = functionMap.get(node.methodCall.functionSymbol.name);
+                Function function = functionMap.get(node.methodCall.funcSymbol.name);
                 LinkedList<Operand> arguments = new LinkedList<>();
                 arguments.add(baseAddr);
                 for (Expr expr : node.methodCall.arguments) {
@@ -880,12 +888,12 @@ public class IRBuilder implements IAstVisitor {
                     Operand arg = exprMap.get(expr);
                     arguments.add(arg);
                 }
-                if (deserveInline(node.methodCall.functionSymbol.name)) {
-                    doInline(node.methodCall.functionSymbol.name, arguments);
+                if (deserveInline(node.methodCall.funcSymbol.name)) {
+                    doInline(node.methodCall.funcSymbol.name, arguments);
                 } else {
                     curBB.append(new Call(curBB, vrax, function, arguments));
                 }
-                if (!isVoidType(node.methodCall.functionSymbol.returnType)) {
+                if (!isVoidType(node.methodCall.funcSymbol.returnType)) {
                     VirtualRegister retValue = new VirtualRegister("");
                     curBB.append(new Move(curBB, retValue, vrax));
                     operand = retValue;
@@ -894,7 +902,8 @@ public class IRBuilder implements IAstVisitor {
                 }
             }
             if (trueBBMap.containsKey(node)) {
-                curBB.append(new CJump(curBB, operand, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node), falseBBMap.get(node)));
+                curBB.append(new CJump(curBB, operand, CJump.CompareOp.NE, new Immediate(0), trueBBMap.get(node),
+                        falseBBMap.get(node)));
             } else {
                 exprMap.put(node, operand);
             }
@@ -913,33 +922,37 @@ public class IRBuilder implements IAstVisitor {
         }
         node.expr.accept(this);
         Operand operand = exprMap.get(node.expr);
-        switch(node.op) {
-            case "v++": case "v--": {
-                assert operand instanceof Address;
-                VirtualRegister oldValue = new VirtualRegister("");
-                curBB.append(new Move(curBB, oldValue, operand));
-                curBB.append(new UnaryInst(curBB, node.op.equals("v++") ? UnaryInst.UnaryOp.INC : UnaryInst.UnaryOp.DEC, (Address) operand));
-                exprMap.put(node, oldValue);
-            }
+        switch (node.op) {
+        case "v++":
+        case "v--": {
+            assert operand instanceof Address;
+            VirtualRegister oldValue = new VirtualRegister("");
+            curBB.append(new Move(curBB, oldValue, operand));
+            curBB.append(new UnaryInst(curBB, node.op.equals("v++") ? UnaryInst.UnaryOp.INC : UnaryInst.UnaryOp.DEC,
+                    (Address) operand));
+            exprMap.put(node, oldValue);
+        }
             break;
-            case "++v": case "--v": {
-                assert operand instanceof Address;
-                curBB.append(new UnaryInst(curBB, node.op.equals("++v") ? UnaryInst.UnaryOp.INC : UnaryInst.UnaryOp.DEC, (Address) operand));
-                exprMap.put(node, operand);
-            }
+        case "++v":
+        case "--v":
+            assert operand instanceof Address;
+            curBB.append(new UnaryInst(curBB, node.op.equals("++v") ? UnaryInst.UnaryOp.INC : UnaryInst.UnaryOp.DEC,
+                    (Address) operand));
+            exprMap.put(node, operand);
             break;
-            case "+": {
-                exprMap.put(node, operand);
-            }
+        case "+":
+            exprMap.put(node, operand);
             break;
-            case "-": case "~":{
-                VirtualRegister vr = new VirtualRegister("");
-                curBB.append(new Move(curBB, vr, operand));
-                curBB.append(new UnaryInst(curBB, node.op.equals("-") ? UnaryInst.UnaryOp.NEG : UnaryInst.UnaryOp.NOT, vr));
-                exprMap.put(node, vr);
-            }
+        case "-":
+        case "~": {
+            VirtualRegister vr = new VirtualRegister("");
+            curBB.append(new Move(curBB, vr, operand));
+            curBB.append(new UnaryInst(curBB, node.op.equals("-") ? UnaryInst.UnaryOp.NEG : UnaryInst.UnaryOp.NOT, vr));
+            exprMap.put(node, vr);
+        }
             break;
-            default: assert false;
+        default:
+            assert false;
         }
     }
 
@@ -969,17 +982,44 @@ public class IRBuilder implements IAstVisitor {
         BinaryInst.BinaryOp bop = null;
         boolean isSpecial = false;
         boolean isRevertable = false;
-        switch(op) {
-            case "*": bop = BinaryInst.BinaryOp.MUL; isSpecial = true; break;
-            case "/": bop = BinaryInst.BinaryOp.DIV; isSpecial = true; break;
-            case "%": bop = BinaryInst.BinaryOp.MOD; isSpecial = true; break;
-            case "+": bop = BinaryInst.BinaryOp.ADD; isRevertable = true; break;
-            case "-": bop = BinaryInst.BinaryOp.SUB; break;
-            case ">>": bop = BinaryInst.BinaryOp.SAR; break;
-            case "<<": bop = BinaryInst.BinaryOp.SAL; break;
-            case "&": bop = BinaryInst.BinaryOp.AND; isRevertable = true; break;
-            case "|": bop = BinaryInst.BinaryOp.OR; isRevertable = true; break;
-            case "^": bop = BinaryInst.BinaryOp.XOR; isRevertable = true; break;
+        switch (op) {
+        case "*":
+            bop = BinaryInst.BinaryOp.MUL;
+            isSpecial = true;
+            break;
+        case "/":
+            bop = BinaryInst.BinaryOp.DIV;
+            isSpecial = true;
+            break;
+        case "%":
+            bop = BinaryInst.BinaryOp.MOD;
+            isSpecial = true;
+            break;
+        case "+":
+            bop = BinaryInst.BinaryOp.ADD;
+            isRevertable = true;
+            break;
+        case "-":
+            bop = BinaryInst.BinaryOp.SUB;
+            break;
+        case ">>":
+            bop = BinaryInst.BinaryOp.SAR;
+            break;
+        case "<<":
+            bop = BinaryInst.BinaryOp.SAL;
+            break;
+        case "&":
+            bop = BinaryInst.BinaryOp.AND;
+            isRevertable = true;
+            break;
+        case "|":
+            bop = BinaryInst.BinaryOp.OR;
+            isRevertable = true;
+            break;
+        case "^":
+            bop = BinaryInst.BinaryOp.XOR;
+            isRevertable = true;
+            break;
         }
         lhs.accept(this);
         Operand olhs = exprMap.get(lhs);
@@ -1014,7 +1054,7 @@ public class IRBuilder implements IAstVisitor {
                 curBB.append(new Move(curBB, vrax, olhs));
                 curBB.append(new BinaryInst(curBB, bop, null, orhs));
                 curBB.append(new Move(curBB, result, vrax));
-            } else {    //  op.equals("/") || op.equals("%")
+            } else { // op.equals("/") || op.equals("%")
                 curBB.append(new Move(curBB, vrax, olhs));
                 curBB.append(new Cdq(curBB));
                 curBB.append(new BinaryInst(curBB, bop, null, orhs));
@@ -1027,6 +1067,7 @@ public class IRBuilder implements IAstVisitor {
         }
         return result;
     }
+
     private void doLogicalBinary(String op, Expr lhs, Expr rhs, BasicBlock trueBB, BasicBlock falseBB) {
         BasicBlock checkSecondBB = new BasicBlock(curFunction, "secondConditionBB");
         if (op.equals("&&")) {
@@ -1042,6 +1083,7 @@ public class IRBuilder implements IAstVisitor {
         falseBBMap.put(rhs, falseBB);
         rhs.accept(this);
     }
+
     private void doRelationBinary(String op, Expr lhs, Expr rhs, BasicBlock trueBB, BasicBlock falseBB) {
         lhs.accept(this);
         Operand olhs = exprMap.get(lhs);
@@ -1049,15 +1091,28 @@ public class IRBuilder implements IAstVisitor {
         Operand orhs = exprMap.get(rhs);
 
         CJump.CompareOp cop = null;
-        switch(op) {
-            case ">": cop = CJump.CompareOp.G; break;
-            case "<": cop = CJump.CompareOp.L; break;
-            case ">=": cop = CJump.CompareOp.GE; break;
-            case "<=": cop = CJump.CompareOp.LE; break;
-            case "==": cop = CJump.CompareOp.E; break;
-            case "!=": cop = CJump.CompareOp.NE; break;
+        switch (op) {
+        case ">":
+            cop = CJump.CompareOp.G;
+            break;
+        case "<":
+            cop = CJump.CompareOp.L;
+            break;
+        case ">=":
+            cop = CJump.CompareOp.GE;
+            break;
+        case "<=":
+            cop = CJump.CompareOp.LE;
+            break;
+        case "==":
+            cop = CJump.CompareOp.E;
+            break;
+        case "!=":
+            cop = CJump.CompareOp.NE;
+            break;
         }
-        if (lhs.type instanceof ClassType && ((ClassType) lhs.type).name.equals("string")) { //  str (<|<=|>|>=|==|!=) str
+        if (lhs.type instanceof ClassType && ((ClassType) lhs.type).name.equals("string")) { // str (<|<=|>|>=|==|!=)
+                                                                                             // str
             VirtualRegister scr = new VirtualRegister("");
             curBB.append(new Call(curBB, vrax, library_stringCompare, olhs, orhs));
             curBB.append(new Move(curBB, scr, vrax));
@@ -1074,23 +1129,37 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(BinaryExpr node) {
-        switch(node.op) {
-            case "*": case "/": case "%": case "+": case "-":
-            case ">>": case "<<": case "&": case "|": case "^":
-                if (node.op.equals("+") && isStringType(node.type)) {
-                    exprMap.put(node, doStringConcate(node.lhs, node.rhs));
-                } else {
-                    exprMap.put(node, doArithmeticBinary(node.op, assignToMap.get(node), node.lhs, node.rhs));
-                }
-                break;
-            case "<": case ">": case "==": case ">=": case "<=": case "!=":
-                doRelationBinary(node.op, node.lhs, node.rhs, trueBBMap.get(node), falseBBMap.get(node));
-                break;
-            case "&&": case "||":
-                doLogicalBinary(node.op, node.lhs, node.rhs, trueBBMap.get(node), falseBBMap.get(node));
-                break;
-            default:
-                assert false;
+        switch (node.op) {
+        case "*":
+        case "/":
+        case "%":
+        case "+":
+        case "-":
+        case ">>":
+        case "<<":
+        case "&":
+        case "|":
+        case "^":
+            if (node.op.equals("+") && isStringType(node.type)) {
+                exprMap.put(node, doStringConcate(node.lhs, node.rhs));
+            } else {
+                exprMap.put(node, doArithmeticBinary(node.op, assignMap.get(node), node.lhs, node.rhs));
+            }
+            break;
+        case "<":
+        case ">":
+        case "==":
+        case ">=":
+        case "<=":
+        case "!=":
+            doRelationBinary(node.op, node.lhs, node.rhs, trueBBMap.get(node), falseBBMap.get(node));
+            break;
+        case "&&":
+        case "||":
+            doLogicalBinary(node.op, node.lhs, node.rhs, trueBBMap.get(node), falseBBMap.get(node));
+            break;
+        default:
+            assert false;
         }
     }
 
@@ -1098,12 +1167,28 @@ public class IRBuilder implements IAstVisitor {
     public void visit(AssignExpr node) {
         node.lhs.accept(this);
         Operand lvalue = exprMap.get(node.lhs);
-        assert(lvalue instanceof Address);
-        assign(node.rhs, (Address)lvalue);
+        assert lvalue instanceof Address;
+        assign(node.rhs, (Address) lvalue);
     }
 
     @Override
     public void visit(EmptyStmt node) {
         return;
+    }
+
+
+    @Override
+    public void visit(PassStmt node) {
+        return;
+    }
+
+    @Override
+    public void visit(PrefixExpr node) {
+        assert false;
+    }
+
+    @Override
+    public void visit(SuffixExpr node) {
+        assert false;
     }
 }

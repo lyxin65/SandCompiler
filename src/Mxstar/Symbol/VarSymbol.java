@@ -1,6 +1,7 @@
 package Mxstar.Symbol;
 
 import Mxstar.AST.TokenLocation;
+import Mxstar.IR.Operand.VirtualRegister;
 
 public class VarSymbol {
     public String name;

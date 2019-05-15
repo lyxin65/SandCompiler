@@ -225,7 +225,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             registerClass(d);
         for (ClassDef d : node.classes)
             registerClassFuncs(d);
-        for (FuncDef d : node.funcs)
+        for (FuncDef d : node.functions)
             registerFunc(d, null);
         if (errorRecorder.errorOccured()) return;
         for (ClassDef d : node.classes)
@@ -243,7 +243,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             defineVar(d);
         for (ClassDef d : node.classes)
             defineClassFuncs(d);
-        for (FuncDef d : node.funcs)
+        for (FuncDef d : node.functions)
             defineFunc(d, null);
         */
     }
@@ -332,7 +332,7 @@ public class SymbolTableBuilder implements IAstVisitor {
 
     @Override
     public void visit(VarDefStmt node) {
-        node.def.accept(this);
+        node.varDef.accept(this);
     }
 
     @Override
@@ -359,7 +359,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             if (curFunc == null) {
                 globalSymbolTable.globalInitUsedVars.add(symbol);
             } else {
-                curFunc.usedGlobalVars.add(symbol);
+                curFunc.usedGV.add(symbol);
                 curFunc.withSideEffect = true;
             }
         }
@@ -418,7 +418,7 @@ public class SymbolTableBuilder implements IAstVisitor {
     public void visit(NewExpr node) {
         for (Expr e : node.exprDimensions)
             e.accept(this);
-        int dimension = node.exprDimensions.size() + node.restDemension;
+        int dimension = node.exprDimensions.size() + node.restDimension;
         node.type = resolveVarType(node.typeNode);
         if (node.type == null) {
             errorRecorder.addRecord(node.typeNode.location, "can not resolve the type");
@@ -442,9 +442,9 @@ public class SymbolTableBuilder implements IAstVisitor {
             return;
         }
         if (node.object.type instanceof ArrayType) {
-            ArrayType arrayType = (ArrayType)node.object.type;
+            // ArrayType arrayType = (ArrayType)node.object.type;
             if (node.methodCall == null || !node.methodCall.funcName.equals("size")) {
-                errorRecorder.addRecord(node.methodCall.location, "array type can only call size method");
+                errorRecorder.addRecord(node.location, "array type can only call size method");
                 node.type = null;
             } else {
                 node.type = new BaseType("int", globalSymbolTable.getBaseSymbol("int"));

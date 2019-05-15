@@ -37,7 +37,7 @@ public class BasicBlock {
             return;
         }
         if (head == null) {
-            inst.pre = inst.nxt = null;
+            inst.prev = inst.next = null;
             head = tail = inst;
         } else {
             tail.append(inst);

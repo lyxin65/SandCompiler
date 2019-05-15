@@ -51,7 +51,7 @@ public class Lea extends IRInstruction {
     }
 
     @Override
-    public void accept(Mstar.IR.IIRVisitor visitor) {
+    public void accept(Mxstar.IR.IIRVisitor visitor) {
         visitor.visit(this);
     }
 

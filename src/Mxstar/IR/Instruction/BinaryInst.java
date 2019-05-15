@@ -5,12 +5,12 @@ import Mxstar.IR.IIRVisitor;
 import Mxstar.IR.Operand.*;
 
 import java.util.HashMap;
-import Java.util.LinkedList;
+import java.util.LinkedList;
 
 import static Mxstar.IR.RegisterSet.vrax;
 import static Mxstar.IR.RegisterSet.vrdx;
 
-public class BinaryInstruction extends IRInstruction {
+public class BinaryInst extends IRInstruction {
     public enum BinaryOp {
         ADD, SUB, MUL, DIV, MOD, SAL, SAR, AND, OR, XOR
     }
@@ -18,7 +18,7 @@ public class BinaryInstruction extends IRInstruction {
     public Address dest;
     public Operand src;
 
-    public BinaryInstruction(BasicBlock bb, BinaryOp op, Address dest, Operand src) {
+    public BinaryInst(BasicBlock bb, BinaryOp op, Address dest, Operand src) {
         super(bb);
         this.op = op;
         this.dest = dest;

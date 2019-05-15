@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class SymbolTable {
     public Map<String,VarSymbol> vars;
-    public Map<String,FuncSymbol> funcs;
+    public Map<String,FuncSymbol> functions;
     public SymbolTable parent;
     public List<SymbolTable> children;
     public Map<String, Integer> offsets;
@@ -19,7 +19,7 @@ public class SymbolTable {
 
     public SymbolTable(SymbolTable parent) {
         this.vars = new LinkedHashMap<>();
-        this.funcs = new LinkedHashMap<>();
+        this.functions = new LinkedHashMap<>();
         this.parent = parent;
         this.children = new LinkedList<>();
         this.offsets = new OrderedHashMap<>();
@@ -36,8 +36,8 @@ public class SymbolTable {
     public int getVarOffset(String name) {
         return offsets.get(name);
     }
-    public FuncSymbol getFuncSymbol(String name) { return funcs.get(name); }
+    public FuncSymbol getFuncSymbol(String name) { return functions.get(name); }
     public void putFuncSymbol(String name, FuncSymbol symbol) {
-        funcs.put(name, symbol);
+        functions.put(name, symbol);
     }
 }

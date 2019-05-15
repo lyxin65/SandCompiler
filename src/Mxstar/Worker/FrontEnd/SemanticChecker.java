@@ -22,7 +22,7 @@ public class SemanticChecker implements IAstVisitor {
         for (VarDef d: node.globalVars) {
             d.accept(this);
         }
-        for (FuncDef d: node.funcs) {
+        for (FuncDef d: node.functions) {
             d.accept(this);
         }
         for (ClassDef d: node.classes) {
@@ -355,7 +355,7 @@ public class SemanticChecker implements IAstVisitor {
 
     @Override
     public void visit(VarDefStmt node) {
-        node.def.accept(this);
+        node.varDef.accept(this);
     }
 
     @Override
