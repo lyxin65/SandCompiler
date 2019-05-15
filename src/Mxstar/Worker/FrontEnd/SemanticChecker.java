@@ -232,11 +232,11 @@ public class SemanticChecker implements IAstVisitor {
                     if(!isInt && !isString)
                         typeError = true;
                     break;
-//                //  for bool
-//                case "&&": case "||":
-//                    if(!isBool)
-//                        typeError = true;
-//                    break;
+                //  for bool
+                case "&&": case "||":
+                    if(!isBool)
+                        typeError = true;
+                    break;
                 //  for anything
                 case "==": case "!=":
                     break;
@@ -289,7 +289,54 @@ public class SemanticChecker implements IAstVisitor {
     }
 
     @Override
+    public void visit(UnaryExpr node) {
+        assert false;
+        node.expr.accept(this);
+        boolean modifiableError = false;
+        boolean typeError = false;
+        boolean isInt = isIntType(node.expr.type);
+        boolean isBool = isBoolType(node.expr.type);
+        switch (node.op) {
+            case "++v":
+            case "--v":
+                if (!node.expr.modifiable)
+                    modifiableError = true;
+                if (!isInt)
+                    typeError = true;
+                node.modifiable = true;
+                break;
+            case "!":
+                if (!isBool)
+                    typeError = true;
+                node.modifiable = false;
+                break;
+            case "~":
+            case "-":
+                if (!isInt)
+                    typeError = true;
+                node.modifiable = false;
+                break;
+            case "v++":
+            case "v--":
+                if (!node.expr.modifiable)
+                    modifiableError = true;
+                if (!isInt)
+                    typeError = true;
+                node.modifiable = false;
+                break;
+            default:
+                assert false;
+        }
+        if (typeError) {
+            recorder.addRecord(node.location, "the type can not do this operation");
+        } else if (modifiableError) {
+            recorder.addRecord(node.location, "the expression is not modifiable");
+        }
+    }
+
+    @Override
     public void visit(PrefixExpr node) {
+        assert false;
         node.expr.accept(this);
         boolean modifiableError = false;
         boolean typeError = false;
@@ -330,6 +377,7 @@ public class SemanticChecker implements IAstVisitor {
 
     @Override
     public void visit(SuffixExpr node) {
+        assert false;
         node.expr.accept(this);
         boolean modifiableError = false;
         boolean typeError = false;
@@ -362,7 +410,7 @@ public class SemanticChecker implements IAstVisitor {
     public void visit(LiteralExpr node) {
         node.modifiable = false;
     }
-
+/*
     @Override
     public void visit(LogicExpr node) {
         node.lhs.accept(this);
@@ -389,7 +437,7 @@ public class SemanticChecker implements IAstVisitor {
         }
         node.modifiable = false;
     }
-
+*/
     @Override
     public void visit(BaseTypeNode node) {
 

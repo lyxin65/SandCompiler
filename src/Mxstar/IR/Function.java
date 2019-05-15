@@ -6,7 +6,6 @@ import Mxstar.IR.Operand.Register;
 import Mxstar.IR.Operand.VirtualRegister;
 import Mxstar.Symbol.VarSymbol;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 

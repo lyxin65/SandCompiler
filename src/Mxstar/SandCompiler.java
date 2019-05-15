@@ -1,6 +1,5 @@
 package Mxstar;
 
-import Mxstar.Symbol.SymbolTable;
 import Mxstar.Worker.ErrorRecorder;
 import Mxstar.Worker.FrontEnd.*;
 import Mxstar.Worker.BackEnd.*;
@@ -17,10 +16,12 @@ import static java.lang.System.exit;
 
 public class SandCompiler {
     public static void main(String[] args) throws IOException {
-        InputStream is = System.in;
+        // InputStream is = System.in;
+        InputStream is = new FileInputStream("program.cpp");
         ANTLRInputStream input = new ANTLRInputStream(is);
         MxstarLexer lexer = new MxstarLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
+        RegisterSet.init();
 
         ErrorRecorder recorder = new ErrorRecorder();
 
@@ -70,6 +71,14 @@ public class SandCompiler {
         IRBuilder irBuilder = new IRBuilder(globalSymbolTable);
         ast.accept(irBuilder);
         IRProgram ir = irBuilder.ir;
+
+        if (Config.printIR) {
+            IRPrinter irPrinter = new IRPrinter();
+            irPrinter.showNasm = false;
+            irPrinter.showHeader = false;
+            irPrinter.visit(ir);
+            irPrinter.printTo(System.err);
+        }
         
         IRCorrector irCorrector = new IRCorrector();
         ir.accept(irCorrector);
@@ -78,9 +87,26 @@ public class SandCompiler {
         SimpleGraphAllocator simpleGraphAllocator = new SimpleGraphAllocator(ir);
         simpleGraphAllocator.run();
 
+        if (Config.printIRAfterAllocator) {
+            IRPrinter irPrinter = new IRPrinter();
+            irPrinter.showNasm = false;
+            irPrinter.showHeader = false;
+            irPrinter.visit(ir);
+            irPrinter.printTo(System.err);
+        }
+
         // IR with PhysicalRegister and StackFrame
         StackFrameBuilder stackFrameBuilder = new StackFrameBuilder(ir);
         stackFrameBuilder.run();
+
+        if (Config.printIRWithFrame) {
+            IRPrinter irPrinter = new IRPrinter();
+            irPrinter.showNasm = true;
+            irPrinter.showHeader = false;
+            irPrinter.visit(ir);
+            irPrinter.printTo(System.err);
+        }
+
 
         if (Config.printToAsmFile) {
             IRPrinter irPrinter = new IRPrinter();

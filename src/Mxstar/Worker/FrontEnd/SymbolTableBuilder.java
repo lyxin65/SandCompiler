@@ -243,7 +243,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             defineVar(d);
         for (ClassDef d : node.classes)
             defineClassFuncs(d);
-        for (FuncDef d : node.functions)
+        for (FuncDef d : node.funcs)
             defineFunc(d, null);
         */
     }
@@ -482,14 +482,23 @@ public class SymbolTableBuilder implements IAstVisitor {
         }
     }
 
+
+    @Override
+    public void visit(UnaryExpr node) {
+        node.expr.accept(this);
+        node.type = node.expr.type;
+    }
+
     @Override
     public void visit(PrefixExpr node) {
+        assert false;
         node.expr.accept(this);
         node.type = node.expr.type;
     }
 
     @Override
     public void visit(SuffixExpr node) {
+        assert false;
         node.expr.accept(this);
         node.type = node.expr.type;
     }
@@ -512,7 +521,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             node.type = node.lhs.type;
         }
     }
-
+/*
     @Override
     public void visit(LogicExpr node) {
         node.lhs.accept(this);
@@ -523,7 +532,7 @@ public class SymbolTableBuilder implements IAstVisitor {
             node.type = node.lhs.type;
         }
     }
-
+*/
     @Override
     public void visit(AssignExpr node) {
         node.lhs.accept(this);
