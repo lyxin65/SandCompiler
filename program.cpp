@@ -1,14 +1,16 @@
-class C2 {
-    int x;
-    int y;
-    int z;
-}
-
 int main() {
-    C2 obj = new C2;
-    obj.x = 10;
-    obj.y = 20;
-    obj.z = 40;
-    return obj.x + obj.y + obj.z;
-}
+    int a = 5;
+    int b = 0;
+    int c;
+    if (b != 0 && a/b != 1) {
+        c = 10;
+    } else {
+        c = 20;
+    }
 
+    if (!(c == 10 && a/b == 0 && a == 5))
+        c = 30;
+
+    println(toString(c));
+    return c;
+}

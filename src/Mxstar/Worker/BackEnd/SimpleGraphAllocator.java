@@ -196,13 +196,6 @@ public class SimpleGraphAllocator {
             }
         }
     }
-    private LinkedList<PhysicalRegister> tryTrans(LinkedList<Register> regs) {
-        LinkedList<PhysicalRegister> res = new LinkedList<>();
-        for(Register r : regs) {
-            res.add((PhysicalRegister)r);
-        }
-        return res;
-    }
     private void replaceRegisers() {
         HashMap<Register,Register> renameMap = new HashMap<>();
         for(HashMap.Entry<VirtualRegister,PhysicalRegister> entry : colors.entrySet())
@@ -210,15 +203,13 @@ public class SimpleGraphAllocator {
         for(BasicBlock bb : function.basicblocks)
             for(IRInstruction inst = bb.head; inst != null; inst = inst.next) {
                 inst.renameUseReg(renameMap);
-               // tryTrans(inst.getUseRegs());
                 inst.renameDefReg(renameMap);
-               // tryTrans(inst.getDefRegs());
             }
     }
     private void processFunction() {
         orignGraph = new Graph();
         while(true) {
-            showFunction(function);
+            //showFunction(function);
 
             livenessAnalyzer.getInferenceGraph(function, orignGraph, null);
             graph = new Graph(orignGraph);
@@ -238,9 +229,9 @@ public class SimpleGraphAllocator {
 
         function.finishAllocate();
 
-        irPrinter.init();
-        irPrinter.visit(function);
-        irPrinter.printTo(System.err);
+        //irPrinter.init();
+        //irPrinter.visit(function);
+        //irPrinter.printTo(System.err);
     }
 
 }

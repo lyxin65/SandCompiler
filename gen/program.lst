@@ -897,7 +897,7 @@
    897                                  
    898                                  main:
    899 00000000 31C0                            xor     eax, eax
-   900 00000002 E9(7E090000)                    jmp     __init
+   900 00000002 E9(A3090000)                    jmp     __init
    901                                  
    902                                  
    903                                  
@@ -912,43 +912,57 @@
    912                                  
    913                                  ;=====================================================================
    914                                  	 section .text
-   915                                  _min:
+   915                                  _main:
    916                                  	b0:
    917 00000938 55                      	push rbp
    918 00000939 4889E5                  	mov rbp, rsp
-   919 0000093C 4889F9                  	mov rcx, rdi
-   920 0000093F 4889F0                  	mov rax, rsi
-   921 00000942 4839C1                  	cmp rcx, rax
-   922 00000945 7E02                    	jle b1
-   923                                  	b2:
-   924 00000947 EB03                    	jmp b3
-   925                                  	b1:
-   926 00000949 4889C8                  	mov rax, rcx
-   927                                  	b3:
-   928 0000094C C9                      	leave
-   929 0000094D C3                      	ret 
-   930                                  _main:
-   931                                  	b4:
-   932 0000094E 55                      	push rbp
-   933 0000094F 4889E5                  	mov rbp, rsp
-   934 00000952 B90A000000              	mov rcx, 10
-   935 00000957 B814000000              	mov rax, 20
-   936 0000095C 4889C6                  	mov rsi, rax
-   937 0000095F 4889CF                  	mov rdi, rcx
-   938 00000962 E8D1FFFFFF              	call _min
-   939 00000967 4889C7                  	mov rdi, rax
-   940 0000096A E881F9FFFF              	call __toString
-   941 0000096F 4889C7                  	mov rdi, rax
-   942 00000972 E8B9F8FFFF              	call __println
-   943 00000977 B800000000              	mov rax, 0
-   944                                  	b5:
-   945 0000097C C9                      	leave
-   946 0000097D C3                      	ret 
-   947                                  __init:
-   948                                  	b6:
-   949 0000097E 55                      	push rbp
-   950 0000097F 4889E5                  	mov rbp, rsp
-   951 00000982 E8C7FFFFFF              	call _main
-   952 00000987 C9                      	leave
-   953 00000988 C3                      	ret 
-   954                                  	section .data
+   919 0000093C 4155                    	push r13
+   920 0000093E B905000000              	mov rcx, 5
+   921 00000943 BE00000000              	mov rsi, 0
+   922 00000948 4883FE00                	cmp rsi, 0
+   923 0000094C 740F                    	je b1
+   924                                  	b2:
+   925 0000094E 4889C8                  	mov rax, rcx
+   926 00000951 99                      	cdq
+   927 00000952 48F7FE                  	idiv rsi
+   928 00000955 4883F801                	cmp rax, 1
+   929 00000959 7402                    	je b1
+   930 0000095B EB08                    	jmp b3
+   931                                  	b1:
+   932 0000095D 41BD14000000            	mov r13, 20
+   933 00000963 EB06                    	jmp b4
+   934                                  	b3:
+   935 00000965 41BD0A000000            	mov r13, 10
+   936                                  	b4:
+   937 0000096B 4983FD0A                	cmp r13, 10
+   938 0000096F 7515                    	jne b5
+   939                                  	b6:
+   940 00000971 4889C8                  	mov rax, rcx
+   941 00000974 99                      	cdq
+   942 00000975 48F7FE                  	idiv rsi
+   943 00000978 4883F800                	cmp rax, 0
+   944 0000097C 7508                    	jne b5
+   945                                  	b7:
+   946 0000097E 4883F905                	cmp rcx, 5
+   947 00000982 7502                    	jne b5
+   948 00000984 EB06                    	jmp b8
+   949                                  	b5:
+   950 00000986 41BD1E000000            	mov r13, 30
+   951                                  	b8:
+   952 0000098C 4C89EF                  	mov rdi, r13
+   953 0000098F E85CF9FFFF              	call __toString
+   954 00000994 4889C7                  	mov rdi, rax
+   955 00000997 E894F8FFFF              	call __println
+   956 0000099C 4C89E8                  	mov rax, r13
+   957                                  	b9:
+   958 0000099F 415D                    	pop r13
+   959 000009A1 C9                      	leave
+   960 000009A2 C3                      	ret 
+   961                                  __init:
+   962                                  	b10:
+   963 000009A3 55                      	push rbp
+   964 000009A4 4889E5                  	mov rbp, rsp
+   965 000009A7 E88CFFFFFF              	call _main
+   966 000009AC C9                      	leave
+   967 000009AD C3                      	ret 
+   968                                  	section .data

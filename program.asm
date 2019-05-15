@@ -912,25 +912,50 @@ _main:
 	b0:
 	push rbp
 	mov rbp, rsp
-	mov rdi, 24
-	call malloc
-	mov rcx, rax
+	push r13
+	mov rcx, 5
+	mov rsi, 0
+	cmp rsi, 0
+	je b1
+	b2:
 	mov rax, rcx
-	mov qword [rax], 10
-	mov rax, rcx
-	mov qword [rax + 8], 20
-	mov rax, rcx
-	mov qword [rax + 16], 40
-	mov rax, rcx
-	mov rdx, rcx
-	mov rax, qword [rax]
-	add rax, qword [rdx + 8]
-	add rax, qword [rcx + 16]
+	cdq
+	idiv rsi
+	cmp rax, 1
+	je b1
+	jmp b3
 	b1:
+	mov r13, 20
+	jmp b4
+	b3:
+	mov r13, 10
+	b4:
+	cmp r13, 10
+	jne b5
+	b6:
+	mov rax, rcx
+	cdq
+	idiv rsi
+	cmp rax, 0
+	jne b5
+	b7:
+	cmp rcx, 5
+	jne b5
+	jmp b8
+	b5:
+	mov r13, 30
+	b8:
+	mov rdi, r13
+	call __toString
+	mov rdi, rax
+	call __println
+	mov rax, r13
+	b9:
+	pop r13
 	leave
 	ret 
 __init:
-	b2:
+	b10:
 	push rbp
 	mov rbp, rsp
 	call _main
