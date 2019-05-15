@@ -196,6 +196,13 @@ public class SimpleGraphAllocator {
             }
         }
     }
+    private LinkedList<PhysicalRegister> tryTrans(LinkedList<Register> regs) {
+        LinkedList<PhysicalRegister> res = new LinkedList<>();
+        for(Register r : regs) {
+            res.add((PhysicalRegister)r);
+        }
+        return res;
+    }
     private void replaceRegisers() {
         HashMap<Register,Register> renameMap = new HashMap<>();
         for(HashMap.Entry<VirtualRegister,PhysicalRegister> entry : colors.entrySet())
@@ -203,7 +210,9 @@ public class SimpleGraphAllocator {
         for(BasicBlock bb : function.basicblocks)
             for(IRInstruction inst = bb.head; inst != null; inst = inst.next) {
                 inst.renameUseReg(renameMap);
+               // tryTrans(inst.getUseRegs());
                 inst.renameDefReg(renameMap);
+               // tryTrans(inst.getDefRegs());
             }
     }
     private void processFunction() {

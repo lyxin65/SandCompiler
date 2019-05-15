@@ -908,40 +908,29 @@ L_033:
 
 ;=====================================================================
 	 section .text
-_min:
+_main:
 	b0:
 	push rbp
 	mov rbp, rsp
-	mov rcx, rdi
-	mov rax, rsi
-	cmp rcx, rax
-	jle b1
-	b2:
-	jmp b3
-	b1:
+	mov rdi, 24
+	call malloc
+	mov rcx, rax
 	mov rax, rcx
-	b3:
-	leave
-	ret 
-_main:
-	b4:
-	push rbp
-	mov rbp, rsp
-	mov rcx, 10
-	mov rax, 20
-	mov rsi, rax
-	mov rdi, rcx
-	call _min
-	mov rdi, rax
-	call __toString
-	mov rdi, rax
-	call __println
-	mov rax, 0
-	b5:
+	mov qword [rax], 10
+	mov rax, rcx
+	mov qword [rax + 8], 20
+	mov rax, rcx
+	mov qword [rax + 16], 40
+	mov rax, rcx
+	mov rdx, rcx
+	mov rax, qword [rax]
+	add rax, qword [rdx + 8]
+	add rax, qword [rcx + 16]
+	b1:
 	leave
 	ret 
 __init:
-	b6:
+	b2:
 	push rbp
 	mov rbp, rsp
 	call _main
