@@ -548,8 +548,9 @@ public class IRBuilder implements IAstVisitor {
         case "int":
             operand = new Immediate(Integer.valueOf(node.value));
             break;
-        case "string": // TODO
-            StaticData data = new StaticData("staticString", node.value);
+        case "string":
+            // StaticData data = new StaticData("staticString", node.value);
+            StaticData data = new StaticData("staticString", node.value.substring(1, node.value.length() - 1));
             ir.staticData.add(data);
             operand = data;
             break;
