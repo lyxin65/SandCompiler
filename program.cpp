@@ -1,41 +1,11 @@
-void printBool(bool v){
-    if (v){
-        println("True");
-    }else{
-        println("False");
-    }
+int a(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15)
+{
+    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14 + a15;
 }
-int main(){
-    string s1 = "ACM";
-    string s2 = "ACMilan";
-    string s3 = "ACMClass";
-    string s4 = s2.substring(0,2);
 
-    printBool(s1 == s4);
-    printBool(s1 != s4);
-    printBool(s1 <  s4);
-    printBool(s1 >  s4);
-    printBool(s1 <= s4);
-    printBool(s1 >= s4);
-
-    println("");
-
-    printBool(s1 == s2);
-    printBool(s1 != s2);
-    printBool(s1 < s2);
-    printBool(s1 > s2);
-    printBool(s1 <= s2);
-    printBool(s1 >= s2);
-
-    println("");
-
-    printBool(s2 == s3);
-    printBool(s2 != s3);
-    printBool(s2 < s3);
-    printBool(s2 > s3);
-    printBool(s2 <= s3);
-    printBool(s2 >= s3);
-
-return 0;
+int main()
+{
+    println(toString(a(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)));
+    return 0;
 }
 

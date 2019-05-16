@@ -19,6 +19,8 @@ public class Push extends IRInstruction {
         LinkedList<Register> regs = new LinkedList<>();
         if (src instanceof Memory) {
             regs.addAll(((Memory)src).getUseRegs());
+        } else if (src instanceof Register) {
+            regs.add((Register)src);
         }
         return regs;
     }
@@ -33,6 +35,8 @@ public class Push extends IRInstruction {
         if (src instanceof Memory) {
             src = ((Memory)src).copy();
             ((Memory)src).renameUseReg(renameMap);
+        } else if (src instanceof Register && renameMap.containsKey(src)) {
+            src = renameMap.get(src);
         }
     }
 

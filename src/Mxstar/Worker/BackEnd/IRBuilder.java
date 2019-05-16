@@ -636,6 +636,13 @@ public class IRBuilder implements IAstVisitor {
                 exprMap.put(node, vr);
             }
         }
+        for (IRInstruction inst = curBB.head; inst != null; inst = inst.next) {
+            if (inst instanceof Move) {
+                System.err.println(((Move)inst).bb.hint + "move");
+            } else {
+                System.err.println("other");
+            }
+        }
     }
 
     private Operand allocateArray(LinkedList<Operand> dims, int baseBytes, Function constructor) {
