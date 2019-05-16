@@ -1,30 +1,41 @@
-int main() {
-	int a = 10000;
-	int b = 0;
-	int c = 2800;
-	int d = 0;
-	int e = 0;
-	int[] f = new int[2801];
-	int g = 0;
-
-	for (;b-c!=0;)
-		f[b++] = a/5;
-	for (;; e = d%a){
-		d = 0;
-		g = c*2;
-		if (g==0) break;
-
-		for (b=c;;d=d*b){
-			d=d+f[b]*a;
-			f[b] = d%--g;
-			d=d/g--;
-			if (--b==0) break;
-		}
-
-		c = c-14;
-		print(toString(e+d/a));
-	}
-
-  print("\n");
-  return 0;
+void printBool(bool v){
+    if (v){
+        println("True");
+    }else{
+        println("False");
+    }
 }
+int main(){
+    string s1 = "ACM";
+    string s2 = "ACMilan";
+    string s3 = "ACMClass";
+    string s4 = s2.substring(0,2);
+
+    printBool(s1 == s4);
+    printBool(s1 != s4);
+    printBool(s1 <  s4);
+    printBool(s1 >  s4);
+    printBool(s1 <= s4);
+    printBool(s1 >= s4);
+
+    println("");
+
+    printBool(s1 == s2);
+    printBool(s1 != s2);
+    printBool(s1 < s2);
+    printBool(s1 > s2);
+    printBool(s1 <= s2);
+    printBool(s1 >= s2);
+
+    println("");
+
+    printBool(s2 == s3);
+    printBool(s2 != s3);
+    printBool(s2 < s3);
+    printBool(s2 > s3);
+    printBool(s2 <= s3);
+    printBool(s2 >= s3);
+
+return 0;
+}
+

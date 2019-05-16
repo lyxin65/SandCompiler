@@ -617,8 +617,9 @@ public class IRBuilder implements IAstVisitor {
         }
         for (int i = 0; i < node.arguments.size(); i++) {
             Expr expr = node.arguments.get(i);
-            expr.accept(this);
-            args.add(exprMap.get(expr));
+            VirtualRegister vr = new VirtualRegister("");
+            assign(expr, vr);
+            args.add(vr);
         }
         if (deserveInline(node.funcSymbol.name)) {
             doInline(node.funcSymbol.name, args);

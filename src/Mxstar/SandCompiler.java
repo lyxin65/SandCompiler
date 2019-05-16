@@ -16,8 +16,8 @@ import static java.lang.System.exit;
 
 public class SandCompiler {
     public static void main(String[] args) throws IOException {
-        // InputStream is = System.in;
-        InputStream is = new FileInputStream("program.cpp");
+        InputStream is = System.in;
+        // InputStream is = new FileInputStream("program.cpp");
         ANTLRInputStream input = new ANTLRInputStream(is);
         MxstarLexer lexer = new MxstarLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
