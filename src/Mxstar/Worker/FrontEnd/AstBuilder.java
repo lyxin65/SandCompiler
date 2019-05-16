@@ -312,12 +312,19 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
         return suffixExpr;
     }
 
+    private boolean isConstExpr(Expr expr) {
+        return expr instanceof LiteralExpr && ((LiteralExpr)expr).typeName.equals("int");
+    }
+
     @Override public Expr visitBinaryExpr(MxstarParser.BinaryExprContext ctx) {
         BinaryExpr binaryExpr = new BinaryExpr();
         binaryExpr.location = new TokenLocation(ctx);
         binaryExpr.op = ctx.op.getText();
         binaryExpr.lhs = (Expr)ctx.expr(0).accept(this);
         binaryExpr.rhs = (Expr)ctx.expr(1).accept(this);
+        if (isConstExpr(binaryExpr.lhs) && isConstExpr(binaryExpr.rhs)) {
+            return LiteralExpr.calc((LiteralExpr)binaryExpr.lhs, (LiteralExpr)binaryExpr.rhs, binaryExpr.op);
+        }
         return binaryExpr;
     }
 

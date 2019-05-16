@@ -10,9 +10,8 @@
       <change beforePath="$PROJECT_DIR$/gen/program.out" beforeDir="false" afterPath="$PROJECT_DIR$/gen/program.out" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/program.asm" beforeDir="false" afterPath="$PROJECT_DIR$/program.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/program.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/program.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Mxstar/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mxstar/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Mxstar/AST/LiteralExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mxstar/AST/LiteralExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -66,32 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/program.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="7" column="74" selection-start-line="7" selection-start-column="74" selection-end-line="7" selection-end-column="74" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Mxstar/Config.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Mxstar/SandCompiler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="107" column="9" lean-forward="true" selection-start-line="107" selection-start-column="9" selection-end-line="107" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="432">
+              <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -99,8 +77,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="874" column="13" selection-start-line="874" selection-start-column="13" selection-end-line="874" selection-end-column="13" />
+            <state relative-caret-position="2539">
+              <caret line="983" column="79" lean-forward="true" selection-start-line="983" selection-start-column="79" selection-end-line="983" selection-end-column="79" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#44928#44929#0" expanded="true" />
@@ -112,25 +90,37 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
-              <caret line="38" column="37" selection-start-line="38" selection-start-column="37" selection-end-line="38" selection-end-column="37" />
+            <state relative-caret-position="545">
+              <caret line="324" column="66" selection-start-line="324" selection-start-column="66" selection-end-line="324" selection-end-column="66" />
               <folding>
-                <element signature="e#1619#1620#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRPrinter.java">
+        <entry file="file://$PROJECT_DIR$/src/Mxstar/AST/LiteralExpr.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="374" column="33" selection-start-line="374" selection-start-column="33" selection-end-line="374" selection-end-column="33" />
+            <state relative-caret-position="479">
+              <caret line="39" column="41" lean-forward="true" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#3076#3077#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1026">
+              <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+              <folding>
+                <element signature="e#1619#1620#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,7 +137,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>trans</find>
       <find>errorRecorder</find>
       <find>usedGlobalVars</find>
       <find>getVariableOffset</find>
@@ -176,6 +165,7 @@
       <find>FuncCall</find>
       <find>push</find>
       <find>Push</find>
+      <find>visitBi</find>
       <find>visit(</find>
     </findStrings>
     <replaceStrings>
@@ -213,7 +203,6 @@
         <option value="$PROJECT_DIR$/src/Mxstar/AST/BlockStmt.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/AST/PassStmt.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/AST/ID.java" />
-        <option value="$PROJECT_DIR$/src/Mxstar/AST/LiteralExpr.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/AST/LogicExpr.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/SyntaxErrorListener.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Symbol/GlobalSymbolTable.java" />
@@ -233,7 +222,6 @@
         <option value="$PROJECT_DIR$/src/Mxstar/AST/AstProgram.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Symbol/FuncSymbol.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/AST/VarDefStmt.java" />
-        <option value="$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Symbol/SymbolTable.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRCorrector.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRPrinter.java" />
@@ -249,11 +237,13 @@
         <option value="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/SimpleGraphAllocator.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/IR/Instruction/Lea.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/SandCompiler.java" />
-        <option value="$PROJECT_DIR$/program.cpp" />
         <option value="$PROJECT_DIR$/src/Mxstar/Config.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRBuilder.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/StackFrameBuilder.java" />
         <option value="$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java" />
+        <option value="$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java" />
+        <option value="$PROJECT_DIR$/src/Mxstar/AST/LiteralExpr.java" />
+        <option value="$PROJECT_DIR$/program.cpp" />
       </list>
     </option>
   </component>
@@ -424,7 +414,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32925585" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.34658512" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34658512" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3985729" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -529,23 +519,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Mxstar/AST/ID.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Mxstar/Symbol/VarSymbol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Mxstar/AST/ArrayTypeNode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -578,16 +551,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="375" column="56" selection-start-line="375" selection-start-column="56" selection-end-line="375" selection-end-column="56" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -907,20 +870,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="874" column="13" selection-start-line="874" selection-start-column="13" selection-end-line="874" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#44928#44929#0" expanded="true" />
-            <element signature="e#45005#45006#0" expanded="true" />
-            <element signature="e#45109#45110#0" expanded="true" />
-            <element signature="e#45213#45214#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Mxstar/IR/Instruction/Pop.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -935,17 +884,61 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/program.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="74" selection-start-line="7" selection-start-column="74" selection-end-line="7" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Mxstar/IR/RegisterSet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1026">
+          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+          <folding>
+            <element signature="e#1619#1620#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/BackEnd/IRBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2539">
+          <caret line="983" column="79" lean-forward="true" selection-start-line="983" selection-start-column="79" selection-end-line="983" selection-end-column="79" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#44928#44929#0" expanded="true" />
+            <element signature="e#45005#45006#0" expanded="true" />
+            <element signature="e#45109#45110#0" expanded="true" />
+            <element signature="e#45213#45214#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Mxstar/AST/BinaryExpr.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Mxstar/Worker/FrontEnd/AstBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="545">
+          <caret line="324" column="66" selection-start-line="324" selection-start-column="66" selection-end-line="324" selection-end-column="66" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Mxstar/AST/LiteralExpr.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="479">
+          <caret line="39" column="41" lean-forward="true" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
+          <folding>
+            <element signature="e#3076#3077#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -959,13 +952,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Mxstar/IR/Instruction/Push.java">
+    <entry file="file://$PROJECT_DIR$/program.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="38" column="37" selection-start-line="38" selection-start-column="37" selection-end-line="38" selection-end-column="37" />
-          <folding>
-            <element signature="e#1619#1620#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="432">
+          <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
         </state>
       </provider>
     </entry>

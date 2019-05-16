@@ -908,117 +908,100 @@ L_033:
 
 ;=====================================================================
 	 section .text
-_a:
+_add:
 	b0:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 80
-	push r15
-	push r12
-	push r13
-	push r14
-	push rbx
-	mov r13, rdi
-	mov r10, rsi
-	mov r14, rdx
+	mov rcx, rdi
+	mov rax, rsi
+	add rcx, rax
 	mov rax, rcx
-	mov r15, r8
-	mov r12, r9
-	mov rdi, qword [rbp + 16]
-	mov rcx, qword [rbp + 24]
-	mov qword [rbp + 24], rcx
-	mov rdx, qword [rbp + 32]
-	mov r9, qword [rbp + 40]
-	mov rbx, qword [rbp + 48]
-	mov rcx, qword [rbp + 56]
-	mov rsi, qword [rbp + 64]
-	mov r8, qword [rbp + 72]
-	mov r11, qword [rbp + 80]
-	add r13, r10
-	mov r10, r13
-	add r10, r14
-	add r10, rax
-	mov rax, r10
-	add rax, r15
-	add rax, r12
-	add rax, rdi
-	mov rdi, rax
-	mov rax, qword [rbp + 24]
-	add rdi, rax
-	mov rax, rdi
-	add rax, rdx
-	add rax, r9
-	add rax, rbx
-	add rax, rcx
-	add rax, rsi
-	add rax, r8
-	add rax, r11
+	cdq
+	mov rcx, 233
+	idiv rcx
+	mov rax, rdx
 	b1:
-	pop rbx
-	pop r14
-	pop r13
-	pop r12
-	pop r15
 	leave
 	ret 
-_main:
+_dp:
 	b2:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 16
-	push r15
-	push r13
-	push r12
 	push r14
 	push rbx
-	mov r10, 1
-	mov r11, 2
-	mov r14, 3
-	mov r12, 4
-	mov r8, 5
-	mov rcx, 6
-	mov rdx, 7
-	mov rdi, 8
-	mov r9, 9
-	mov rsi, 10
-	mov r15, 11
-	mov r13, 12
-	mov rbx, 13
-	mov rax, 14
-	mov qword [rbp - 8], rax
-	mov rax, 15
-	push rax
-	mov rax, qword [rbp - 8]
-	push rax
-	mov qword [rbp - 8], rax
-	push rbx
-	push r13
 	push r15
-	push rsi
-	push r9
-	push rdi
-	push rdx
-	mov r9, rcx
-	mov rcx, r12
-	mov rdx, r14
-	mov rsi, r11
-	mov rdi, r10
-	call _a
+	mov r14, rdi
+	cmp r14, 1
+	jle b3
+	b4:
+	mov rcx, 0
+	mov rbx, 2
+	b5:
+	cmp rbx, r14
+	jle b6
+	b7:
+	mov rax, rcx
+	jmp b8
+	b6:
+	mov rax, r14
+	xor rax, rbx
+	cmp rax, r14
+	jge b9
+	b10:
+	mov r15, rcx
+	mov rax, r14
+	xor rax, rbx
+	mov rdi, rax
+	call _dp
+	mov rsi, rax
+	mov rdi, r15
+	call _add
+	mov rcx, rax
+	b9:
+	b11:
+	mov rax, rbx
+	inc rbx
+	jmp b5
+	b3:
+	mov rax, 36
+	b8:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+_main:
+	b12:
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push r15
+	mov rbx, 55
+	mov r15, 1
+	b13:
+	cmp r15, rbx
+	jle b14
+	b15:
+	mov rax, 0
+	b16:
+	pop r15
+	pop rbx
+	leave
+	ret 
+	b14:
+	mov rax, r15
+	mov rdi, rax
+	call _dp
 	mov rdi, rax
 	call __toString
 	mov rdi, rax
 	call __println
-	mov rax, 0
-	b3:
-	pop rbx
-	pop r14
-	pop r12
-	pop r13
-	pop r15
-	leave
-	ret 
+	b17:
+	mov rax, r15
+	inc r15
+	jmp b13
 __init:
-	b4:
+	b18:
 	push rbp
 	mov rbp, rsp
 	call _main

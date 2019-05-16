@@ -29,6 +29,35 @@ public class LiteralExpr extends Expr {
         }
     }
 
+    public LiteralExpr(String typeName, String value) {
+        this.typeName = typeName;
+        this.value = value;
+    }
+
+    public static LiteralExpr calc(LiteralExpr a, LiteralExpr b, String op) {
+        assert a.typeName.equals("int") && b.typeName.equals("int");
+        int x = Integer.valueOf(a.value);
+        int y = Integer.valueOf(b.value);
+        switch (op) {
+            case "+":
+                return new LiteralExpr("int", String.valueOf(x + y));
+            case "-":
+                return new LiteralExpr("int", String.valueOf(x - y));
+            case "*":
+                return new LiteralExpr("int", String.valueOf(x * y));
+            case "/":
+                return new LiteralExpr("int", String.valueOf(x / y));
+            case "%":
+                return new LiteralExpr("int", String.valueOf(x % y));
+            case "<<":
+                return new LiteralExpr("int", String.valueOf(x << y));
+            case ">>":
+                return new LiteralExpr("int", String.valueOf(x >> y));
+            default:
+                return new LiteralExpr("int", "0");
+        }
+    }
+
     private String escape(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         int length = string.length();
