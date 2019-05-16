@@ -53,6 +53,12 @@ public class LiteralExpr extends Expr {
                 return new LiteralExpr("int", String.valueOf(x << y));
             case ">>":
                 return new LiteralExpr("int", String.valueOf(x >> y));
+            case "|":
+                return new LiteralExpr("int", String.valueOf(x | y));
+            case "^":
+                return new LiteralExpr("int", String.valueOf(x ^ y));
+            case "&":
+                return new LiteralExpr("int", String.valueOf(x & y));
             default:
                 return new LiteralExpr("int", "0");
         }
