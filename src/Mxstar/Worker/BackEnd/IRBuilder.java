@@ -19,6 +19,7 @@ public class IRBuilder implements IAstVisitor {
 
     private BasicBlock curBB;
     private Stack<BasicBlock> loopConditionBB;
+    private Stack<BasicBlock> loopUpdateBB;
     private Stack<BasicBlock> loopAfterBB;
     private Function curFunction;
     private ClassSymbol curClassSymbol;
@@ -95,6 +96,7 @@ public class IRBuilder implements IAstVisitor {
         this.ir = new IRProgram();
         this.loopAfterBB = new Stack<>();
         this.loopConditionBB = new Stack<>();
+        this.loopUpdateBB = new Stack<>();
         this.functionMap = new HashMap<>();
         this.funcDefMap = new HashMap<>();
         this.trueBBMap = new HashMap<>();
@@ -399,18 +401,19 @@ public class IRBuilder implements IAstVisitor {
         }
         BasicBlock bodyBB = new BasicBlock(curFunction, "forBoby");
         BasicBlock afterBB = new BasicBlock(curFunction, "afterBoby");
-        BasicBlock condBB = new BasicBlock(curFunction, "forCond");
-        BasicBlock updateBB = new BasicBlock(curFunction, "forUpdate");
+        BasicBlock condBB = node.condition != null? new BasicBlock(curFunction, "forCond") : bodyBB;
+        BasicBlock updateBB = node.updateStmt != null? new BasicBlock(curFunction, "forUpdate") : condBB;
         curBB.append(new Jump(curBB, condBB));
-        loopConditionBB.push(updateBB);
-        loopAfterBB.push(condBB);
+        loopConditionBB.push(condBB);
+        loopUpdateBB.push(updateBB);
+        loopAfterBB.push(afterBB);
         if (node.condition != null) {
             trueBBMap.put(node.condition, bodyBB);
             falseBBMap.put(node.condition, afterBB);
             curBB = condBB;
             node.condition.accept(this);
         } else {
-            // always true
+            // System.err.println("foooooor");
         }
         curBB = bodyBB;
         node.body.accept(this);
@@ -423,6 +426,7 @@ public class IRBuilder implements IAstVisitor {
         curBB = afterBB;
         loopAfterBB.pop();
         loopConditionBB.pop();
+        loopUpdateBB.pop();
     }
 
     @Override
@@ -466,7 +470,7 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(ContinueStmt node) {
-        curBB.append(new Jump(curBB, loopConditionBB.peek()));
+        curBB.append(new Jump(curBB, loopUpdateBB.peek()));
     }
 
     @Override
@@ -662,28 +666,23 @@ public class IRBuilder implements IAstVisitor {
             VirtualRegister size = new VirtualRegister("");
             VirtualRegister bytes = new VirtualRegister("");
             curBB.append(new Move(curBB, size, dims.get(0)));
-            curBB.append(new Lea(curBB, bytes, new Memory(size, Config.REGISTER_WIDTH,
-                    new Immediate(Config.REGISTER_WIDTH))));
+            curBB.append(new Lea(curBB, bytes, new Memory(size, Config.REGISTER_WIDTH, new Immediate(Config.REGISTER_WIDTH))));
             curBB.append(new Call(curBB, vrax, external_malloc, bytes));
             curBB.append(new Move(curBB, addr, vrax));
             curBB.append(new Move(curBB, new Memory(addr), size));
-
-            BasicBlock condBB = new BasicBlock(curFunction, "allocCondBB");
-            BasicBlock bodyBB = new BasicBlock(curFunction, "allocBodyBB");
-            BasicBlock afterBB = new BasicBlock(curFunction, "allocAfterBB");
+            BasicBlock condBB = new BasicBlock(curFunction, "allocateCondBB");
+            BasicBlock bodyBB = new BasicBlock(curFunction, "allocateBodyBB");
+            BasicBlock afterBB = new BasicBlock(curFunction, "allocateAfterBB");
             curBB.append(new Jump(curBB, condBB));
             condBB.append(new CJump(condBB, size, CJump.CompareOp.G, new Immediate(0), bodyBB, afterBB));
             curBB = bodyBB;
-            // ???
-
-            if (dims.size() == 1) {
+            if(dims.size() == 1) {
                 Operand pointer = allocateArray(new LinkedList<>(), baseBytes, constructor);
                 curBB.append(new Move(curBB, new Memory(addr, size, Config.REGISTER_WIDTH), pointer));
             } else {
                 LinkedList<Operand> remainDims = new LinkedList<>();
-                for (int i = 1; i < dims.size(); i++) {
+                for(int i = 1; i < dims.size(); i++)
                     remainDims.add(dims.get(i));
-                }
                 Operand pointer = allocateArray(remainDims, baseBytes, constructor);
                 curBB.append(new Move(curBB, new Memory(addr, size, Config.REGISTER_WIDTH), pointer));
             }
@@ -1185,11 +1184,11 @@ public class IRBuilder implements IAstVisitor {
 
     @Override
     public void visit(PrefixExpr node) {
-        assert false;
+        System.err.println("noooooo!!!");
     }
 
     @Override
     public void visit(SuffixExpr node) {
-        assert false;
+        System.err.println("noooooo!!!");
     }
 }

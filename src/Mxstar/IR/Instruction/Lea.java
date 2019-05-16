@@ -21,13 +21,13 @@ public class Lea extends IRInstruction {
     public LinkedList<Register> getUseRegs() {
         LinkedList<Register> regs = new LinkedList<>();
         regs.addAll(src.getUseRegs());
-        regs.add(dest);
+        // regs.add(dest);
         return regs;
     }
 
     @Override
     public LinkedList<StackSlot> getStackSlots() {
-        return defaultGetStackSlots();
+        return defaultGetStackSlots(src);
     }
 
     @Override

@@ -912,53 +912,126 @@ _main:
 	b0:
 	push rbp
 	mov rbp, rsp
+	sub rsp, 16
+	push r14
+	push rbx
+	push r12
 	push r13
-	mov rcx, 5
-	mov rsi, 0
-	cmp rsi, 0
-	je b1
-	b2:
-	mov rax, rcx
-	cdq
-	idiv rsi
-	cmp rax, 1
-	je b1
-	jmp b3
+	push r15
+	mov r12, 10000
+	mov r15, 0
+	mov rbx, 2800
+	mov rax, 0
+	mov qword [rbp - 8], rax
+	mov r14, 0
+	mov r13, 2801
+	lea rax, [r13 * 8 + 8]
+	mov rdi, rax
+	call malloc
+	mov qword [rax], r13
 	b1:
-	mov r13, 20
-	jmp b4
+	cmp r13, 0
+	jg b2
 	b3:
-	mov r13, 10
+	mov r13, rax
+	mov rsi, 0
 	b4:
-	cmp r13, 10
-	jne b5
-	b6:
-	mov rax, rcx
-	cdq
-	idiv rsi
+	mov rax, r15
+	sub rax, rbx
 	cmp rax, 0
 	jne b5
+	b6:
 	b7:
-	cmp rcx, 5
-	jne b5
-	jmp b8
-	b5:
-	mov r13, 30
-	b8:
-	mov rdi, r13
+	mov rax, 0
+	mov qword [rbp - 8], rax
+	mov rax, rbx
+	mov rcx, 2
+	imul rcx
+	mov rsi, rax
+	cmp rsi, 0
+	je b8
+	b9:
+	mov r15, rbx
+	b10:
+	mov rax, qword [r13 + r15 * 8 + 8]
+	imul r12
+	mov rcx, qword [rbp - 8]
+	add rcx, rax
+	mov qword [rbp - 8], rcx
+	dec rsi
+	mov rax, qword [rbp - 8]
+	cdq
+	idiv rsi
+	mov rax, rdx
+	mov qword [r13 + r15 * 8 + 8], rax
+	mov rcx, rsi
+	dec rsi
+	mov rax, qword [rbp - 8]
+	cdq
+	idiv rcx
+	mov qword [rbp - 8], rax
+	dec r15
+	cmp r15, 0
+	je b11
+	b12:
+	b13:
+	mov rax, qword [rbp - 8]
+	imul r15
+	mov qword [rbp - 8], rax
+	jmp b10
+	b11:
+	b14:
+	sub rbx, 14
+	mov rax, qword [rbp - 8]
+	cdq
+	idiv r12
+	mov rcx, r14
+	add rcx, rax
+	mov rdi, rcx
 	call __toString
 	mov rdi, rax
-	call __println
-	mov rax, r13
-	b9:
+	call __print
+	b15:
+	mov rax, qword [rbp - 8]
+	cdq
+	idiv r12
+	mov rax, rdx
+	mov r14, rax
+	jmp b7
+	b8:
+	b16:
+	mov rdi, g_0
+	call __print
+	mov rax, 0
+	b17:
+	pop r15
 	pop r13
+	pop r12
+	pop rbx
+	pop r14
 	leave
 	ret 
+	b5:
+	mov rsi, r15
+	inc r15
+	mov rax, r12
+	cdq
+	mov rcx, 5
+	idiv rcx
+	mov qword [r13 + rsi * 8 + 8], rax
+	jmp b4
+	b2:
+	mov qword [rax + r13 * 8], 0
+	dec r13
+	jmp b1
 __init:
-	b10:
+	b18:
 	push rbp
 	mov rbp, rsp
 	call _main
 	leave
 	ret 
 	section .data
+g_0:
+	dq 1
+	db 0AH, 00H

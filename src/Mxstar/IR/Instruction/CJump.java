@@ -29,7 +29,7 @@ public class CJump extends IRInstruction {
     }
 
     public BasicBlock doCompare() {
-        assert(src1 instanceof Immediate && src2 instanceof Immediate);
+        assert src1 instanceof Immediate && src2 instanceof Immediate;
         int v1 = ((Immediate)src1).value;
         int v2 = ((Immediate)src2).value;
         boolean r;
@@ -40,7 +40,7 @@ public class CJump extends IRInstruction {
             case L: r = (v1 < v2); break;
             case G: r = (v1 > v2); break;
             case E: r = (v1 == v2); break;
-            default: r = false; assert(false);
+            default: r = false; assert false;
         }
         return r ? thenBB : elseBB;
     }
@@ -53,7 +53,7 @@ public class CJump extends IRInstruction {
             case GE: return L;
             case LE: return G;
             case NE: return NE;
-            default: assert(false); return E;
+            default: assert false; return E;
         }
     }
 
@@ -65,7 +65,7 @@ public class CJump extends IRInstruction {
             case L: return GE;
             case G: return LE;
             case E: return NE;
-            default: assert(false); return E;
+            default: assert false; return E;
         }
 
     }
