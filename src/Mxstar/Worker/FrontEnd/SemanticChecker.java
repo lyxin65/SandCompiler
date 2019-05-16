@@ -3,7 +3,6 @@ package Mxstar.Worker.FrontEnd;
 import Mxstar.AST.*;
 import Mxstar.Symbol.*;
 import Mxstar.Worker.ErrorRecorder;
-import org.antlr.v4.runtime.BaseErrorListener;
 
 public class SemanticChecker implements IAstVisitor {
     GlobalSymbolTable gst;

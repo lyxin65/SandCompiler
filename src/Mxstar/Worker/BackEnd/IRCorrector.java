@@ -95,20 +95,6 @@ public class IRCorrector implements IIRVisitor {
             VirtualRegister vr = new VirtualRegister("");
             inst.prepend(new Move(inst.bb, vr, inst.src));
             inst.src = vr;
-        }  else {
-            /*if (Config.allocator == Config.Allocator.NaiveAllocator) {
-                PhysicalRegister pdest = getPhysical(inst.dest);
-                PhysicalRegister psrc = getPhysical(inst.src);
-                if (pdest != null && inst.src instanceof Memory) {
-                    VirtualRegister vr = new VirtualRegister("");
-                    inst.prepend(new Move(inst.bb, vr, inst.src));
-                    inst.src = vr;
-                } else if (psrc != null && inst.dest instanceof Memory) {
-                    VirtualRegister vr = new VirtualRegister("");
-                    inst.prepend(new Move(inst.bb, vr, inst.dest));
-                    inst.dest= vr;
-                }
-            }*/
         }
 
     }

@@ -68,7 +68,7 @@ public class SimpleGraphAllocator {
         System.err.println("Interference Graph:");
         for(VirtualRegister reg : graph.getAllRegisters()) {
             System.err.print(irPrinter.varNames.get(reg) + ": ");
-            for(VirtualRegister adjReg : graph.getAdjacents(reg)) {
+            for(VirtualRegister adjReg : graph.getAdj(reg)) {
                 System.err.print(irPrinter.varNames.get(adjReg) + " ");
             }
             System.err.print("\n");
@@ -86,7 +86,7 @@ public class SimpleGraphAllocator {
 
     //  for process function
     Function function;
-    Graph orignGraph;
+    Graph originGraph;
     Graph graph;
     HashSet<VirtualRegister> simplifyWorklist;
     HashSet<VirtualRegister> spillWorklist;
@@ -109,7 +109,7 @@ public class SimpleGraphAllocator {
     }
     private void simplify() {
         VirtualRegister reg = simplifyWorklist.iterator().next();
-        LinkedList<VirtualRegister> neighbors = new LinkedList<>(graph.getAdjacents(reg));
+        LinkedList<VirtualRegister> neighbors = new LinkedList<>(graph.getAdj(reg));
         graph.delRegister(reg);
         for(VirtualRegister vr : neighbors) {
             if(graph.getDegree(vr) < K && spillWorklist.contains(vr)) {
@@ -145,7 +145,7 @@ public class SimpleGraphAllocator {
             if(vr.allocatedPhysicalRegister != null)
                 continue;
             HashSet<PhysicalRegister> okColors = new HashSet<>(generalRegisters);
-            for(VirtualRegister neighbor : orignGraph.getAdjacents(vr)) {
+            for(VirtualRegister neighbor : originGraph.getAdj(vr)) {
                 if(colors.containsKey(neighbor))
                     okColors.remove(colors.get(neighbor));
             }
@@ -207,12 +207,12 @@ public class SimpleGraphAllocator {
             }
     }
     private void processFunction() {
-        orignGraph = new Graph();
+        originGraph = new Graph();
         while(true) {
             //showFunction(function);
 
-            livenessAnalyzer.getInferenceGraph(function, orignGraph, null);
-            graph = new Graph(orignGraph);
+            livenessAnalyzer.getInferenceGraph(function, originGraph, null);
+            graph = new Graph(originGraph);
             init();
             do {
                 if (!simplifyWorklist.isEmpty()) simplify();

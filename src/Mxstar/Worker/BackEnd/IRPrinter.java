@@ -1,15 +1,11 @@
 package Mxstar.Worker.BackEnd;
 
-import Mxstar.AST.*;
-import Mxstar.Config;
 import Mxstar.IR.BasicBlock;
 import Mxstar.IR.Function;
 import Mxstar.IR.IRProgram;
-import Mxstar.IR.RegisterSet;
 import Mxstar.IR.Instruction.*;
 import Mxstar.IR.Operand.*;
 import Mxstar.IR.IIRVisitor;
-import Mxstar.Symbol.*;
 
 import java.io.*;
 import java.util.ArrayList;
