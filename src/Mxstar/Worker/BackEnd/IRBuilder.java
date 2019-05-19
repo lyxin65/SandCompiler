@@ -82,9 +82,6 @@ public class IRBuilder implements IAstVisitor {
 
         library_stringConcate = new Function(Function.Type.Library, "stringConcate", true);
         library_stringCompare = new Function(Function.Type.Library, "stringCompare", true);
-        library_hasValue = new Function(Function.Type.Library, "hasValue", true);
-        library_getValue = new Function(Function.Type.Library, "getValue", true);
-        library_setValue = new Function(Function.Type.Library, "setValue", true);
 
         library_init = new Function(Function.Type.Library, "init", true);
 
@@ -187,40 +184,9 @@ public class IRBuilder implements IAstVisitor {
             }
         }
 
-        // add back opt
-        // for (FuncDef fd: node.functions) {
-        // if (deserveBackOptimization(fd)) {
-        // addValueBackOptimizeCode(fd);
-        // }
-        // }
-
         buildInitFunction(node);
     }
 
-    /*
-     * private boolean deserveBackOptimization(FuncDef funcDef) { Function function
-     * = functionMap.get(funcDef.symbol.name); if (funcDef.name.equals("func"))
-     * return false; // hack it! return Config.useBackupOptimization &&
-     * funcDef.symbol.isGlobalFunction && !function.hasOutput &&
-     * function.recursiveUsedGlobalVariables.isEmpty() && function.parameters.size()
-     * == 1 && intType(funcDef.parameters.get(0).symbol.type); }
-     * 
-     * private void addValueBackOptimizeCode(FuncDef funcDef) { if
-     * (!deserveBackOptimization(funcDef)) return; Function function =
-     * functionMap.get(funcDef.symbol.name); BasicBlock bb = new
-     * BasicBlock(function, "backopt_entry"); BasicBlock hitBB = new
-     * BasicBlock(function, "backopt_hit"); VirtualRegister argu = new
-     * VirtualRegister(""); bb.append(new Push(bb, vrdi)); bb.append(new Move(bb,
-     * argu, vrdi)); bb.append(new Call(bb, vrax, library_hasValue, new
-     * FunctionAddress(function), argu)); bb.append(new Pop(bb, vrdi));
-     * bb.append(new CJump(bb, vrax, CJump.CompareOp.NE, new Immediate(0), hitBB,
-     * function.enterBB)); hitBB.append(new Call(hitBB, vrax, library_getValue, new
-     * FunctionAddress(function), argu)); hitBB.append(new Jump(hitBB,
-     * function.leaveBB)); BasicBlock leaveBB = function.leaveBB;
-     * leaveBB.prepend(new Call(leaveBB, vrax, library_setValue, new
-     * FunctionAddress(function), argu, vrax)); function.enterBB = bb;
-     * function.finishBuild(); }
-     */
 
     @Override
     public void visit(Definition node) {
@@ -245,15 +211,6 @@ public class IRBuilder implements IAstVisitor {
         curFunction = functionMap.get(node.symbol.name);
         curBB = curFunction.enterBB = new BasicBlock(curFunction, "enter");
 
-        /**
-         * Processes in a function: save arguments in physical registers to virtual
-         * registers load global variables in memory to virtual registers function body
-         * save global variables in virtual registers to memory
-         *
-         * callee and caller register saving code are added in StackFrameBuilder
-         */
-
-        /** declare virtual registers for parameters */
         if (inClassDef) {
             VirtualRegister vthis = new VirtualRegister("");
             curFunction.parameters.add(vthis);
@@ -436,6 +393,7 @@ public class IRBuilder implements IAstVisitor {
         BasicBlock afterBB = new BasicBlock(curFunction, "whileAfterBB");
         curBB.append(new Jump(curBB, condBB));
         loopConditionBB.push(condBB);
+        loopUpdateBB.push(condBB);
         loopAfterBB.push(afterBB);
         curBB = condBB;
         trueBBMap.put(node.condition, bodyBB);
@@ -446,6 +404,7 @@ public class IRBuilder implements IAstVisitor {
         curBB.append(new Jump(curBB, condBB));
         curBB = afterBB;
         loopAfterBB.pop();
+        loopUpdateBB.pop();
         loopConditionBB.pop();
     }
 
@@ -553,7 +512,6 @@ public class IRBuilder implements IAstVisitor {
             operand = new Immediate(Integer.valueOf(node.value));
             break;
         case "string":
-            // StaticData data = new StaticData("staticString", node.value);
             StaticData data = new StaticData("staticString", node.value.substring(1, node.value.length() - 1));
             ir.staticData.add(data);
             operand = data;

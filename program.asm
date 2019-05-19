@@ -908,17 +908,129 @@ L_033:
 
 ;=====================================================================
 	 section .text
-_main:
+_max:
 	b0:
 	push rbp
 	mov rbp, rsp
+	mov rax, rdi
+	mov rcx, rsi
+	cmp rax, rcx
+	jg b1
+	b2:
+	mov rax, rcx
+	jmp b3
+	b1:
+	b3:
+	leave
+	ret 
+_equ:
+	b4:
+	push rbp
+	mov rbp, rsp
+	mov rcx, rdi
+	mov rax, rsi
+	cmp rcx, 0
+	je b5
+	b6:
+	cmp rax, 0
+	je b7
+	b8:
+	mov rcx, qword [rcx]
+	cmp rcx, qword [rax]
+	je b9
+	b10:
+	mov rax, 0
+	jmp b11
+	b9:
+	mov rax, 1
+	b11:
+	jmp b12
+	b7:
+	b13:
+	mov rax, 0
+	b14:
+	jmp b12
+	b5:
+	cmp rax, 0
+	je b15
+	b16:
+	b17:
+	mov rax, 0
+	b18:
+	jmp b12
+	b15:
+	b19:
+	mov rax, 1
+	b20:
+	b12:
+	leave
+	ret 
+_merge:
+	b21:
+	push rbp
+	mov rbp, rsp
+	push r13
 	push r14
-	push r15
 	push rbx
+	push r15
+	mov r13, rdi
+	mov r15, rsi
+	mov r14, rdx
+	mov rcx, r15
+	mov rax, r13
+	add rax, 1
+	mov rsi, rax
+	mov rdi, rcx
+	call _splay_tree.find
+	mov rbx, rax
+	mov rax, rbx
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov rax, r15
+	mov qword [rax], rbx
+	mov rax, r15
+	mov rsi, r13
+	mov rdi, rax
+	call _splay_tree.find
+	mov rbx, rax
+	mov rcx, rbx
+	mov rax, r15
+	mov rsi, qword [rax]
+	mov rdi, rcx
+	call _Node.rotto
+	mov rax, rbx
+	mov rcx, qword [rax + 80]
+	mov rax, r14
+	mov rax, qword [rax]
+	mov qword [rcx + 16], rax
+	mov rax, r14
+	mov rax, qword [rax]
+	mov qword [rax + 88], rbx
+	mov rax, rbx
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov rax, r15
+	mov qword [rax], rbx
+	b22:
+	pop r15
+	pop rbx
+	pop r14
+	pop r13
+	leave
+	ret 
+_main:
+	b23:
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16
 	push r12
 	push r13
-	mov rax, qword [g_0]
-	mov qword [g_0], rax
+	push r14
+	push rbx
+	push r15
+	mov r15, qword [g_0]
 	mov rax, qword [g_1]
 	mov qword [g_1], rax
 	mov rax, qword [g_2]
@@ -927,55 +1039,70 @@ _main:
 	mov qword [g_3], rax
 	mov rax, qword [g_4]
 	mov qword [g_4], rax
-	mov r13, qword [g_5]
+	mov rax, qword [g_5]
+	mov qword [g_5], rax
 	mov rax, qword [g_6]
 	mov qword [g_6], rax
-	mov rax, qword [g_7]
-	mov qword [g_7], rax
-	mov r12, qword [g_8]
-	mov rax, qword [g_9]
-	mov qword [g_9], rax
-	mov rax, qword [g_10]
-	mov qword [g_10], rax
-	mov r15, qword [g_11]
-	mov rax, qword [g_12]
-	mov qword [g_12], rax
-	mov rax, qword [g_13]
-	mov qword [g_13], rax
-	mov r14, qword [g_14]
-	mov rbx, qword [g_15]
-	mov rax, qword [g_16]
-	mov qword [g_16], rax
-	mov rax, qword [g_17]
-	mov qword [g_17], rax
-	mov rax, qword [g_18]
-	mov qword [g_18], rax
-	mov rax, qword [g_19]
-	mov qword [g_19], rax
-	mov rax, qword [g_20]
-	mov qword [g_20], rax
-	mov rax, qword [g_21]
-	mov qword [g_21], rax
-	mov rax, qword [g_22]
-	mov qword [g_22], rax
-	mov rsi, 0
-	mov rcx, 300000000
-	mov rax, 0
-	mov qword [g_20], rax
-	b1:
-	mov rax, qword [g_20]
+	call __getInt
+	mov qword [g_1], rax
+	call __getInt
+	mov qword [g_5], rax
+	mov rdi, 8
+	call malloc
+	mov r15, rax
+	mov rdi, r15
+	call _splay_tree.splay_tree
+	mov rax, r15
+	mov qword [g_2], rax
+	mov rdi, 8
+	call malloc
+	mov r15, rax
+	mov rdi, r15
+	call _splay_tree.splay_tree
+	mov rax, qword [g_4]
+	mov rcx, rax
+	neg rcx
+	mov rax, qword [g_3]
+	mov qword [rax + 8], rcx
+	mov rax, qword [g_1]
+	mov rdx, rax
+	add rdx, 1
+	mov rax, qword [g_4]
+	mov rcx, rax
+	neg rcx
+	mov rax, qword [g_3]
+	mov qword [rax + rdx * 8 + 8], rcx
+	mov rax, 1
+	mov qword [rbp - 8], rax
+	b24:
+	mov rax, qword [rbp - 8]
+	mov rcx, qword [g_1]
 	cmp rax, rcx
-	jl b2
-	b3:
-	mov rax, rsi
-	mov rdi, rax
-	call __toString
-	mov rdi, rax
-	call __println
+	jle b25
+	b26:
+	mov rax, qword [g_2]
+	mov rcx, rax
+	mov rax, qword [g_1]
+	mov rdx, rax
+	add rdx, 1
+	mov rax, qword [g_3]
+	mov qword [g_3], rax
+	mov rsi, 0
+	mov rdi, rcx
+	call _splay_tree.build_tree
+	mov rax, qword [g_3]
+	mov qword [g_3], rax
+	mov rax, 1
+	mov qword [rbp - 8], rax
+	b27:
+	mov rax, qword [rbp - 8]
+	mov rcx, qword [g_5]
+	cmp rax, rcx
+	jle b28
+	b29:
 	mov rax, 0
-	b4:
-	mov rcx, qword [g_0]
-	mov qword [g_0], rcx
+	b30:
+	mov qword [g_0], r15
 	mov rcx, qword [g_1]
 	mov qword [g_1], rcx
 	mov rcx, qword [g_2]
@@ -984,324 +1111,1309 @@ _main:
 	mov qword [g_3], rcx
 	mov rcx, qword [g_4]
 	mov qword [g_4], rcx
-	mov qword [g_5], r13
+	mov rcx, qword [g_5]
+	mov qword [g_5], rcx
 	mov rcx, qword [g_6]
 	mov qword [g_6], rcx
-	mov rcx, qword [g_7]
-	mov qword [g_7], rcx
-	mov qword [g_8], r12
-	mov rcx, qword [g_9]
-	mov qword [g_9], rcx
-	mov rcx, qword [g_10]
-	mov qword [g_10], rcx
-	mov qword [g_11], r15
-	mov rcx, qword [g_12]
-	mov qword [g_12], rcx
-	mov rcx, qword [g_13]
-	mov qword [g_13], rcx
-	mov qword [g_14], r14
-	mov qword [g_15], rbx
-	mov rcx, qword [g_16]
-	mov qword [g_16], rcx
-	mov rcx, qword [g_17]
-	mov qword [g_17], rcx
-	mov rcx, qword [g_18]
-	mov qword [g_18], rcx
-	mov rcx, qword [g_19]
-	mov qword [g_19], rcx
-	mov rcx, qword [g_20]
-	mov qword [g_20], rcx
-	mov rcx, qword [g_21]
-	mov qword [g_21], rcx
-	mov rcx, qword [g_22]
-	mov qword [g_22], rcx
+	pop r15
+	pop rbx
+	pop r14
 	pop r13
 	pop r12
-	pop rbx
-	pop r15
-	pop r14
 	leave
 	ret 
-	b2:
-	mov rax, qword [g_1]
-	add rax, 1
-	mov qword [g_1], rax
-	mov rax, qword [g_18]
-	add rax, 1
-	mov qword [g_18], rax
-	mov rax, qword [g_19]
-	add rax, 1
-	mov qword [g_19], rax
-	mov rax, qword [g_1]
-	add rax, 1
-	mov qword [g_9], rax
-	mov rax, qword [g_18]
-	add rax, 1
-	mov qword [g_21], rax
-	mov rax, qword [g_19]
-	add rax, 1
-	mov qword [g_0], rax
-	mov rax, qword [g_1]
-	add rax, 1
-	mov qword [g_10], rax
-	mov rax, qword [g_18]
-	add rax, 1
-	mov qword [g_12], rax
-	mov rax, qword [g_19]
-	add rax, 1
-	mov qword [g_2], rax
-	mov rax, qword [g_1]
-	add rax, 1
-	mov qword [g_13], rax
-	mov rax, qword [g_18]
-	mov r13, rax
-	mov rax, qword [g_1]
-	mov qword [g_7], rax
-	mov rax, qword [g_18]
-	mov qword [g_16], rax
-	mov rax, qword [g_19]
-	mov r12, rax
-	mov rax, qword [g_9]
-	mov qword [g_17], rax
-	mov rax, qword [g_21]
-	mov qword [g_3], rax
-	mov rax, qword [g_0]
-	mov qword [g_6], rax
-	mov rax, qword [g_10]
-	mov qword [g_22], rax
-	mov rax, qword [g_12]
-	mov rbx, rax
-	mov rax, qword [g_2]
+	b28:
+	call __getString
 	mov r14, rax
-	mov rax, qword [g_13]
-	mov qword [g_4], rax
-	mov r15, r13
-	mov rax, qword [g_20]
-	cdq
-	mov rdi, 10000000
-	idiv rdi
-	mov rax, rdx
-	cmp rax, 0
-	jne b5
-	b6:
-	mov rax, qword [g_1]
-	add rsi, rax
-	mov rax, rsi
-	mov rsi, qword [g_18]
-	add rax, rsi
-	mov rsi, rax
-	mov rax, qword [g_19]
-	add rsi, rax
-	mov rax, qword [g_9]
-	add rsi, rax
-	mov rax, qword [g_21]
-	add rsi, rax
-	mov rax, qword [g_0]
-	add rsi, rax
-	mov rax, rsi
-	mov rsi, qword [g_10]
-	add rax, rsi
-	mov rsi, qword [g_12]
-	add rax, rsi
-	mov rsi, rax
-	mov rax, qword [g_2]
-	add rsi, rax
-	mov rax, qword [g_13]
-	add rsi, rax
-	mov rax, rsi
-	add rax, r13
-	mov rsi, qword [g_7]
-	add rax, rsi
-	mov rsi, rax
-	mov rax, qword [g_16]
-	add rsi, rax
-	mov rax, rsi
-	add rax, r12
-	mov rsi, rax
-	mov rax, qword [g_17]
-	add rsi, rax
+	mov rax, r14
+	mov rsi, 0
+	mov rdi, rax
+	call __string_ord
+	mov rbx, rax
+	mov rax, qword [g_6]
+	mov rsi, 0
+	mov rdi, rax
+	call __string_ord
+	cmp rbx, rax
+	jne b31
+	b32:
+	call __getInt
+	mov r12, rax
+	call __getInt
+	mov r13, rax
+	mov rbx, 1
+	b33:
+	cmp rbx, r13
+	jle b34
+	b35:
+	mov rcx, r15
 	mov rax, qword [g_3]
-	add rsi, rax
-	mov rax, rsi
-	mov rsi, qword [g_6]
-	add rax, rsi
-	mov rsi, rax
-	mov rax, qword [g_22]
-	add rsi, rax
-	mov rax, rsi
-	add rax, rbx
-	add rax, r14
-	mov rsi, qword [g_4]
-	add rax, rsi
-	add rax, r15
-	and rax, 2147450879
-	mov rsi, rax
-	b5:
-	b7:
-	mov rax, qword [g_20]
+	mov qword [g_3], rax
+	mov rdx, r13
+	mov rsi, 1
+	mov rdi, rcx
+	call _splay_tree.build_tree
+	mov rax, qword [g_3]
+	mov qword [g_3], rax
+	mov rax, r12
 	add rax, 1
-	mov qword [g_20], rax
-	jmp b1
-__init:
-	b8:
+	mov rdi, rax
+	mov rax, qword [g_2]
+	mov rcx, rax
+	mov rax, r15
+	mov rdx, rax
+	mov rsi, rcx
+	call _merge
+	b31:
+	mov rax, r14
+	mov rsi, 0
+	mov rdi, rax
+	call __string_ord
+	mov rbx, rax
+	mov rax, qword [g_6]
+	mov rsi, 1
+	mov rdi, rax
+	call __string_ord
+	cmp rbx, rax
+	jne b36
+	b37:
+	call __getInt
+	mov rbx, rax
+	call __getInt
+	mov rdx, rax
+	mov rax, qword [g_2]
+	mov rsi, rbx
+	add rsi, 1
+	mov rcx, rbx
+	add rcx, rdx
+	mov rdx, rcx
+	mov rdi, rax
+	call _splay_tree.del
+	b36:
+	mov rax, r14
+	mov rsi, 0
+	mov rdi, rax
+	call __string_ord
+	cmp rax, 82
+	jne b38
+	b39:
+	call __getInt
+	mov rbx, rax
+	call __getInt
+	mov rcx, rax
+	mov rax, qword [g_2]
+	mov rsi, rbx
+	add rsi, 1
+	mov rdx, rbx
+	add rdx, rcx
+	mov rdi, rax
+	call _splay_tree.rol
+	b38:
+	mov rax, r14
+	mov rsi, 0
+	mov rdi, rax
+	call __string_ord
+	cmp rax, 71
+	jne b40
+	b41:
+	call __getInt
+	mov rbx, rax
+	call __getInt
+	mov rcx, rax
+	cmp rcx, 0
+	jg b42
+	b43:
+	mov rax, g_7
+	mov rdi, rax
+	call __print
+	jmp b44
+	b42:
+	mov rax, qword [g_2]
+	mov rdi, rax
+	mov rax, rbx
+	add rax, 1
+	mov rdx, rbx
+	add rdx, rcx
+	mov rsi, rax
+	call _splay_tree.getsum
+	mov rdi, rax
+	call __toString
+	mov rdi, rax
+	call __println
+	b44:
+	b40:
+	mov rax, r14
+	mov rsi, 0
+	mov rdi, rax
+	call __string_ord
+	cmp rax, 77
+	jne b45
+	b46:
+	mov rax, r14
+	mov rsi, 2
+	mov rdi, rax
+	call __string_ord
+	cmp rax, 75
+	je b47
+	b48:
+	mov rax, qword [g_2]
+	mov rdi, rax
+	call _splay_tree.getMax
+	mov rdi, rax
+	call __toString
+	mov rsi, g_8
+	mov rdi, rax
+	call __stringConcate
+	mov rdi, rax
+	call __print
+	jmp b49
+	b47:
+	call __getInt
+	mov rbx, rax
+	call __getInt
+	mov r14, rax
+	call __getInt
+	mov rcx, qword [g_2]
+	mov rdi, rcx
+	mov rsi, rbx
+	add rsi, 1
+	mov rdx, rbx
+	add rdx, r14
+	mov rcx, rax
+	call _splay_tree.change
+	b49:
+	b45:
+	b50:
+	mov rax, qword [rbp - 8]
+	inc rax
+	mov qword [rbp - 8], rax
+	jmp b27
+	b34:
+	call __getInt
+	mov rcx, rax
+	mov rax, qword [g_3]
+	mov qword [rax + rbx * 8 + 8], rcx
+	b51:
+	inc rbx
+	jmp b33
+	b25:
+	call __getInt
+	mov rdx, qword [g_3]
+	mov rcx, qword [rbp - 8]
+	mov qword [rdx + rcx * 8 + 8], rax
+	b52:
+	mov rax, qword [rbp - 8]
+	mov rax, qword [rbp - 8]
+	inc rax
+	mov qword [rbp - 8], rax
+	jmp b24
+_Node.copy:
+	b53:
+	push rbp
+	mov rbp, rsp
+	mov rdx, rdi
+	mov rcx, rsi
+	mov rax, rcx
+	mov rax, qword [rax]
+	mov qword [rdx], rax
+	mov rax, rcx
+	mov rax, qword [rax + 8]
+	mov qword [rdx + 8], rax
+	mov rax, rcx
+	mov rax, qword [rax + 16]
+	mov qword [rdx + 16], rax
+	mov rax, rcx
+	mov rax, qword [rax + 24]
+	mov qword [rdx + 24], rax
+	mov rax, rcx
+	mov rax, qword [rax + 32]
+	mov qword [rdx + 32], rax
+	mov rax, rcx
+	mov rax, qword [rax + 40]
+	mov qword [rdx + 40], rax
+	mov rax, rcx
+	mov rax, qword [rax + 48]
+	mov qword [rdx + 48], rax
+	mov rax, rcx
+	mov rax, qword [rax + 56]
+	mov qword [rdx + 56], rax
+	mov rax, rcx
+	mov rax, qword [rax + 64]
+	mov qword [rdx + 64], rax
+	mov rax, rcx
+	mov rax, qword [rax + 72]
+	mov qword [rdx + 72], rax
+	mov rsi, qword [rdx + 80]
+	mov rax, rcx
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 8]
+	mov qword [rsi + 8], rax
+	mov rsi, qword [rdx + 80]
+	mov rax, rcx
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 16]
+	mov qword [rsi + 16], rax
+	mov rax, rcx
+	mov rax, qword [rax + 88]
+	mov qword [rdx + 88], rax
+	b54:
+	leave
+	ret 
+_Node.init:
+	b55:
 	push rbp
 	mov rbp, rsp
 	push r14
-	push r15
 	push rbx
-	push r12
-	push r13
-	mov rax, 0
-	mov qword [g_20], rax
-	mov r9, 0
-	mov rax, 0
-	mov qword [g_18], rax
-	mov rsi, 0
-	mov r11, 0
-	mov r8, 0
-	mov rdi, 0
-	mov rdx, 0
-	mov r10, 0
-	mov rax, 0
-	mov qword [g_2], rax
-	mov rcx, 0
-	mov rax, 0
-	mov qword [g_5], rax
-	mov rax, 0
-	mov qword [g_7], rax
-	mov rax, 0
-	mov qword [g_16], rax
-	mov r13, 0
-	mov rax, 0
-	mov qword [g_17], rax
-	mov rax, 0
-	mov qword [g_3], rax
-	mov rbx, 0
-	mov rax, 0
-	mov qword [g_22], rax
-	mov r15, 0
-	mov r14, 0
-	mov r12, 0
-	mov rax, 0
-	mov qword [g_11], rax
-	mov qword [g_0], rdi
-	mov qword [g_1], r9
-	mov rax, qword [g_2]
-	mov qword [g_2], rax
-	mov rax, qword [g_3]
-	mov qword [g_3], rax
-	mov qword [g_4], r12
-	mov rax, qword [g_5]
-	mov qword [g_5], rax
-	mov qword [g_6], rbx
-	mov rax, qword [g_7]
-	mov qword [g_7], rax
-	mov qword [g_8], r13
-	mov qword [g_9], r11
-	mov qword [g_10], rdx
-	mov rax, qword [g_11]
-	mov qword [g_11], rax
-	mov qword [g_12], r10
-	mov qword [g_13], rcx
-	mov qword [g_14], r14
-	mov qword [g_15], r15
-	mov rax, qword [g_16]
-	mov qword [g_16], rax
-	mov rax, qword [g_17]
-	mov qword [g_17], rax
-	mov rax, qword [g_18]
-	mov qword [g_18], rax
-	mov qword [g_19], rsi
-	mov rax, qword [g_20]
-	mov qword [g_20], rax
-	mov qword [g_21], r8
-	mov rax, qword [g_22]
-	mov qword [g_22], rax
-	call _main
-	mov rcx, qword [g_22]
-	mov qword [g_22], rcx
-	mov r8, qword [g_21]
-	mov rcx, qword [g_20]
-	mov qword [g_20], rcx
-	mov rsi, qword [g_19]
-	mov rcx, qword [g_18]
-	mov qword [g_18], rcx
-	mov rcx, qword [g_17]
-	mov qword [g_17], rcx
-	mov rcx, qword [g_16]
-	mov qword [g_16], rcx
-	mov r15, qword [g_15]
-	mov r14, qword [g_14]
-	mov rcx, qword [g_13]
-	mov r10, qword [g_12]
-	mov rcx, qword [g_11]
-	mov qword [g_11], rcx
-	mov rdx, qword [g_10]
-	mov r11, qword [g_9]
-	mov r13, qword [g_8]
-	mov rcx, qword [g_7]
-	mov qword [g_7], rcx
-	mov rbx, qword [g_6]
-	mov rcx, qword [g_5]
-	mov qword [g_5], rcx
-	mov r12, qword [g_4]
-	mov rcx, qword [g_3]
-	mov qword [g_3], rcx
-	mov rcx, qword [g_2]
-	mov qword [g_2], rcx
-	mov r9, qword [g_1]
-	mov rdi, qword [g_0]
-	pop r13
-	pop r12
-	pop rbx
+	push r15
+	mov rbx, rdi
+	mov rcx, rsi
+	mov rax, rdx
+	mov qword [rbx], rax
+	mov qword [rbx + 16], 1
+	mov qword [rbx + 32], 0
+	mov qword [rbx + 48], 0
+	mov qword [rbx + 40], 0
+	mov qword [rbx + 24], rcx
+	mov qword [rbx + 8], rcx
+	mov qword [rbx + 56], rcx
+	mov qword [rbx + 64], rcx
+	mov qword [rbx + 72], rcx
+	mov r14, 2
+	lea rax, [r14 * 8 + 8]
+	mov rdi, rax
+	call malloc
+	mov r15, rax
+	mov qword [r15], r14
+	b56:
+	cmp r14, 0
+	jg b57
+	b58:
+	mov qword [rbx + 80], r15
+	mov rax, qword [rbx + 80]
+	mov qword [rax + 8], 0
+	mov rax, qword [rbx + 80]
+	mov qword [rax + 16], 0
+	mov qword [rbx + 88], 0
+	b59:
 	pop r15
+	pop rbx
 	pop r14
 	leave
 	ret 
+	b57:
+	mov rdi, 8
+	call malloc
+	mov qword [rax], 0
+	mov qword [r15 + r14 * 8], rax
+	dec r14
+	jmp b56
+_Node.judge:
+	b60:
+	push rbp
+	mov rbp, rsp
+	mov rax, rdi
+	mov rcx, rsi
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 8]
+	mov rsi, rcx
+	mov rdi, rax
+	call _equ
+	cmp rax, 0
+	jne b61
+	b62:
+	mov rax, 1
+	jmp b63
+	b61:
+	mov rax, 0
+	b63:
+	leave
+	ret 
+_Node.push_up:
+	b64:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov rbx, rdi
+	mov qword [rbx + 16], 1
+	mov rax, qword [rbx + 8]
+	mov qword [rbx + 24], rax
+	mov r15, 0
+	b65:
+	cmp r15, 2
+	jl b66
+	b67:
+	mov rax, qword [rbx + 8]
+	mov qword [rbx + 56], rax
+	mov rax, qword [rbx + 8]
+	mov qword [rbx + 64], rax
+	mov rax, qword [rbx + 8]
+	mov qword [rbx + 72], rax
+	mov r15, qword [rbx + 8]
+	mov r14, qword [rbx + 8]
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + 8], 0
+	je b68
+	b69:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 8]
+	mov rax, qword [rax + 56]
+	mov qword [rbx + 56], rax
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 8]
+	add r15, qword [rax + 24]
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 8]
+	mov rax, qword [rax + 64]
+	mov rcx, 0
+	mov rsi, rcx
+	mov rdi, rax
+	call _max
+	add r14, rax
+	b68:
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + 16], 0
+	je b70
+	b71:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 16]
+	mov rax, qword [rax + 64]
+	mov qword [rbx + 64], rax
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 16]
+	add r14, qword [rax + 24]
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 16]
+	mov rax, qword [rax + 56]
+	mov rcx, 0
+	mov rsi, rcx
+	mov rdi, rax
+	call _max
+	add r15, rax
+	b70:
+	mov rax, qword [rbx + 56]
+	mov rcx, r15
+	mov rsi, rcx
+	mov rdi, rax
+	call _max
+	mov qword [rbx + 56], rax
+	mov rcx, qword [rbx + 64]
+	mov rax, r14
+	mov rsi, rax
+	mov rdi, rcx
+	call _max
+	mov qword [rbx + 64], rax
+	mov r15, 0
+	b72:
+	cmp r15, 2
+	jl b73
+	b74:
+	mov r15, qword [rbx + 8]
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + 8], 0
+	je b75
+	b76:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 8]
+	mov rcx, qword [rax + 64]
+	mov rax, 0
+	mov rsi, rax
+	mov rdi, rcx
+	call _max
+	add r15, rax
+	b75:
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + 16], 0
+	je b77
+	b78:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + 16]
+	mov rcx, qword [rax + 56]
+	mov rax, 0
+	mov rsi, rax
+	mov rdi, rcx
+	call _max
+	add r15, rax
+	b77:
+	mov rax, qword [rbx + 72]
+	mov rcx, r15
+	mov rsi, rcx
+	mov rdi, rax
+	call _max
+	mov qword [rbx + 72], rax
+	b79:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+	b73:
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + r15 * 8 + 8], 0
+	je b80
+	b81:
+	mov rcx, qword [rbx + 72]
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + r15 * 8 + 8]
+	mov rax, qword [rax + 72]
+	mov rsi, rax
+	mov rdi, rcx
+	call _max
+	mov qword [rbx + 72], rax
+	b80:
+	b82:
+	inc r15
+	jmp b72
+	b66:
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + r15 * 8 + 8], 0
+	je b83
+	b84:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + r15 * 8 + 8]
+	mov rcx, qword [rbx + 16]
+	add rcx, qword [rax + 16]
+	mov qword [rbx + 16], rcx
+	mov rax, qword [rbx + 80]
+	mov rcx, qword [rax + r15 * 8 + 8]
+	mov rax, qword [rbx + 24]
+	add rax, qword [rcx + 24]
+	mov qword [rbx + 24], rax
+	b83:
+	b85:
+	inc r15
+	jmp b65
+_Node.addtag_ch:
+	b86:
+	push rbp
+	mov rbp, rsp
+	mov rcx, rsi
+	mov qword [rdi + 8], rcx
+	mov rax, qword [rdi + 16]
+	imul rcx
+	mov qword [rdi + 24], rax
+	cmp rcx, 0
+	jge b87
+	b88:
+	mov qword [rdi + 56], rcx
+	mov qword [rdi + 64], rcx
+	mov qword [rdi + 72], rcx
+	jmp b89
+	b87:
+	mov rax, qword [rdi + 24]
+	mov qword [rdi + 56], rax
+	mov rax, qword [rdi + 24]
+	mov qword [rdi + 64], rax
+	mov rax, qword [rdi + 24]
+	mov qword [rdi + 72], rax
+	b89:
+	mov qword [rdi + 32], 1
+	mov qword [rdi + 40], rcx
+	b90:
+	leave
+	ret 
+_Node.addtag_ro:
+	b91:
+	push rbp
+	mov rbp, rsp
+	mov rdx, rdi
+	mov rax, qword [rdx + 80]
+	mov rcx, qword [rax + 8]
+	mov rsi, qword [rdx + 80]
+	mov rax, qword [rdx + 80]
+	mov rax, qword [rax + 16]
+	mov qword [rsi + 8], rax
+	mov rax, qword [rdx + 80]
+	mov qword [rax + 16], rcx
+	mov rax, qword [rdx + 56]
+	mov rcx, qword [rdx + 64]
+	mov qword [rdx + 56], rcx
+	mov qword [rdx + 64], rax
+	mov rax, qword [rdx + 48]
+	xor rax, 1
+	mov qword [rdx + 48], rax
+	b92:
+	leave
+	ret 
+_Node.push_down:
+	b93:
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push r15
+	mov rbx, rdi
+	cmp qword [rbx + 32], 1
+	jne b94
+	b95:
+	mov r15, 0
+	b96:
+	cmp r15, 2
+	jl b97
+	b98:
+	mov qword [rbx + 32], 0
+	b94:
+	cmp qword [rbx + 48], 1
+	jne b99
+	b100:
+	mov r15, 0
+	b101:
+	cmp r15, 2
+	jl b102
+	b103:
+	mov qword [rbx + 48], 0
+	b99:
+	b104:
+	pop r15
+	pop rbx
+	leave
+	ret 
+	b102:
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + r15 * 8 + 8], 0
+	je b105
+	b106:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + r15 * 8 + 8]
+	mov rdi, rax
+	call _Node.addtag_ro
+	b105:
+	b107:
+	inc r15
+	jmp b101
+	b97:
+	mov rax, qword [rbx + 80]
+	cmp qword [rax + r15 * 8 + 8], 0
+	je b108
+	b109:
+	mov rax, qword [rbx + 80]
+	mov rax, qword [rax + r15 * 8 + 8]
+	mov rsi, qword [rbx + 40]
+	mov rdi, rax
+	call _Node.addtag_ch
+	b108:
+	b110:
+	inc r15
+	jmp b96
+_Node.rot:
+	b111:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov rbx, rdi
+	mov r15, qword [rbx + 88]
+	mov rax, r15
+	mov rsi, rbx
+	mov rdi, rax
+	call _Node.judge
+	mov rcx, rax
+	mov rax, r15
+	mov rsi, qword [rax + 80]
+	mov rax, rcx
+	xor rax, 1
+	mov rdx, qword [rbx + 80]
+	mov rax, qword [rdx + rax * 8 + 8]
+	mov qword [rsi + rcx * 8 + 8], rax
+	mov rdx, rcx
+	xor rdx, 1
+	mov rax, qword [rbx + 80]
+	mov qword [rax + rdx * 8 + 8], r15
+	mov rax, r15
+	mov rax, qword [rax + 80]
+	cmp qword [rax + rcx * 8 + 8], 0
+	je b112
+	b113:
+	mov rax, r15
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + rcx * 8 + 8]
+	mov qword [rax + 88], r15
+	b112:
+	mov rax, r15
+	mov rax, qword [rax + 88]
+	mov qword [rbx + 88], rax
+	mov rax, r15
+	mov qword [rax + 88], rbx
+	cmp qword [rbx + 88], 0
+	je b114
+	b115:
+	mov r14, qword [rbx + 88]
+	mov rax, qword [rbx + 88]
+	mov rsi, r15
+	mov rdi, rax
+	call _Node.judge
+	mov rcx, qword [r14 + 80]
+	mov qword [rcx + rax * 8 + 8], rbx
+	b114:
+	mov rax, r15
+	mov rdi, rax
+	call _Node.push_up
+	b116:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+_Node.rotto:
+	b117:
+	push rbp
+	mov rbp, rsp
+	push r13
+	push r14
+	push rbx
+	push r15
+	mov r14, rdi
+	mov r13, rsi
+	b118:
+	mov rcx, qword [r14 + 88]
+	mov rax, r13
+	mov rsi, rax
+	mov rdi, rcx
+	call _equ
+	cmp rax, 0
+	jne b119
+	b120:
+	mov r15, qword [r14 + 88]
+	mov rax, r15
+	mov rcx, qword [rax + 88]
+	mov rax, r13
+	mov rsi, rax
+	mov rdi, rcx
+	call _equ
+	cmp rax, 0
+	jne b121
+	b122:
+	mov rax, r15
+	mov rax, qword [rax + 88]
+	mov rsi, r15
+	mov rdi, rax
+	call _Node.judge
+	mov rbx, rax
+	mov rax, r15
+	mov rsi, r14
+	mov rdi, rax
+	call _Node.judge
+	cmp rbx, rax
+	je b123
+	b124:
+	mov rdi, r14
+	call _Node.rot
+	mov rdi, r14
+	call _Node.rot
+	jmp b125
+	b123:
+	mov rax, r15
+	mov rdi, rax
+	call _Node.rot
+	mov rdi, r14
+	call _Node.rot
+	b125:
+	jmp b118
+	b121:
+	mov rdi, r14
+	call _Node.rot
+	jmp b118
+	b119:
+	mov rdi, r14
+	call _Node.push_up
+	cmp qword [r14 + 88], 0
+	je b126
+	b127:
+	mov rax, qword [r14 + 88]
+	mov rdi, rax
+	call _Node.push_up
+	b126:
+	b128:
+	pop r15
+	pop rbx
+	pop r14
+	pop r13
+	leave
+	ret 
+_splay_tree.splay_tree:
+	b129:
+	push rbp
+	mov rbp, rsp
+	mov rax, rdi
+	mov qword [rax], 0
+	b130:
+	leave
+	ret 
+_splay_tree.build:
+	b131:
+	push rbp
+	mov rbp, rsp
+	sub rsp, 48
+	push r12
+	push r13
+	push r14
+	push rbx
+	push r15
+	mov r15, rdi
+	mov r14, rsi
+	mov rax, rdx
+	mov qword [rbp - 32], rax
+	mov r13, rcx
+	mov rax, r8
+	mov qword [rbp - 16], rax
+	mov rbx, qword [g_3]
+	mov r12, qword [g_9]
+	mov rcx, r13
+	mov rax, qword [rbp - 16]
+	add rcx, rax
+	mov rax, rcx
+	mov rcx, 1
+	sar rax, cl
+	mov qword [rbp - 8], rax
+	mov rdi, 96
+	call malloc
+	mov qword [rbp - 40], rax
+	mov rax, qword [rbp - 40]
+	mov rcx, rax
+	inc r12
+	mov rdx, r12
+	mov rax, qword [rbp - 8]
+	mov rsi, qword [rbx + rax * 8 + 8]
+	mov rdi, rcx
+	call _Node.init
+	mov rcx, r14
+	mov rax, qword [rbp - 40]
+	mov rsi, rax
+	mov rdi, rcx
+	call _Node.copy
+	mov rax, r14
+	mov rcx, qword [rbp - 32]
+	mov qword [rax + 88], rcx
+	mov rax, qword [rbp - 8]
+	cmp r13, rax
+	jge b132
+	b133:
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov qword [rbp - 24], rax
+	mov rdi, 96
+	call malloc
+	mov rcx, rax
+	mov rax, qword [rbp - 24]
+	mov qword [rax + 8], rcx
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 8]
+	inc r12
+	mov rdx, r12
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.init
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rsi, qword [rax + 8]
+	mov rdx, r14
+	mov rax, r13
+	mov rcx, qword [rbp - 8]
+	sub rcx, 1
+	mov qword [g_3], rbx
+	mov qword [g_9], r12
+	mov r8, rcx
+	mov rcx, rax
+	mov rdi, r15
+	call _splay_tree.build
+	mov r12, qword [g_9]
+	mov rbx, qword [g_3]
+	b132:
+	mov rcx, qword [rbp - 16]
+	mov rax, qword [rbp - 8]
+	cmp rcx, rax
+	jle b134
+	b135:
+	mov rax, r14
+	mov r13, qword [rax + 80]
+	mov rdi, 96
+	call malloc
+	mov qword [r13 + 16], rax
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 16]
+	inc r12
+	mov rdx, r12
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.init
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rsi, qword [rax + 16]
+	mov rdx, r14
+	mov rax, qword [rbp - 8]
+	add rax, 1
+	mov rcx, rax
+	mov rax, qword [rbp - 16]
+	mov qword [g_3], rbx
+	mov qword [g_9], r12
+	mov r8, rax
+	mov rdi, r15
+	call _splay_tree.build
+	mov r12, qword [g_9]
+	mov rbx, qword [g_3]
+	b134:
+	mov rax, r14
+	mov rdi, rax
+	call _Node.push_up
+	b136:
+	mov qword [g_3], rbx
+	mov qword [g_9], r12
+	pop r15
+	pop rbx
+	pop r14
+	pop r13
+	pop r12
+	leave
+	ret 
+_splay_tree.build_tree:
+	b137:
+	push rbp
+	mov rbp, rsp
+	push r13
+	push r14
+	push rbx
+	push r15
+	mov rbx, rdi
+	mov r14, rsi
+	mov r13, rdx
+	mov r15, qword [g_9]
+	mov rdi, 96
+	call malloc
+	mov qword [rbx], rax
+	mov rax, qword [rbx]
+	inc r15
+	mov rdx, r15
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.init
+	mov rsi, qword [rbx]
+	mov rdx, 0
+	mov rax, r14
+	mov rcx, r13
+	mov qword [g_9], r15
+	mov r8, rcx
+	mov rcx, rax
+	mov rdi, rbx
+	call _splay_tree.build
+	mov r15, qword [g_9]
+	b138:
+	mov qword [g_9], r15
+	pop r15
+	pop rbx
+	pop r14
+	pop r13
+	leave
+	ret 
+_splay_tree.find:
+	b139:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov rax, rdi
+	mov rbx, rsi
+	mov r14, qword [rax]
+	mov r15, 0
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	cmp qword [rax + 8], 0
+	jne b140
+	b141:
+	mov rcx, 1
+	jmp b142
+	b140:
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 8]
+	mov rax, qword [rax + 16]
+	add rax, 1
+	mov rcx, rax
+	b142:
+	b143:
+	mov rax, r15
+	add rax, rcx
+	cmp rax, rbx
+	jne b144
+	b145:
+	mov rax, r14
+	b146:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+	b144:
+	mov rax, r15
+	add rax, rcx
+	cmp rbx, rax
+	jl b147
+	b148:
+	add r15, rcx
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov r14, qword [rax + 16]
+	jmp b149
+	b147:
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov r14, qword [rax + 8]
+	b149:
+	mov rax, r14
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	cmp qword [rax + 8], 0
+	jne b150
+	b151:
+	mov rcx, 1
+	jmp b152
+	b150:
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 8]
+	mov rax, qword [rax + 16]
+	add rax, 1
+	mov rcx, rax
+	b152:
+	jmp b143
+_splay_tree.dfs:
+	b153:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov r15, rdi
+	mov r14, rsi
+	mov rbx, 0
+	b154:
+	cmp rbx, 2
+	jl b155
+	b156:
+	b157:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+	b155:
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	cmp qword [rax + rbx * 8 + 8], 0
+	je b158
+	b159:
+	mov rax, r14
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + rbx * 8 + 8]
+	mov rsi, rax
+	mov rdi, r15
+	call _splay_tree.dfs
+	b158:
+	b160:
+	mov rax, rbx
+	inc rbx
+	jmp b154
+_splay_tree.del:
+	b161:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov r15, rdi
+	mov r14, rsi
+	mov rax, rdx
+	add rax, 1
+	mov rsi, rax
+	mov rdi, r15
+	call _splay_tree.find
+	mov rbx, rax
+	mov rax, rbx
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [r15], rbx
+	mov rax, r14
+	sub rax, 1
+	mov rsi, rax
+	mov rdi, r15
+	call _splay_tree.find
+	mov rbx, rax
+	mov rax, rbx
+	mov rsi, qword [r15]
+	mov rdi, rax
+	call _Node.rotto
+	mov rax, rbx
+	mov rax, qword [rax + 80]
+	cmp qword [rax + 16], 0
+	je b162
+	b163:
+	mov rax, rbx
+	mov rax, qword [rax + 80]
+	mov rax, qword [rax + 16]
+	mov rsi, rax
+	mov rdi, r15
+	call _splay_tree.dfs
+	b162:
+	mov rax, rbx
+	mov rax, qword [rax + 80]
+	mov qword [rax + 16], 0
+	mov rax, rbx
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [r15], rbx
+	b164:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+_splay_tree.change:
+	b165:
+	push rbp
+	mov rbp, rsp
+	push r13
+	push r14
+	push rbx
+	push r15
+	mov rbx, rdi
+	mov r13, rsi
+	mov rax, rdx
+	mov r14, rcx
+	add rax, 1
+	mov rsi, rax
+	mov rdi, rbx
+	call _splay_tree.find
+	mov r15, rax
+	mov rax, r15
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [rbx], r15
+	mov rax, r13
+	sub rax, 1
+	mov rsi, rax
+	mov rdi, rbx
+	call _splay_tree.find
+	mov r15, rax
+	mov rax, r15
+	mov rsi, qword [rbx]
+	mov rdi, rax
+	call _Node.rotto
+	mov rax, r15
+	mov rax, qword [rax + 80]
+	mov r15, qword [rax + 16]
+	mov rax, r15
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, r15
+	mov rsi, r14
+	mov rdi, rax
+	call _Node.addtag_ch
+	mov rax, r15
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, r15
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [rbx], r15
+	b166:
+	pop r15
+	pop rbx
+	pop r14
+	pop r13
+	leave
+	ret 
+_splay_tree.rol:
+	b167:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov r14, rdi
+	mov rbx, rsi
+	mov rax, rdx
+	add rax, 1
+	mov rsi, rax
+	mov rdi, r14
+	call _splay_tree.find
+	mov r15, rax
+	mov rax, r15
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [r14], r15
+	mov rax, rbx
+	sub rax, 1
+	mov rsi, rax
+	mov rdi, r14
+	call _splay_tree.find
+	mov r15, rax
+	mov rax, r15
+	mov rsi, qword [r14]
+	mov rdi, rax
+	call _Node.rotto
+	mov rax, r15
+	mov rax, qword [rax + 80]
+	mov r15, qword [rax + 16]
+	mov rax, r15
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, r15
+	mov rdi, rax
+	call _Node.addtag_ro
+	mov rax, r15
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, r15
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [r14], r15
+	b168:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+_splay_tree.getsum:
+	b169:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov r15, rdi
+	mov r14, rsi
+	mov rax, rdx
+	add rax, 1
+	mov rsi, rax
+	mov rdi, r15
+	call _splay_tree.find
+	mov rbx, rax
+	mov rax, rbx
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [r15], rbx
+	mov rax, r14
+	sub rax, 1
+	mov rsi, rax
+	mov rdi, r15
+	call _splay_tree.find
+	mov rbx, rax
+	mov rax, rbx
+	mov rsi, qword [r15]
+	mov rdi, rax
+	call _Node.rotto
+	mov rax, rbx
+	mov rax, qword [rax + 80]
+	mov rbx, qword [rax + 16]
+	mov rax, rbx
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, rbx
+	mov r14, qword [rax + 24]
+	mov rax, rbx
+	mov rsi, 0
+	mov rdi, rax
+	call _Node.rotto
+	mov qword [r15], rbx
+	mov rax, r14
+	b170:
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+_splay_tree.getMax:
+	b171:
+	push rbp
+	mov rbp, rsp
+	push r15
+	mov r15, rdi
+	mov rax, qword [r15]
+	mov rdi, rax
+	call _Node.push_down
+	mov rax, qword [r15]
+	mov rax, qword [rax + 72]
+	b172:
+	pop r15
+	leave
+	ret 
+__init:
+	b173:
+	push rbp
+	mov rbp, rsp
+	push r14
+	push rbx
+	push r15
+	mov rbx, 1000000000
+	mov rax, 4000010
+	mov r15, 0
+	mov r14, rax
+	lea rax, [r14 * 8 + 8]
+	mov rdi, rax
+	call malloc
+	mov qword [rax], r14
+	b174:
+	cmp r14, 0
+	jg b175
+	b176:
+	mov rcx, rax
+	mov rdx, g_10
+	mov qword [g_9], r15
+	mov qword [g_3], rcx
+	mov qword [g_4], rbx
+	mov qword [g_6], rdx
+	call _main
+	mov rdx, qword [g_6]
+	mov rbx, qword [g_4]
+	mov rcx, qword [g_3]
+	mov r15, qword [g_9]
+	pop r15
+	pop rbx
+	pop r14
+	leave
+	ret 
+	b175:
+	mov qword [rax + r14 * 8], 0
+	dec r14
+	jmp b174
 	section .data
-g_20:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_1:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_18:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_19:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_9:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_21:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_0:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_10:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_12:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_2:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_13:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_5:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_7:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_16:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_8:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_17:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_3:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_6:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_22:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_15:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-g_14:
-	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
 g_4:
 	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
 g_11:
 	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_1:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_5:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_9:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_3:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_2:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_0:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_6:
+	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+g_7:
+	dq 2
+	db 30H, 0AH, 00H
+g_8:
+	dq 1
+	db 0AH, 00H
+g_10:
+	dq 2
+	db 49H, 44H, 00H

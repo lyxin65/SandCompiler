@@ -344,16 +344,7 @@ public class AstBuilder extends MxstarBaseVisitor<Object> {
     @Override public Expr visitLiteralExpr(MxstarParser.LiteralExprContext ctx) {
         return visitLiteral(ctx.literal());
     }
-/*
-    @Override public Expr visitLogicExpr(MxstarParser.LogicExprContext ctx) {
-        LogicExpr logicExpr = new LogicExpr();
-        logicExpr.location = new TokenLocation(ctx);
-        logicExpr.lhs = (Expr) ctx.expr(0).accept(this);
-        logicExpr.rhs = (Expr) ctx.expr(1).accept(this);
-        logicExpr.op = ctx.op.getText();
-        return logicExpr;
-    }
-*/
+
     @Override public Expr visitArrayExpr(MxstarParser.ArrayExprContext ctx) {
         ArrayExpr arrayExpr = new ArrayExpr();
         arrayExpr.location = new TokenLocation(ctx);

@@ -897,7 +897,7 @@
    897                                  
    898                                  main:
    899 00000000 31C0                            xor     eax, eax
-   900 00000002 E9(240E0000)                    jmp     __init
+   900 00000002 E9(C31A0000)                    jmp     __init
    901                                  
    902                                  
    903                                  
@@ -912,400 +912,1515 @@
    912                                  
    913                                  ;=====================================================================
    914                                  	 section .text
-   915                                  _main:
+   915                                  _max:
    916                                  	b0:
    917 00000938 55                      	push rbp
    918 00000939 4889E5                  	mov rbp, rsp
-   919 0000093C 4156                    	push r14
-   920 0000093E 4157                    	push r15
-   921 00000940 53                      	push rbx
-   922 00000941 4154                    	push r12
-   923 00000943 4155                    	push r13
-   924 00000945 488B05(30000000)        	mov rax, qword [g_0]
-   925 0000094C 488905(30000000)        	mov qword [g_0], rax
-   926 00000953 488B05(08000000)        	mov rax, qword [g_1]
-   927 0000095A 488905(08000000)        	mov qword [g_1], rax
-   928 00000961 488B05(48000000)        	mov rax, qword [g_2]
-   929 00000968 488905(48000000)        	mov qword [g_2], rax
-   930 0000096F 488B05(80000000)        	mov rax, qword [g_3]
-   931 00000976 488905(80000000)        	mov qword [g_3], rax
-   932 0000097D 488B05(A8000000)        	mov rax, qword [g_4]
-   933 00000984 488905(A8000000)        	mov qword [g_4], rax
-   934 0000098B 4C8B2D(58000000)        	mov r13, qword [g_5]
-   935 00000992 488B05(88000000)        	mov rax, qword [g_6]
-   936 00000999 488905(88000000)        	mov qword [g_6], rax
-   937 000009A0 488B05(60000000)        	mov rax, qword [g_7]
-   938 000009A7 488905(60000000)        	mov qword [g_7], rax
-   939 000009AE 4C8B25(70000000)        	mov r12, qword [g_8]
-   940 000009B5 488B05(20000000)        	mov rax, qword [g_9]
-   941 000009BC 488905(20000000)        	mov qword [g_9], rax
-   942 000009C3 488B05(38000000)        	mov rax, qword [g_10]
-   943 000009CA 488905(38000000)        	mov qword [g_10], rax
-   944 000009D1 4C8B3D(B0000000)        	mov r15, qword [g_11]
-   945 000009D8 488B05(40000000)        	mov rax, qword [g_12]
-   946 000009DF 488905(40000000)        	mov qword [g_12], rax
-   947 000009E6 488B05(50000000)        	mov rax, qword [g_13]
-   948 000009ED 488905(50000000)        	mov qword [g_13], rax
-   949 000009F4 4C8B35(A0000000)        	mov r14, qword [g_14]
-   950 000009FB 488B1D(98000000)        	mov rbx, qword [g_15]
-   951 00000A02 488B05(68000000)        	mov rax, qword [g_16]
-   952 00000A09 488905(68000000)        	mov qword [g_16], rax
-   953 00000A10 488B05(78000000)        	mov rax, qword [g_17]
-   954 00000A17 488905(78000000)        	mov qword [g_17], rax
-   955 00000A1E 488B05(10000000)        	mov rax, qword [g_18]
-   956 00000A25 488905(10000000)        	mov qword [g_18], rax
-   957 00000A2C 488B05(18000000)        	mov rax, qword [g_19]
-   958 00000A33 488905(18000000)        	mov qword [g_19], rax
-   959 00000A3A 488B05(00000000)        	mov rax, qword [g_20]
-   960 00000A41 488905(00000000)        	mov qword [g_20], rax
-   961 00000A48 488B05(28000000)        	mov rax, qword [g_21]
-   962 00000A4F 488905(28000000)        	mov qword [g_21], rax
-   963 00000A56 488B05(90000000)        	mov rax, qword [g_22]
-   964 00000A5D 488905(90000000)        	mov qword [g_22], rax
-   965 00000A64 BE00000000              	mov rsi, 0
-   966 00000A69 B900A3E111              	mov rcx, 300000000
-   967 00000A6E B800000000              	mov rax, 0
-   968 00000A73 488905(00000000)        	mov qword [g_20], rax
-   969                                  	b1:
-   970 00000A7A 488B05(00000000)        	mov rax, qword [g_20]
-   971 00000A81 4839C8                  	cmp rax, rcx
-   972 00000A84 0F8C42010000            	jl b2
-   973                                  	b3:
-   974 00000A8A 4889F0                  	mov rax, rsi
-   975 00000A8D 4889C7                  	mov rdi, rax
-   976 00000A90 E85BF8FFFF              	call __toString
-   977 00000A95 4889C7                  	mov rdi, rax
-   978 00000A98 E893F7FFFF              	call __println
-   979 00000A9D B800000000              	mov rax, 0
-   980                                  	b4:
-   981 00000AA2 488B0D(30000000)        	mov rcx, qword [g_0]
-   982 00000AA9 48890D(30000000)        	mov qword [g_0], rcx
-   983 00000AB0 488B0D(08000000)        	mov rcx, qword [g_1]
-   984 00000AB7 48890D(08000000)        	mov qword [g_1], rcx
-   985 00000ABE 488B0D(48000000)        	mov rcx, qword [g_2]
-   986 00000AC5 48890D(48000000)        	mov qword [g_2], rcx
-   987 00000ACC 488B0D(80000000)        	mov rcx, qword [g_3]
-   988 00000AD3 48890D(80000000)        	mov qword [g_3], rcx
-   989 00000ADA 488B0D(A8000000)        	mov rcx, qword [g_4]
-   990 00000AE1 48890D(A8000000)        	mov qword [g_4], rcx
-   991 00000AE8 4C892D(58000000)        	mov qword [g_5], r13
-   992 00000AEF 488B0D(88000000)        	mov rcx, qword [g_6]
-   993 00000AF6 48890D(88000000)        	mov qword [g_6], rcx
-   994 00000AFD 488B0D(60000000)        	mov rcx, qword [g_7]
-   995 00000B04 48890D(60000000)        	mov qword [g_7], rcx
-   996 00000B0B 4C8925(70000000)        	mov qword [g_8], r12
-   997 00000B12 488B0D(20000000)        	mov rcx, qword [g_9]
-   998 00000B19 48890D(20000000)        	mov qword [g_9], rcx
-   999 00000B20 488B0D(38000000)        	mov rcx, qword [g_10]
-  1000 00000B27 48890D(38000000)        	mov qword [g_10], rcx
-  1001 00000B2E 4C893D(B0000000)        	mov qword [g_11], r15
-  1002 00000B35 488B0D(40000000)        	mov rcx, qword [g_12]
-  1003 00000B3C 48890D(40000000)        	mov qword [g_12], rcx
-  1004 00000B43 488B0D(50000000)        	mov rcx, qword [g_13]
-  1005 00000B4A 48890D(50000000)        	mov qword [g_13], rcx
-  1006 00000B51 4C8935(A0000000)        	mov qword [g_14], r14
-  1007 00000B58 48891D(98000000)        	mov qword [g_15], rbx
-  1008 00000B5F 488B0D(68000000)        	mov rcx, qword [g_16]
-  1009 00000B66 48890D(68000000)        	mov qword [g_16], rcx
-  1010 00000B6D 488B0D(78000000)        	mov rcx, qword [g_17]
-  1011 00000B74 48890D(78000000)        	mov qword [g_17], rcx
-  1012 00000B7B 488B0D(10000000)        	mov rcx, qword [g_18]
-  1013 00000B82 48890D(10000000)        	mov qword [g_18], rcx
-  1014 00000B89 488B0D(18000000)        	mov rcx, qword [g_19]
-  1015 00000B90 48890D(18000000)        	mov qword [g_19], rcx
-  1016 00000B97 488B0D(00000000)        	mov rcx, qword [g_20]
-  1017 00000B9E 48890D(00000000)        	mov qword [g_20], rcx
-  1018 00000BA5 488B0D(28000000)        	mov rcx, qword [g_21]
-  1019 00000BAC 48890D(28000000)        	mov qword [g_21], rcx
-  1020 00000BB3 488B0D(90000000)        	mov rcx, qword [g_22]
-  1021 00000BBA 48890D(90000000)        	mov qword [g_22], rcx
-  1022 00000BC1 415D                    	pop r13
-  1023 00000BC3 415C                    	pop r12
-  1024 00000BC5 5B                      	pop rbx
-  1025 00000BC6 415F                    	pop r15
-  1026 00000BC8 415E                    	pop r14
-  1027 00000BCA C9                      	leave
-  1028 00000BCB C3                      	ret 
-  1029                                  	b2:
-  1030 00000BCC 488B05(08000000)        	mov rax, qword [g_1]
-  1031 00000BD3 4883C001                	add rax, 1
-  1032 00000BD7 488905(08000000)        	mov qword [g_1], rax
-  1033 00000BDE 488B05(10000000)        	mov rax, qword [g_18]
-  1034 00000BE5 4883C001                	add rax, 1
-  1035 00000BE9 488905(10000000)        	mov qword [g_18], rax
-  1036 00000BF0 488B05(18000000)        	mov rax, qword [g_19]
-  1037 00000BF7 4883C001                	add rax, 1
-  1038 00000BFB 488905(18000000)        	mov qword [g_19], rax
-  1039 00000C02 488B05(08000000)        	mov rax, qword [g_1]
-  1040 00000C09 4883C001                	add rax, 1
-  1041 00000C0D 488905(20000000)        	mov qword [g_9], rax
-  1042 00000C14 488B05(10000000)        	mov rax, qword [g_18]
-  1043 00000C1B 4883C001                	add rax, 1
-  1044 00000C1F 488905(28000000)        	mov qword [g_21], rax
-  1045 00000C26 488B05(18000000)        	mov rax, qword [g_19]
-  1046 00000C2D 4883C001                	add rax, 1
-  1047 00000C31 488905(30000000)        	mov qword [g_0], rax
-  1048 00000C38 488B05(08000000)        	mov rax, qword [g_1]
-  1049 00000C3F 4883C001                	add rax, 1
-  1050 00000C43 488905(38000000)        	mov qword [g_10], rax
-  1051 00000C4A 488B05(10000000)        	mov rax, qword [g_18]
-  1052 00000C51 4883C001                	add rax, 1
-  1053 00000C55 488905(40000000)        	mov qword [g_12], rax
-  1054 00000C5C 488B05(18000000)        	mov rax, qword [g_19]
-  1055 00000C63 4883C001                	add rax, 1
-  1056 00000C67 488905(48000000)        	mov qword [g_2], rax
-  1057 00000C6E 488B05(08000000)        	mov rax, qword [g_1]
-  1058 00000C75 4883C001                	add rax, 1
-  1059 00000C79 488905(50000000)        	mov qword [g_13], rax
-  1060 00000C80 488B05(10000000)        	mov rax, qword [g_18]
-  1061 00000C87 4989C5                  	mov r13, rax
-  1062 00000C8A 488B05(08000000)        	mov rax, qword [g_1]
-  1063 00000C91 488905(60000000)        	mov qword [g_7], rax
-  1064 00000C98 488B05(10000000)        	mov rax, qword [g_18]
-  1065 00000C9F 488905(68000000)        	mov qword [g_16], rax
-  1066 00000CA6 488B05(18000000)        	mov rax, qword [g_19]
-  1067 00000CAD 4989C4                  	mov r12, rax
-  1068 00000CB0 488B05(20000000)        	mov rax, qword [g_9]
-  1069 00000CB7 488905(78000000)        	mov qword [g_17], rax
-  1070 00000CBE 488B05(28000000)        	mov rax, qword [g_21]
-  1071 00000CC5 488905(80000000)        	mov qword [g_3], rax
-  1072 00000CCC 488B05(30000000)        	mov rax, qword [g_0]
-  1073 00000CD3 488905(88000000)        	mov qword [g_6], rax
-  1074 00000CDA 488B05(38000000)        	mov rax, qword [g_10]
-  1075 00000CE1 488905(90000000)        	mov qword [g_22], rax
-  1076 00000CE8 488B05(40000000)        	mov rax, qword [g_12]
-  1077 00000CEF 4889C3                  	mov rbx, rax
-  1078 00000CF2 488B05(48000000)        	mov rax, qword [g_2]
-  1079 00000CF9 4989C6                  	mov r14, rax
-  1080 00000CFC 488B05(50000000)        	mov rax, qword [g_13]
-  1081 00000D03 488905(A8000000)        	mov qword [g_4], rax
-  1082 00000D0A 4D89EF                  	mov r15, r13
-  1083 00000D0D 488B05(00000000)        	mov rax, qword [g_20]
-  1084 00000D14 99                      	cdq
-  1085 00000D15 BF80969800              	mov rdi, 10000000
-  1086 00000D1A 48F7FF                  	idiv rdi
-  1087 00000D1D 4889D0                  	mov rax, rdx
-  1088 00000D20 4883F800                	cmp rax, 0
-  1089 00000D24 0F85E3000000            	jne b5
-  1090                                  	b6:
-  1091 00000D2A 488B05(08000000)        	mov rax, qword [g_1]
-  1092 00000D31 4801C6                  	add rsi, rax
-  1093 00000D34 4889F0                  	mov rax, rsi
-  1094 00000D37 488B35(10000000)        	mov rsi, qword [g_18]
-  1095 00000D3E 4801F0                  	add rax, rsi
-  1096 00000D41 4889C6                  	mov rsi, rax
-  1097 00000D44 488B05(18000000)        	mov rax, qword [g_19]
-  1098 00000D4B 4801C6                  	add rsi, rax
-  1099 00000D4E 488B05(20000000)        	mov rax, qword [g_9]
-  1100 00000D55 4801C6                  	add rsi, rax
-  1101 00000D58 488B05(28000000)        	mov rax, qword [g_21]
-  1102 00000D5F 4801C6                  	add rsi, rax
-  1103 00000D62 488B05(30000000)        	mov rax, qword [g_0]
-  1104 00000D69 4801C6                  	add rsi, rax
-  1105 00000D6C 4889F0                  	mov rax, rsi
-  1106 00000D6F 488B35(38000000)        	mov rsi, qword [g_10]
-  1107 00000D76 4801F0                  	add rax, rsi
-  1108 00000D79 488B35(40000000)        	mov rsi, qword [g_12]
-  1109 00000D80 4801F0                  	add rax, rsi
-  1110 00000D83 4889C6                  	mov rsi, rax
-  1111 00000D86 488B05(48000000)        	mov rax, qword [g_2]
-  1112 00000D8D 4801C6                  	add rsi, rax
-  1113 00000D90 488B05(50000000)        	mov rax, qword [g_13]
-  1114 00000D97 4801C6                  	add rsi, rax
-  1115 00000D9A 4889F0                  	mov rax, rsi
-  1116 00000D9D 4C01E8                  	add rax, r13
-  1117 00000DA0 488B35(60000000)        	mov rsi, qword [g_7]
-  1118 00000DA7 4801F0                  	add rax, rsi
-  1119 00000DAA 4889C6                  	mov rsi, rax
-  1120 00000DAD 488B05(68000000)        	mov rax, qword [g_16]
-  1121 00000DB4 4801C6                  	add rsi, rax
-  1122 00000DB7 4889F0                  	mov rax, rsi
-  1123 00000DBA 4C01E0                  	add rax, r12
-  1124 00000DBD 4889C6                  	mov rsi, rax
-  1125 00000DC0 488B05(78000000)        	mov rax, qword [g_17]
-  1126 00000DC7 4801C6                  	add rsi, rax
-  1127 00000DCA 488B05(80000000)        	mov rax, qword [g_3]
-  1128 00000DD1 4801C6                  	add rsi, rax
-  1129 00000DD4 4889F0                  	mov rax, rsi
-  1130 00000DD7 488B35(88000000)        	mov rsi, qword [g_6]
-  1131 00000DDE 4801F0                  	add rax, rsi
-  1132 00000DE1 4889C6                  	mov rsi, rax
-  1133 00000DE4 488B05(90000000)        	mov rax, qword [g_22]
-  1134 00000DEB 4801C6                  	add rsi, rax
-  1135 00000DEE 4889F0                  	mov rax, rsi
-  1136 00000DF1 4801D8                  	add rax, rbx
-  1137 00000DF4 4C01F0                  	add rax, r14
-  1138 00000DF7 488B35(A8000000)        	mov rsi, qword [g_4]
-  1139 00000DFE 4801F0                  	add rax, rsi
-  1140 00000E01 4C01F8                  	add rax, r15
-  1141 00000E04 4825FF7FFF7F            	and rax, 2147450879
-  1142 00000E0A 4889C6                  	mov rsi, rax
-  1143                                  	b5:
-  1144                                  	b7:
-  1145 00000E0D 488B05(00000000)        	mov rax, qword [g_20]
-  1146 00000E14 4883C001                	add rax, 1
-  1147 00000E18 488905(00000000)        	mov qword [g_20], rax
-  1148 00000E1F E956FCFFFF              	jmp b1
-  1149                                  __init:
-  1150                                  	b8:
-  1151 00000E24 55                      	push rbp
-  1152 00000E25 4889E5                  	mov rbp, rsp
-  1153 00000E28 4156                    	push r14
-  1154 00000E2A 4157                    	push r15
-  1155 00000E2C 53                      	push rbx
-  1156 00000E2D 4154                    	push r12
-  1157 00000E2F 4155                    	push r13
-  1158 00000E31 B800000000              	mov rax, 0
-  1159 00000E36 488905(00000000)        	mov qword [g_20], rax
-  1160 00000E3D 41B900000000            	mov r9, 0
-  1161 00000E43 B800000000              	mov rax, 0
-  1162 00000E48 488905(10000000)        	mov qword [g_18], rax
-  1163 00000E4F BE00000000              	mov rsi, 0
-  1164 00000E54 41BB00000000            	mov r11, 0
-  1165 00000E5A 41B800000000            	mov r8, 0
-  1166 00000E60 BF00000000              	mov rdi, 0
-  1167 00000E65 BA00000000              	mov rdx, 0
-  1168 00000E6A 41BA00000000            	mov r10, 0
-  1169 00000E70 B800000000              	mov rax, 0
-  1170 00000E75 488905(48000000)        	mov qword [g_2], rax
-  1171 00000E7C B900000000              	mov rcx, 0
-  1172 00000E81 B800000000              	mov rax, 0
-  1173 00000E86 488905(58000000)        	mov qword [g_5], rax
-  1174 00000E8D B800000000              	mov rax, 0
-  1175 00000E92 488905(60000000)        	mov qword [g_7], rax
-  1176 00000E99 B800000000              	mov rax, 0
-  1177 00000E9E 488905(68000000)        	mov qword [g_16], rax
-  1178 00000EA5 41BD00000000            	mov r13, 0
-  1179 00000EAB B800000000              	mov rax, 0
-  1180 00000EB0 488905(78000000)        	mov qword [g_17], rax
-  1181 00000EB7 B800000000              	mov rax, 0
-  1182 00000EBC 488905(80000000)        	mov qword [g_3], rax
-  1183 00000EC3 BB00000000              	mov rbx, 0
-  1184 00000EC8 B800000000              	mov rax, 0
-  1185 00000ECD 488905(90000000)        	mov qword [g_22], rax
-  1186 00000ED4 41BF00000000            	mov r15, 0
-  1187 00000EDA 41BE00000000            	mov r14, 0
-  1188 00000EE0 41BC00000000            	mov r12, 0
-  1189 00000EE6 B800000000              	mov rax, 0
-  1190 00000EEB 488905(B0000000)        	mov qword [g_11], rax
-  1191 00000EF2 48893D(30000000)        	mov qword [g_0], rdi
-  1192 00000EF9 4C890D(08000000)        	mov qword [g_1], r9
-  1193 00000F00 488B05(48000000)        	mov rax, qword [g_2]
-  1194 00000F07 488905(48000000)        	mov qword [g_2], rax
-  1195 00000F0E 488B05(80000000)        	mov rax, qword [g_3]
-  1196 00000F15 488905(80000000)        	mov qword [g_3], rax
-  1197 00000F1C 4C8925(A8000000)        	mov qword [g_4], r12
-  1198 00000F23 488B05(58000000)        	mov rax, qword [g_5]
-  1199 00000F2A 488905(58000000)        	mov qword [g_5], rax
-  1200 00000F31 48891D(88000000)        	mov qword [g_6], rbx
-  1201 00000F38 488B05(60000000)        	mov rax, qword [g_7]
-  1202 00000F3F 488905(60000000)        	mov qword [g_7], rax
-  1203 00000F46 4C892D(70000000)        	mov qword [g_8], r13
-  1204 00000F4D 4C891D(20000000)        	mov qword [g_9], r11
-  1205 00000F54 488915(38000000)        	mov qword [g_10], rdx
-  1206 00000F5B 488B05(B0000000)        	mov rax, qword [g_11]
-  1207 00000F62 488905(B0000000)        	mov qword [g_11], rax
-  1208 00000F69 4C8915(40000000)        	mov qword [g_12], r10
-  1209 00000F70 48890D(50000000)        	mov qword [g_13], rcx
-  1210 00000F77 4C8935(A0000000)        	mov qword [g_14], r14
-  1211 00000F7E 4C893D(98000000)        	mov qword [g_15], r15
-  1212 00000F85 488B05(68000000)        	mov rax, qword [g_16]
-  1213 00000F8C 488905(68000000)        	mov qword [g_16], rax
-  1214 00000F93 488B05(78000000)        	mov rax, qword [g_17]
-  1215 00000F9A 488905(78000000)        	mov qword [g_17], rax
-  1216 00000FA1 488B05(10000000)        	mov rax, qword [g_18]
-  1217 00000FA8 488905(10000000)        	mov qword [g_18], rax
-  1218 00000FAF 488935(18000000)        	mov qword [g_19], rsi
-  1219 00000FB6 488B05(00000000)        	mov rax, qword [g_20]
-  1220 00000FBD 488905(00000000)        	mov qword [g_20], rax
-  1221 00000FC4 4C8905(28000000)        	mov qword [g_21], r8
-  1222 00000FCB 488B05(90000000)        	mov rax, qword [g_22]
-  1223 00000FD2 488905(90000000)        	mov qword [g_22], rax
-  1224 00000FD9 E85AF9FFFF              	call _main
-  1225 00000FDE 488B0D(90000000)        	mov rcx, qword [g_22]
-  1226 00000FE5 48890D(90000000)        	mov qword [g_22], rcx
-  1227 00000FEC 4C8B05(28000000)        	mov r8, qword [g_21]
-  1228 00000FF3 488B0D(00000000)        	mov rcx, qword [g_20]
-  1229 00000FFA 48890D(00000000)        	mov qword [g_20], rcx
-  1230 00001001 488B35(18000000)        	mov rsi, qword [g_19]
-  1231 00001008 488B0D(10000000)        	mov rcx, qword [g_18]
-  1232 0000100F 48890D(10000000)        	mov qword [g_18], rcx
-  1233 00001016 488B0D(78000000)        	mov rcx, qword [g_17]
-  1234 0000101D 48890D(78000000)        	mov qword [g_17], rcx
-  1235 00001024 488B0D(68000000)        	mov rcx, qword [g_16]
-  1236 0000102B 48890D(68000000)        	mov qword [g_16], rcx
-  1237 00001032 4C8B3D(98000000)        	mov r15, qword [g_15]
-  1238 00001039 4C8B35(A0000000)        	mov r14, qword [g_14]
-  1239 00001040 488B0D(50000000)        	mov rcx, qword [g_13]
-  1240 00001047 4C8B15(40000000)        	mov r10, qword [g_12]
-  1241 0000104E 488B0D(B0000000)        	mov rcx, qword [g_11]
-  1242 00001055 48890D(B0000000)        	mov qword [g_11], rcx
-  1243 0000105C 488B15(38000000)        	mov rdx, qword [g_10]
-  1244 00001063 4C8B1D(20000000)        	mov r11, qword [g_9]
-  1245 0000106A 4C8B2D(70000000)        	mov r13, qword [g_8]
-  1246 00001071 488B0D(60000000)        	mov rcx, qword [g_7]
-  1247 00001078 48890D(60000000)        	mov qword [g_7], rcx
-  1248 0000107F 488B1D(88000000)        	mov rbx, qword [g_6]
-  1249 00001086 488B0D(58000000)        	mov rcx, qword [g_5]
-  1250 0000108D 48890D(58000000)        	mov qword [g_5], rcx
-  1251 00001094 4C8B25(A8000000)        	mov r12, qword [g_4]
-  1252 0000109B 488B0D(80000000)        	mov rcx, qword [g_3]
-  1253 000010A2 48890D(80000000)        	mov qword [g_3], rcx
-  1254 000010A9 488B0D(48000000)        	mov rcx, qword [g_2]
-  1255 000010B0 48890D(48000000)        	mov qword [g_2], rcx
-  1256 000010B7 4C8B0D(08000000)        	mov r9, qword [g_1]
-  1257 000010BE 488B3D(30000000)        	mov rdi, qword [g_0]
-  1258 000010C5 415D                    	pop r13
-  1259 000010C7 415C                    	pop r12
-  1260 000010C9 5B                      	pop rbx
-  1261 000010CA 415F                    	pop r15
-  1262 000010CC 415E                    	pop r14
-  1263 000010CE C9                      	leave
-  1264 000010CF C3                      	ret 
-  1265                                  	section .data
-  1266                                  g_20:
-  1267 00000000 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1268                                  g_1:
-  1269 00000008 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1270                                  g_18:
-  1271 00000010 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1272                                  g_19:
-  1273 00000018 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1274                                  g_9:
-  1275 00000020 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1276                                  g_21:
-  1277 00000028 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1278                                  g_0:
-  1279 00000030 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1280                                  g_10:
-  1281 00000038 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1282                                  g_12:
-  1283 00000040 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1284                                  g_2:
-  1285 00000048 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1286                                  g_13:
-  1287 00000050 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1288                                  g_5:
-  1289 00000058 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1290                                  g_7:
-  1291 00000060 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1292                                  g_16:
-  1293 00000068 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1294                                  g_8:
-  1295 00000070 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1296                                  g_17:
-  1297 00000078 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1298                                  g_3:
-  1299 00000080 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1300                                  g_6:
-  1301 00000088 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1302                                  g_22:
-  1303 00000090 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1304                                  g_15:
-  1305 00000098 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1306                                  g_14:
-  1307 000000A0 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1308                                  g_4:
-  1309 000000A8 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
-  1310                                  g_11:
-  1311 000000B0 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+   919 0000093C 4889F8                  	mov rax, rdi
+   920 0000093F 4889F1                  	mov rcx, rsi
+   921 00000942 4839C8                  	cmp rax, rcx
+   922 00000945 7F05                    	jg b1
+   923                                  	b2:
+   924 00000947 4889C8                  	mov rax, rcx
+   925 0000094A EB00                    	jmp b3
+   926                                  	b1:
+   927                                  	b3:
+   928 0000094C C9                      	leave
+   929 0000094D C3                      	ret 
+   930                                  _equ:
+   931                                  	b4:
+   932 0000094E 55                      	push rbp
+   933 0000094F 4889E5                  	mov rbp, rsp
+   934 00000952 4889F9                  	mov rcx, rdi
+   935 00000955 4889F0                  	mov rax, rsi
+   936 00000958 4883F900                	cmp rcx, 0
+   937 0000095C 7423                    	je b5
+   938                                  	b6:
+   939 0000095E 4883F800                	cmp rax, 0
+   940 00000962 7416                    	je b7
+   941                                  	b8:
+   942 00000964 488B09                  	mov rcx, qword [rcx]
+   943 00000967 483B08                  	cmp rcx, qword [rax]
+   944 0000096A 7407                    	je b9
+   945                                  	b10:
+   946 0000096C B800000000              	mov rax, 0
+   947 00000971 EB05                    	jmp b11
+   948                                  	b9:
+   949 00000973 B801000000              	mov rax, 1
+   950                                  	b11:
+   951 00000978 EB19                    	jmp b12
+   952                                  	b7:
+   953                                  	b13:
+   954 0000097A B800000000              	mov rax, 0
+   955                                  	b14:
+   956 0000097F EB12                    	jmp b12
+   957                                  	b5:
+   958 00000981 4883F800                	cmp rax, 0
+   959 00000985 7407                    	je b15
+   960                                  	b16:
+   961                                  	b17:
+   962 00000987 B800000000              	mov rax, 0
+   963                                  	b18:
+   964 0000098C EB05                    	jmp b12
+   965                                  	b15:
+   966                                  	b19:
+   967 0000098E B801000000              	mov rax, 1
+   968                                  	b20:
+   969                                  	b12:
+   970 00000993 C9                      	leave
+   971 00000994 C3                      	ret 
+   972                                  _merge:
+   973                                  	b21:
+   974 00000995 55                      	push rbp
+   975 00000996 4889E5                  	mov rbp, rsp
+   976 00000999 4155                    	push r13
+   977 0000099B 4156                    	push r14
+   978 0000099D 53                      	push rbx
+   979 0000099E 4157                    	push r15
+   980 000009A0 4989FD                  	mov r13, rdi
+   981 000009A3 4989F7                  	mov r15, rsi
+   982 000009A6 4989D6                  	mov r14, rdx
+   983 000009A9 4C89F9                  	mov rcx, r15
+   984 000009AC 4C89E8                  	mov rax, r13
+   985 000009AF 4883C001                	add rax, 1
+   986 000009B3 4889C6                  	mov rsi, rax
+   987 000009B6 4889CF                  	mov rdi, rcx
+   988 000009B9 E85C0D0000              	call _splay_tree.find
+   989 000009BE 4889C3                  	mov rbx, rax
+   990 000009C1 4889D8                  	mov rax, rbx
+   991 000009C4 BE00000000              	mov rsi, 0
+   992 000009C9 4889C7                  	mov rdi, rax
+   993 000009CC E8280A0000              	call _Node.rotto
+   994 000009D1 4C89F8                  	mov rax, r15
+   995 000009D4 488918                  	mov qword [rax], rbx
+   996 000009D7 4C89F8                  	mov rax, r15
+   997 000009DA 4C89EE                  	mov rsi, r13
+   998 000009DD 4889C7                  	mov rdi, rax
+   999 000009E0 E8350D0000              	call _splay_tree.find
+  1000 000009E5 4889C3                  	mov rbx, rax
+  1001 000009E8 4889D9                  	mov rcx, rbx
+  1002 000009EB 4C89F8                  	mov rax, r15
+  1003 000009EE 488B30                  	mov rsi, qword [rax]
+  1004 000009F1 4889CF                  	mov rdi, rcx
+  1005 000009F4 E8000A0000              	call _Node.rotto
+  1006 000009F9 4889D8                  	mov rax, rbx
+  1007 000009FC 488B4850                	mov rcx, qword [rax + 80]
+  1008 00000A00 4C89F0                  	mov rax, r14
+  1009 00000A03 488B00                  	mov rax, qword [rax]
+  1010 00000A06 48894110                	mov qword [rcx + 16], rax
+  1011 00000A0A 4C89F0                  	mov rax, r14
+  1012 00000A0D 488B00                  	mov rax, qword [rax]
+  1013 00000A10 48895858                	mov qword [rax + 88], rbx
+  1014 00000A14 4889D8                  	mov rax, rbx
+  1015 00000A17 BE00000000              	mov rsi, 0
+  1016 00000A1C 4889C7                  	mov rdi, rax
+  1017 00000A1F E8D5090000              	call _Node.rotto
+  1018 00000A24 4C89F8                  	mov rax, r15
+  1019 00000A27 488918                  	mov qword [rax], rbx
+  1020                                  	b22:
+  1021 00000A2A 415F                    	pop r15
+  1022 00000A2C 5B                      	pop rbx
+  1023 00000A2D 415E                    	pop r14
+  1024 00000A2F 415D                    	pop r13
+  1025 00000A31 C9                      	leave
+  1026 00000A32 C3                      	ret 
+  1027                                  _main:
+  1028                                  	b23:
+  1029 00000A33 55                      	push rbp
+  1030 00000A34 4889E5                  	mov rbp, rsp
+  1031 00000A37 4883EC10                	sub rsp, 16
+  1032 00000A3B 4154                    	push r12
+  1033 00000A3D 4155                    	push r13
+  1034 00000A3F 4156                    	push r14
+  1035 00000A41 53                      	push rbx
+  1036 00000A42 4157                    	push r15
+  1037 00000A44 4C8B3D(38000000)        	mov r15, qword [g_0]
+  1038 00000A4B 488B05(10000000)        	mov rax, qword [g_1]
+  1039 00000A52 488905(10000000)        	mov qword [g_1], rax
+  1040 00000A59 488B05(30000000)        	mov rax, qword [g_2]
+  1041 00000A60 488905(30000000)        	mov qword [g_2], rax
+  1042 00000A67 488B05(28000000)        	mov rax, qword [g_3]
+  1043 00000A6E 488905(28000000)        	mov qword [g_3], rax
+  1044 00000A75 488B05(00000000)        	mov rax, qword [g_4]
+  1045 00000A7C 488905(00000000)        	mov qword [g_4], rax
+  1046 00000A83 488B05(18000000)        	mov rax, qword [g_5]
+  1047 00000A8A 488905(18000000)        	mov qword [g_5], rax
+  1048 00000A91 488B05(40000000)        	mov rax, qword [g_6]
+  1049 00000A98 488905(40000000)        	mov qword [g_6], rax
+  1050 00000A9F E82CF8FFFF              	call __getInt
+  1051 00000AA4 488905(10000000)        	mov qword [g_1], rax
+  1052 00000AAB E820F8FFFF              	call __getInt
+  1053 00000AB0 488905(18000000)        	mov qword [g_5], rax
+  1054 00000AB7 BF08000000              	mov rdi, 8
+  1055 00000ABC E8(00000000)            	call malloc
+  1056 00000AC1 4989C7                  	mov r15, rax
+  1057 00000AC4 4C89FF                  	mov rdi, r15
+  1058 00000AC7 E8F8090000              	call _splay_tree.splay_tree
+  1059 00000ACC 4C89F8                  	mov rax, r15
+  1060 00000ACF 488905(30000000)        	mov qword [g_2], rax
+  1061 00000AD6 BF08000000              	mov rdi, 8
+  1062 00000ADB E8(00000000)            	call malloc
+  1063 00000AE0 4989C7                  	mov r15, rax
+  1064 00000AE3 4C89FF                  	mov rdi, r15
+  1065 00000AE6 E8D9090000              	call _splay_tree.splay_tree
+  1066 00000AEB 488B05(00000000)        	mov rax, qword [g_4]
+  1067 00000AF2 4889C1                  	mov rcx, rax
+  1068 00000AF5 48F7D9                  	neg rcx
+  1069 00000AF8 488B05(28000000)        	mov rax, qword [g_3]
+  1070 00000AFF 48894808                	mov qword [rax + 8], rcx
+  1071 00000B03 488B05(10000000)        	mov rax, qword [g_1]
+  1072 00000B0A 4889C2                  	mov rdx, rax
+  1073 00000B0D 4883C201                	add rdx, 1
+  1074 00000B11 488B05(00000000)        	mov rax, qword [g_4]
+  1075 00000B18 4889C1                  	mov rcx, rax
+  1076 00000B1B 48F7D9                  	neg rcx
+  1077 00000B1E 488B05(28000000)        	mov rax, qword [g_3]
+  1078 00000B25 48894CD008              	mov qword [rax + rdx * 8 + 8], rcx
+  1079 00000B2A B801000000              	mov rax, 1
+  1080 00000B2F 488945F8                	mov qword [rbp - 8], rax
+  1081                                  	b24:
+  1082 00000B33 488B45F8                	mov rax, qword [rbp - 8]
+  1083 00000B37 488B0D(10000000)        	mov rcx, qword [g_1]
+  1084 00000B3E 4839C8                  	cmp rax, rcx
+  1085 00000B41 0F8E33030000            	jle b25
+  1086                                  	b26:
+  1087 00000B47 488B05(30000000)        	mov rax, qword [g_2]
+  1088 00000B4E 4889C1                  	mov rcx, rax
+  1089 00000B51 488B05(10000000)        	mov rax, qword [g_1]
+  1090 00000B58 4889C2                  	mov rdx, rax
+  1091 00000B5B 4883C201                	add rdx, 1
+  1092 00000B5F 488B05(28000000)        	mov rax, qword [g_3]
+  1093 00000B66 488905(28000000)        	mov qword [g_3], rax
+  1094 00000B6D BE00000000              	mov rsi, 0
+  1095 00000B72 4889CF                  	mov rdi, rcx
+  1096 00000B75 E8280B0000              	call _splay_tree.build_tree
+  1097 00000B7A 488B05(28000000)        	mov rax, qword [g_3]
+  1098 00000B81 488905(28000000)        	mov qword [g_3], rax
+  1099 00000B88 B801000000              	mov rax, 1
+  1100 00000B8D 488945F8                	mov qword [rbp - 8], rax
+  1101                                  	b27:
+  1102 00000B91 488B45F8                	mov rax, qword [rbp - 8]
+  1103 00000B95 488B0D(18000000)        	mov rcx, qword [g_5]
+  1104 00000B9C 4839C8                  	cmp rax, rcx
+  1105 00000B9F 7E6B                    	jle b28
+  1106                                  	b29:
+  1107 00000BA1 B800000000              	mov rax, 0
+  1108                                  	b30:
+  1109 00000BA6 4C893D(38000000)        	mov qword [g_0], r15
+  1110 00000BAD 488B0D(10000000)        	mov rcx, qword [g_1]
+  1111 00000BB4 48890D(10000000)        	mov qword [g_1], rcx
+  1112 00000BBB 488B0D(30000000)        	mov rcx, qword [g_2]
+  1113 00000BC2 48890D(30000000)        	mov qword [g_2], rcx
+  1114 00000BC9 488B0D(28000000)        	mov rcx, qword [g_3]
+  1115 00000BD0 48890D(28000000)        	mov qword [g_3], rcx
+  1116 00000BD7 488B0D(00000000)        	mov rcx, qword [g_4]
+  1117 00000BDE 48890D(00000000)        	mov qword [g_4], rcx
+  1118 00000BE5 488B0D(18000000)        	mov rcx, qword [g_5]
+  1119 00000BEC 48890D(18000000)        	mov qword [g_5], rcx
+  1120 00000BF3 488B0D(40000000)        	mov rcx, qword [g_6]
+  1121 00000BFA 48890D(40000000)        	mov qword [g_6], rcx
+  1122 00000C01 415F                    	pop r15
+  1123 00000C03 5B                      	pop rbx
+  1124 00000C04 415E                    	pop r14
+  1125 00000C06 415D                    	pop r13
+  1126 00000C08 415C                    	pop r12
+  1127 00000C0A C9                      	leave
+  1128 00000C0B C3                      	ret 
+  1129                                  	b28:
+  1130 00000C0C E82FF6FFFF              	call __getString
+  1131 00000C11 4989C6                  	mov r14, rax
+  1132 00000C14 4C89F0                  	mov rax, r14
+  1133 00000C17 BE00000000              	mov rsi, 0
+  1134 00000C1C 4889C7                  	mov rdi, rax
+  1135 00000C1F E83CFAFFFF              	call __string_ord
+  1136 00000C24 4889C3                  	mov rbx, rax
+  1137 00000C27 488B05(40000000)        	mov rax, qword [g_6]
+  1138 00000C2E BE00000000              	mov rsi, 0
+  1139 00000C33 4889C7                  	mov rdi, rax
+  1140 00000C36 E825FAFFFF              	call __string_ord
+  1141 00000C3B 4839C3                  	cmp rbx, rax
+  1142 00000C3E 756F                    	jne b31
+  1143                                  	b32:
+  1144 00000C40 E88BF6FFFF              	call __getInt
+  1145 00000C45 4989C4                  	mov r12, rax
+  1146 00000C48 E883F6FFFF              	call __getInt
+  1147 00000C4D 4989C5                  	mov r13, rax
+  1148 00000C50 BB01000000              	mov rbx, 1
+  1149                                  	b33:
+  1150 00000C55 4C39EB                  	cmp rbx, r13
+  1151 00000C58 0F8E00020000            	jle b34
+  1152                                  	b35:
+  1153 00000C5E 4C89F9                  	mov rcx, r15
+  1154 00000C61 488B05(28000000)        	mov rax, qword [g_3]
+  1155 00000C68 488905(28000000)        	mov qword [g_3], rax
+  1156 00000C6F 4C89EA                  	mov rdx, r13
+  1157 00000C72 BE01000000              	mov rsi, 1
+  1158 00000C77 4889CF                  	mov rdi, rcx
+  1159 00000C7A E8230A0000              	call _splay_tree.build_tree
+  1160 00000C7F 488B05(28000000)        	mov rax, qword [g_3]
+  1161 00000C86 488905(28000000)        	mov qword [g_3], rax
+  1162 00000C8D 4C89E0                  	mov rax, r12
+  1163 00000C90 4883C001                	add rax, 1
+  1164 00000C94 4889C7                  	mov rdi, rax
+  1165 00000C97 488B05(30000000)        	mov rax, qword [g_2]
+  1166 00000C9E 4889C1                  	mov rcx, rax
+  1167 00000CA1 4C89F8                  	mov rax, r15
+  1168 00000CA4 4889C2                  	mov rdx, rax
+  1169 00000CA7 4889CE                  	mov rsi, rcx
+  1170 00000CAA E8E6FCFFFF              	call _merge
+  1171                                  	b31:
+  1172 00000CAF 4C89F0                  	mov rax, r14
+  1173 00000CB2 BE00000000              	mov rsi, 0
+  1174 00000CB7 4889C7                  	mov rdi, rax
+  1175 00000CBA E8A1F9FFFF              	call __string_ord
+  1176 00000CBF 4889C3                  	mov rbx, rax
+  1177 00000CC2 488B05(40000000)        	mov rax, qword [g_6]
+  1178 00000CC9 BE01000000              	mov rsi, 1
+  1179 00000CCE 4889C7                  	mov rdi, rax
+  1180 00000CD1 E88AF9FFFF              	call __string_ord
+  1181 00000CD6 4839C3                  	cmp rbx, rax
+  1182 00000CD9 752F                    	jne b36
+  1183                                  	b37:
+  1184 00000CDB E8F0F5FFFF              	call __getInt
+  1185 00000CE0 4889C3                  	mov rbx, rax
+  1186 00000CE3 E8E8F5FFFF              	call __getInt
+  1187 00000CE8 4889C2                  	mov rdx, rax
+  1188 00000CEB 488B05(30000000)        	mov rax, qword [g_2]
+  1189 00000CF2 4889DE                  	mov rsi, rbx
+  1190 00000CF5 4883C601                	add rsi, 1
+  1191 00000CF9 4889D9                  	mov rcx, rbx
+  1192 00000CFC 4801D1                  	add rcx, rdx
+  1193 00000CFF 4889CA                  	mov rdx, rcx
+  1194 00000D02 4889C7                  	mov rdi, rax
+  1195 00000D05 E8150B0000              	call _splay_tree.del
+  1196                                  	b36:
+  1197 00000D0A 4C89F0                  	mov rax, r14
+  1198 00000D0D BE00000000              	mov rsi, 0
+  1199 00000D12 4889C7                  	mov rdi, rax
+  1200 00000D15 E846F9FFFF              	call __string_ord
+  1201 00000D1A 4883F852                	cmp rax, 82
+  1202 00000D1E 752C                    	jne b38
+  1203                                  	b39:
+  1204 00000D20 E8ABF5FFFF              	call __getInt
+  1205 00000D25 4889C3                  	mov rbx, rax
+  1206 00000D28 E8A3F5FFFF              	call __getInt
+  1207 00000D2D 4889C1                  	mov rcx, rax
+  1208 00000D30 488B05(30000000)        	mov rax, qword [g_2]
+  1209 00000D37 4889DE                  	mov rsi, rbx
+  1210 00000D3A 4883C601                	add rsi, 1
+  1211 00000D3E 4889DA                  	mov rdx, rbx
+  1212 00000D41 4801CA                  	add rdx, rcx
+  1213 00000D44 4889C7                  	mov rdi, rax
+  1214 00000D47 E8240C0000              	call _splay_tree.rol
+  1215                                  	b38:
+  1216 00000D4C 4C89F0                  	mov rax, r14
+  1217 00000D4F BE00000000              	mov rsi, 0
+  1218 00000D54 4889C7                  	mov rdi, rax
+  1219 00000D57 E804F9FFFF              	call __string_ord
+  1220 00000D5C 4883F847                	cmp rax, 71
+  1221 00000D60 7559                    	jne b40
+  1222                                  	b41:
+  1223 00000D62 E869F5FFFF              	call __getInt
+  1224 00000D67 4889C3                  	mov rbx, rax
+  1225 00000D6A E861F5FFFF              	call __getInt
+  1226 00000D6F 4889C1                  	mov rcx, rax
+  1227 00000D72 4883F900                	cmp rcx, 0
+  1228 00000D76 7F14                    	jg b42
+  1229                                  	b43:
+  1230 00000D78 48B8-                   	mov rax, g_7
+  1231 00000D7A [4800000000000000] 
+  1232 00000D82 4889C7                  	mov rdi, rax
+  1233 00000D85 E886F4FFFF              	call __print
+  1234 00000D8A EB2F                    	jmp b44
+  1235                                  	b42:
+  1236 00000D8C 488B05(30000000)        	mov rax, qword [g_2]
+  1237 00000D93 4889C7                  	mov rdi, rax
+  1238 00000D96 4889D8                  	mov rax, rbx
+  1239 00000D99 4883C001                	add rax, 1
+  1240 00000D9D 4889DA                  	mov rdx, rbx
+  1241 00000DA0 4801CA                  	add rdx, rcx
+  1242 00000DA3 4889C6                  	mov rsi, rax
+  1243 00000DA6 E8650C0000              	call _splay_tree.getsum
+  1244 00000DAB 4889C7                  	mov rdi, rax
+  1245 00000DAE E83DF5FFFF              	call __toString
+  1246 00000DB3 4889C7                  	mov rdi, rax
+  1247 00000DB6 E875F4FFFF              	call __println
+  1248                                  	b44:
+  1249                                  	b40:
+  1250 00000DBB 4C89F0                  	mov rax, r14
+  1251 00000DBE BE00000000              	mov rsi, 0
+  1252 00000DC3 4889C7                  	mov rdi, rax
+  1253 00000DC6 E895F8FFFF              	call __string_ord
+  1254 00000DCB 4883F84D                	cmp rax, 77
+  1255 00000DCF 757D                    	jne b45
+  1256                                  	b46:
+  1257 00000DD1 4C89F0                  	mov rax, r14
+  1258 00000DD4 BE02000000              	mov rsi, 2
+  1259 00000DD9 4889C7                  	mov rdi, rax
+  1260 00000DDC E87FF8FFFF              	call __string_ord
+  1261 00000DE1 4883F84B                	cmp rax, 75
+  1262 00000DE5 7433                    	je b47
+  1263                                  	b48:
+  1264 00000DE7 488B05(30000000)        	mov rax, qword [g_2]
+  1265 00000DEE 4889C7                  	mov rdi, rax
+  1266 00000DF1 E8AE0C0000              	call _splay_tree.getMax
+  1267 00000DF6 4889C7                  	mov rdi, rax
+  1268 00000DF9 E8F2F4FFFF              	call __toString
+  1269 00000DFE 48BE-                   	mov rsi, g_8
+  1270 00000E00 [5300000000000000] 
+  1271 00000E08 4889C7                  	mov rdi, rax
+  1272 00000E0B E860F8FFFF              	call __stringConcate
+  1273 00000E10 4889C7                  	mov rdi, rax
+  1274 00000E13 E8F8F3FFFF              	call __print
+  1275 00000E18 EB34                    	jmp b49
+  1276                                  	b47:
+  1277 00000E1A E8B1F4FFFF              	call __getInt
+  1278 00000E1F 4889C3                  	mov rbx, rax
+  1279 00000E22 E8A9F4FFFF              	call __getInt
+  1280 00000E27 4989C6                  	mov r14, rax
+  1281 00000E2A E8A1F4FFFF              	call __getInt
+  1282 00000E2F 488B0D(30000000)        	mov rcx, qword [g_2]
+  1283 00000E36 4889CF                  	mov rdi, rcx
+  1284 00000E39 4889DE                  	mov rsi, rbx
+  1285 00000E3C 4883C601                	add rsi, 1
+  1286 00000E40 4889DA                  	mov rdx, rbx
+  1287 00000E43 4C01F2                  	add rdx, r14
+  1288 00000E46 4889C1                  	mov rcx, rax
+  1289 00000E49 E8780A0000              	call _splay_tree.change
+  1290                                  	b49:
+  1291                                  	b45:
+  1292                                  	b50:
+  1293 00000E4E 488B45F8                	mov rax, qword [rbp - 8]
+  1294 00000E52 48FFC0                  	inc rax
+  1295 00000E55 488945F8                	mov qword [rbp - 8], rax
+  1296 00000E59 E933FDFFFF              	jmp b27
+  1297                                  	b34:
+  1298 00000E5E E86DF4FFFF              	call __getInt
+  1299 00000E63 4889C1                  	mov rcx, rax
+  1300 00000E66 488B05(28000000)        	mov rax, qword [g_3]
+  1301 00000E6D 48894CD808              	mov qword [rax + rbx * 8 + 8], rcx
+  1302                                  	b51:
+  1303 00000E72 48FFC3                  	inc rbx
+  1304 00000E75 E9DBFDFFFF              	jmp b33
+  1305                                  	b25:
+  1306 00000E7A E851F4FFFF              	call __getInt
+  1307 00000E7F 488B15(28000000)        	mov rdx, qword [g_3]
+  1308 00000E86 488B4DF8                	mov rcx, qword [rbp - 8]
+  1309 00000E8A 488944CA08              	mov qword [rdx + rcx * 8 + 8], rax
+  1310                                  	b52:
+  1311 00000E8F 488B45F8                	mov rax, qword [rbp - 8]
+  1312 00000E93 488B45F8                	mov rax, qword [rbp - 8]
+  1313 00000E97 48FFC0                  	inc rax
+  1314 00000E9A 488945F8                	mov qword [rbp - 8], rax
+  1315 00000E9E E990FCFFFF              	jmp b24
+  1316                                  _Node.copy:
+  1317                                  	b53:
+  1318 00000EA3 55                      	push rbp
+  1319 00000EA4 4889E5                  	mov rbp, rsp
+  1320 00000EA7 4889FA                  	mov rdx, rdi
+  1321 00000EAA 4889F1                  	mov rcx, rsi
+  1322 00000EAD 4889C8                  	mov rax, rcx
+  1323 00000EB0 488B00                  	mov rax, qword [rax]
+  1324 00000EB3 488902                  	mov qword [rdx], rax
+  1325 00000EB6 4889C8                  	mov rax, rcx
+  1326 00000EB9 488B4008                	mov rax, qword [rax + 8]
+  1327 00000EBD 48894208                	mov qword [rdx + 8], rax
+  1328 00000EC1 4889C8                  	mov rax, rcx
+  1329 00000EC4 488B4010                	mov rax, qword [rax + 16]
+  1330 00000EC8 48894210                	mov qword [rdx + 16], rax
+  1331 00000ECC 4889C8                  	mov rax, rcx
+  1332 00000ECF 488B4018                	mov rax, qword [rax + 24]
+  1333 00000ED3 48894218                	mov qword [rdx + 24], rax
+  1334 00000ED7 4889C8                  	mov rax, rcx
+  1335 00000EDA 488B4020                	mov rax, qword [rax + 32]
+  1336 00000EDE 48894220                	mov qword [rdx + 32], rax
+  1337 00000EE2 4889C8                  	mov rax, rcx
+  1338 00000EE5 488B4028                	mov rax, qword [rax + 40]
+  1339 00000EE9 48894228                	mov qword [rdx + 40], rax
+  1340 00000EED 4889C8                  	mov rax, rcx
+  1341 00000EF0 488B4030                	mov rax, qword [rax + 48]
+  1342 00000EF4 48894230                	mov qword [rdx + 48], rax
+  1343 00000EF8 4889C8                  	mov rax, rcx
+  1344 00000EFB 488B4038                	mov rax, qword [rax + 56]
+  1345 00000EFF 48894238                	mov qword [rdx + 56], rax
+  1346 00000F03 4889C8                  	mov rax, rcx
+  1347 00000F06 488B4040                	mov rax, qword [rax + 64]
+  1348 00000F0A 48894240                	mov qword [rdx + 64], rax
+  1349 00000F0E 4889C8                  	mov rax, rcx
+  1350 00000F11 488B4048                	mov rax, qword [rax + 72]
+  1351 00000F15 48894248                	mov qword [rdx + 72], rax
+  1352 00000F19 488B7250                	mov rsi, qword [rdx + 80]
+  1353 00000F1D 4889C8                  	mov rax, rcx
+  1354 00000F20 488B4050                	mov rax, qword [rax + 80]
+  1355 00000F24 488B4008                	mov rax, qword [rax + 8]
+  1356 00000F28 48894608                	mov qword [rsi + 8], rax
+  1357 00000F2C 488B7250                	mov rsi, qword [rdx + 80]
+  1358 00000F30 4889C8                  	mov rax, rcx
+  1359 00000F33 488B4050                	mov rax, qword [rax + 80]
+  1360 00000F37 488B4010                	mov rax, qword [rax + 16]
+  1361 00000F3B 48894610                	mov qword [rsi + 16], rax
+  1362 00000F3F 4889C8                  	mov rax, rcx
+  1363 00000F42 488B4058                	mov rax, qword [rax + 88]
+  1364 00000F46 48894258                	mov qword [rdx + 88], rax
+  1365                                  	b54:
+  1366 00000F4A C9                      	leave
+  1367 00000F4B C3                      	ret 
+  1368                                  _Node.init:
+  1369                                  	b55:
+  1370 00000F4C 55                      	push rbp
+  1371 00000F4D 4889E5                  	mov rbp, rsp
+  1372 00000F50 4156                    	push r14
+  1373 00000F52 53                      	push rbx
+  1374 00000F53 4157                    	push r15
+  1375 00000F55 4889FB                  	mov rbx, rdi
+  1376 00000F58 4889F1                  	mov rcx, rsi
+  1377 00000F5B 4889D0                  	mov rax, rdx
+  1378 00000F5E 488903                  	mov qword [rbx], rax
+  1379 00000F61 48C7431001000000        	mov qword [rbx + 16], 1
+  1380 00000F69 48C7432000000000        	mov qword [rbx + 32], 0
+  1381 00000F71 48C7433000000000        	mov qword [rbx + 48], 0
+  1382 00000F79 48C7432800000000        	mov qword [rbx + 40], 0
+  1383 00000F81 48894B18                	mov qword [rbx + 24], rcx
+  1384 00000F85 48894B08                	mov qword [rbx + 8], rcx
+  1385 00000F89 48894B38                	mov qword [rbx + 56], rcx
+  1386 00000F8D 48894B40                	mov qword [rbx + 64], rcx
+  1387 00000F91 48894B48                	mov qword [rbx + 72], rcx
+  1388 00000F95 41BE02000000            	mov r14, 2
+  1389 00000F9B 4A8D04F508000000        	lea rax, [r14 * 8 + 8]
+  1390 00000FA3 4889C7                  	mov rdi, rax
+  1391 00000FA6 E8(00000000)            	call malloc
+  1392 00000FAB 4989C7                  	mov r15, rax
+  1393 00000FAE 4D8937                  	mov qword [r15], r14
+  1394                                  	b56:
+  1395 00000FB1 4983FE00                	cmp r14, 0
+  1396 00000FB5 7F2B                    	jg b57
+  1397                                  	b58:
+  1398 00000FB7 4C897B50                	mov qword [rbx + 80], r15
+  1399 00000FBB 488B4350                	mov rax, qword [rbx + 80]
+  1400 00000FBF 48C7400800000000        	mov qword [rax + 8], 0
+  1401 00000FC7 488B4350                	mov rax, qword [rbx + 80]
+  1402 00000FCB 48C7401000000000        	mov qword [rax + 16], 0
+  1403 00000FD3 48C7435800000000        	mov qword [rbx + 88], 0
+  1404                                  	b59:
+  1405 00000FDB 415F                    	pop r15
+  1406 00000FDD 5B                      	pop rbx
+  1407 00000FDE 415E                    	pop r14
+  1408 00000FE0 C9                      	leave
+  1409 00000FE1 C3                      	ret 
+  1410                                  	b57:
+  1411 00000FE2 BF08000000              	mov rdi, 8
+  1412 00000FE7 E8(00000000)            	call malloc
+  1413 00000FEC 48C70000000000          	mov qword [rax], 0
+  1414 00000FF3 4B8904F7                	mov qword [r15 + r14 * 8], rax
+  1415 00000FF7 49FFCE                  	dec r14
+  1416 00000FFA EBB5                    	jmp b56
+  1417                                  _Node.judge:
+  1418                                  	b60:
+  1419 00000FFC 55                      	push rbp
+  1420 00000FFD 4889E5                  	mov rbp, rsp
+  1421 00001000 4889F8                  	mov rax, rdi
+  1422 00001003 4889F1                  	mov rcx, rsi
+  1423 00001006 488B4050                	mov rax, qword [rax + 80]
+  1424 0000100A 488B4008                	mov rax, qword [rax + 8]
+  1425 0000100E 4889CE                  	mov rsi, rcx
+  1426 00001011 4889C7                  	mov rdi, rax
+  1427 00001014 E835F9FFFF              	call _equ
+  1428 00001019 4883F800                	cmp rax, 0
+  1429 0000101D 7507                    	jne b61
+  1430                                  	b62:
+  1431 0000101F B801000000              	mov rax, 1
+  1432 00001024 EB05                    	jmp b63
+  1433                                  	b61:
+  1434 00001026 B800000000              	mov rax, 0
+  1435                                  	b63:
+  1436 0000102B C9                      	leave
+  1437 0000102C C3                      	ret 
+  1438                                  _Node.push_up:
+  1439                                  	b64:
+  1440 0000102D 55                      	push rbp
+  1441 0000102E 4889E5                  	mov rbp, rsp
+  1442 00001031 4156                    	push r14
+  1443 00001033 53                      	push rbx
+  1444 00001034 4157                    	push r15
+  1445 00001036 4889FB                  	mov rbx, rdi
+  1446 00001039 48C7431001000000        	mov qword [rbx + 16], 1
+  1447 00001041 488B4308                	mov rax, qword [rbx + 8]
+  1448 00001045 48894318                	mov qword [rbx + 24], rax
+  1449 00001049 41BF00000000            	mov r15, 0
+  1450                                  	b65:
+  1451 0000104F 4983FF02                	cmp r15, 2
+  1452 00001053 0F8C8D010000            	jl b66
+  1453                                  	b67:
+  1454 00001059 488B4308                	mov rax, qword [rbx + 8]
+  1455 0000105D 48894338                	mov qword [rbx + 56], rax
+  1456 00001061 488B4308                	mov rax, qword [rbx + 8]
+  1457 00001065 48894340                	mov qword [rbx + 64], rax
+  1458 00001069 488B4308                	mov rax, qword [rbx + 8]
+  1459 0000106D 48894348                	mov qword [rbx + 72], rax
+  1460 00001071 4C8B7B08                	mov r15, qword [rbx + 8]
+  1461 00001075 4C8B7308                	mov r14, qword [rbx + 8]
+  1462 00001079 488B4350                	mov rax, qword [rbx + 80]
+  1463 0000107D 4883780800              	cmp qword [rax + 8], 0
+  1464 00001082 743B                    	je b68
+  1465                                  	b69:
+  1466 00001084 488B4350                	mov rax, qword [rbx + 80]
+  1467 00001088 488B4008                	mov rax, qword [rax + 8]
+  1468 0000108C 488B4038                	mov rax, qword [rax + 56]
+  1469 00001090 48894338                	mov qword [rbx + 56], rax
+  1470 00001094 488B4350                	mov rax, qword [rbx + 80]
+  1471 00001098 488B4008                	mov rax, qword [rax + 8]
+  1472 0000109C 4C037818                	add r15, qword [rax + 24]
+  1473 000010A0 488B4350                	mov rax, qword [rbx + 80]
+  1474 000010A4 488B4008                	mov rax, qword [rax + 8]
+  1475 000010A8 488B4040                	mov rax, qword [rax + 64]
+  1476 000010AC B900000000              	mov rcx, 0
+  1477 000010B1 4889CE                  	mov rsi, rcx
+  1478 000010B4 4889C7                  	mov rdi, rax
+  1479 000010B7 E87CF8FFFF              	call _max
+  1480 000010BC 4901C6                  	add r14, rax
+  1481                                  	b68:
+  1482 000010BF 488B4350                	mov rax, qword [rbx + 80]
+  1483 000010C3 4883781000              	cmp qword [rax + 16], 0
+  1484 000010C8 743B                    	je b70
+  1485                                  	b71:
+  1486 000010CA 488B4350                	mov rax, qword [rbx + 80]
+  1487 000010CE 488B4010                	mov rax, qword [rax + 16]
+  1488 000010D2 488B4040                	mov rax, qword [rax + 64]
+  1489 000010D6 48894340                	mov qword [rbx + 64], rax
+  1490 000010DA 488B4350                	mov rax, qword [rbx + 80]
+  1491 000010DE 488B4010                	mov rax, qword [rax + 16]
+  1492 000010E2 4C037018                	add r14, qword [rax + 24]
+  1493 000010E6 488B4350                	mov rax, qword [rbx + 80]
+  1494 000010EA 488B4010                	mov rax, qword [rax + 16]
+  1495 000010EE 488B4038                	mov rax, qword [rax + 56]
+  1496 000010F2 B900000000              	mov rcx, 0
+  1497 000010F7 4889CE                  	mov rsi, rcx
+  1498 000010FA 4889C7                  	mov rdi, rax
+  1499 000010FD E836F8FFFF              	call _max
+  1500 00001102 4901C7                  	add r15, rax
+  1501                                  	b70:
+  1502 00001105 488B4338                	mov rax, qword [rbx + 56]
+  1503 00001109 4C89F9                  	mov rcx, r15
+  1504 0000110C 4889CE                  	mov rsi, rcx
+  1505 0000110F 4889C7                  	mov rdi, rax
+  1506 00001112 E821F8FFFF              	call _max
+  1507 00001117 48894338                	mov qword [rbx + 56], rax
+  1508 0000111B 488B4B40                	mov rcx, qword [rbx + 64]
+  1509 0000111F 4C89F0                  	mov rax, r14
+  1510 00001122 4889C6                  	mov rsi, rax
+  1511 00001125 4889CF                  	mov rdi, rcx
+  1512 00001128 E80BF8FFFF              	call _max
+  1513 0000112D 48894340                	mov qword [rbx + 64], rax
+  1514 00001131 41BF00000000            	mov r15, 0
+  1515                                  	b72:
+  1516 00001137 4983FF02                	cmp r15, 2
+  1517 0000113B 7C75                    	jl b73
+  1518                                  	b74:
+  1519 0000113D 4C8B7B08                	mov r15, qword [rbx + 8]
+  1520 00001141 488B4350                	mov rax, qword [rbx + 80]
+  1521 00001145 4883780800              	cmp qword [rax + 8], 0
+  1522 0000114A 741F                    	je b75
+  1523                                  	b76:
+  1524 0000114C 488B4350                	mov rax, qword [rbx + 80]
+  1525 00001150 488B4008                	mov rax, qword [rax + 8]
+  1526 00001154 488B4840                	mov rcx, qword [rax + 64]
+  1527 00001158 B800000000              	mov rax, 0
+  1528 0000115D 4889C6                  	mov rsi, rax
+  1529 00001160 4889CF                  	mov rdi, rcx
+  1530 00001163 E8D0F7FFFF              	call _max
+  1531 00001168 4901C7                  	add r15, rax
+  1532                                  	b75:
+  1533 0000116B 488B4350                	mov rax, qword [rbx + 80]
+  1534 0000116F 4883781000              	cmp qword [rax + 16], 0
+  1535 00001174 741F                    	je b77
+  1536                                  	b78:
+  1537 00001176 488B4350                	mov rax, qword [rbx + 80]
+  1538 0000117A 488B4010                	mov rax, qword [rax + 16]
+  1539 0000117E 488B4838                	mov rcx, qword [rax + 56]
+  1540 00001182 B800000000              	mov rax, 0
+  1541 00001187 4889C6                  	mov rsi, rax
+  1542 0000118A 4889CF                  	mov rdi, rcx
+  1543 0000118D E8A6F7FFFF              	call _max
+  1544 00001192 4901C7                  	add r15, rax
+  1545                                  	b77:
+  1546 00001195 488B4348                	mov rax, qword [rbx + 72]
+  1547 00001199 4C89F9                  	mov rcx, r15
+  1548 0000119C 4889CE                  	mov rsi, rcx
+  1549 0000119F 4889C7                  	mov rdi, rax
+  1550 000011A2 E891F7FFFF              	call _max
+  1551 000011A7 48894348                	mov qword [rbx + 72], rax
+  1552                                  	b79:
+  1553 000011AB 415F                    	pop r15
+  1554 000011AD 5B                      	pop rbx
+  1555 000011AE 415E                    	pop r14
+  1556 000011B0 C9                      	leave
+  1557 000011B1 C3                      	ret 
+  1558                                  	b73:
+  1559 000011B2 488B4350                	mov rax, qword [rbx + 80]
+  1560 000011B6 4A837CF80800            	cmp qword [rax + r15 * 8 + 8], 0
+  1561 000011BC 7420                    	je b80
+  1562                                  	b81:
+  1563 000011BE 488B4B48                	mov rcx, qword [rbx + 72]
+  1564 000011C2 488B4350                	mov rax, qword [rbx + 80]
+  1565 000011C6 4A8B44F808              	mov rax, qword [rax + r15 * 8 + 8]
+  1566 000011CB 488B4048                	mov rax, qword [rax + 72]
+  1567 000011CF 4889C6                  	mov rsi, rax
+  1568 000011D2 4889CF                  	mov rdi, rcx
+  1569 000011D5 E85EF7FFFF              	call _max
+  1570 000011DA 48894348                	mov qword [rbx + 72], rax
+  1571                                  	b80:
+  1572                                  	b82:
+  1573 000011DE 49FFC7                  	inc r15
+  1574 000011E1 E951FFFFFF              	jmp b72
+  1575                                  	b66:
+  1576 000011E6 488B4350                	mov rax, qword [rbx + 80]
+  1577 000011EA 4A837CF80800            	cmp qword [rax + r15 * 8 + 8], 0
+  1578 000011F0 742A                    	je b83
+  1579                                  	b84:
+  1580 000011F2 488B4350                	mov rax, qword [rbx + 80]
+  1581 000011F6 4A8B44F808              	mov rax, qword [rax + r15 * 8 + 8]
+  1582 000011FB 488B4B10                	mov rcx, qword [rbx + 16]
+  1583 000011FF 48034810                	add rcx, qword [rax + 16]
+  1584 00001203 48894B10                	mov qword [rbx + 16], rcx
+  1585 00001207 488B4350                	mov rax, qword [rbx + 80]
+  1586 0000120B 4A8B4CF808              	mov rcx, qword [rax + r15 * 8 + 8]
+  1587 00001210 488B4318                	mov rax, qword [rbx + 24]
+  1588 00001214 48034118                	add rax, qword [rcx + 24]
+  1589 00001218 48894318                	mov qword [rbx + 24], rax
+  1590                                  	b83:
+  1591                                  	b85:
+  1592 0000121C 49FFC7                  	inc r15
+  1593 0000121F E92BFEFFFF              	jmp b65
+  1594                                  _Node.addtag_ch:
+  1595                                  	b86:
+  1596 00001224 55                      	push rbp
+  1597 00001225 4889E5                  	mov rbp, rsp
+  1598 00001228 4889F1                  	mov rcx, rsi
+  1599 0000122B 48894F08                	mov qword [rdi + 8], rcx
+  1600 0000122F 488B4710                	mov rax, qword [rdi + 16]
+  1601 00001233 48F7E9                  	imul rcx
+  1602 00001236 48894718                	mov qword [rdi + 24], rax
+  1603 0000123A 4883F900                	cmp rcx, 0
+  1604 0000123E 7D0E                    	jge b87
+  1605                                  	b88:
+  1606 00001240 48894F38                	mov qword [rdi + 56], rcx
+  1607 00001244 48894F40                	mov qword [rdi + 64], rcx
+  1608 00001248 48894F48                	mov qword [rdi + 72], rcx
+  1609 0000124C EB18                    	jmp b89
+  1610                                  	b87:
+  1611 0000124E 488B4718                	mov rax, qword [rdi + 24]
+  1612 00001252 48894738                	mov qword [rdi + 56], rax
+  1613 00001256 488B4718                	mov rax, qword [rdi + 24]
+  1614 0000125A 48894740                	mov qword [rdi + 64], rax
+  1615 0000125E 488B4718                	mov rax, qword [rdi + 24]
+  1616 00001262 48894748                	mov qword [rdi + 72], rax
+  1617                                  	b89:
+  1618 00001266 48C7472001000000        	mov qword [rdi + 32], 1
+  1619 0000126E 48894F28                	mov qword [rdi + 40], rcx
+  1620                                  	b90:
+  1621 00001272 C9                      	leave
+  1622 00001273 C3                      	ret 
+  1623                                  _Node.addtag_ro:
+  1624                                  	b91:
+  1625 00001274 55                      	push rbp
+  1626 00001275 4889E5                  	mov rbp, rsp
+  1627 00001278 4889FA                  	mov rdx, rdi
+  1628 0000127B 488B4250                	mov rax, qword [rdx + 80]
+  1629 0000127F 488B4808                	mov rcx, qword [rax + 8]
+  1630 00001283 488B7250                	mov rsi, qword [rdx + 80]
+  1631 00001287 488B4250                	mov rax, qword [rdx + 80]
+  1632 0000128B 488B4010                	mov rax, qword [rax + 16]
+  1633 0000128F 48894608                	mov qword [rsi + 8], rax
+  1634 00001293 488B4250                	mov rax, qword [rdx + 80]
+  1635 00001297 48894810                	mov qword [rax + 16], rcx
+  1636 0000129B 488B4238                	mov rax, qword [rdx + 56]
+  1637 0000129F 488B4A40                	mov rcx, qword [rdx + 64]
+  1638 000012A3 48894A38                	mov qword [rdx + 56], rcx
+  1639 000012A7 48894240                	mov qword [rdx + 64], rax
+  1640 000012AB 488B4230                	mov rax, qword [rdx + 48]
+  1641 000012AF 4883F001                	xor rax, 1
+  1642 000012B3 48894230                	mov qword [rdx + 48], rax
+  1643                                  	b92:
+  1644 000012B7 C9                      	leave
+  1645 000012B8 C3                      	ret 
+  1646                                  _Node.push_down:
+  1647                                  	b93:
+  1648 000012B9 55                      	push rbp
+  1649 000012BA 4889E5                  	mov rbp, rsp
+  1650 000012BD 53                      	push rbx
+  1651 000012BE 4157                    	push r15
+  1652 000012C0 4889FB                  	mov rbx, rdi
+  1653 000012C3 48837B2001              	cmp qword [rbx + 32], 1
+  1654 000012C8 7514                    	jne b94
+  1655                                  	b95:
+  1656 000012CA 41BF00000000            	mov r15, 0
+  1657                                  	b96:
+  1658 000012D0 4983FF02                	cmp r15, 2
+  1659 000012D4 7C4A                    	jl b97
+  1660                                  	b98:
+  1661 000012D6 48C7432000000000        	mov qword [rbx + 32], 0
+  1662                                  	b94:
+  1663 000012DE 48837B3001              	cmp qword [rbx + 48], 1
+  1664 000012E3 7514                    	jne b99
+  1665                                  	b100:
+  1666 000012E5 41BF00000000            	mov r15, 0
+  1667                                  	b101:
+  1668 000012EB 4983FF02                	cmp r15, 2
+  1669 000012EF 7C0D                    	jl b102
+  1670                                  	b103:
+  1671 000012F1 48C7433000000000        	mov qword [rbx + 48], 0
+  1672                                  	b99:
+  1673                                  	b104:
+  1674 000012F9 415F                    	pop r15
+  1675 000012FB 5B                      	pop rbx
+  1676 000012FC C9                      	leave
+  1677 000012FD C3                      	ret 
+  1678                                  	b102:
+  1679 000012FE 488B4350                	mov rax, qword [rbx + 80]
+  1680 00001302 4A837CF80800            	cmp qword [rax + r15 * 8 + 8], 0
+  1681 00001308 7411                    	je b105
+  1682                                  	b106:
+  1683 0000130A 488B4350                	mov rax, qword [rbx + 80]
+  1684 0000130E 4A8B44F808              	mov rax, qword [rax + r15 * 8 + 8]
+  1685 00001313 4889C7                  	mov rdi, rax
+  1686 00001316 E859FFFFFF              	call _Node.addtag_ro
+  1687                                  	b105:
+  1688                                  	b107:
+  1689 0000131B 49FFC7                  	inc r15
+  1690 0000131E EBCB                    	jmp b101
+  1691                                  	b97:
+  1692 00001320 488B4350                	mov rax, qword [rbx + 80]
+  1693 00001324 4A837CF80800            	cmp qword [rax + r15 * 8 + 8], 0
+  1694 0000132A 7415                    	je b108
+  1695                                  	b109:
+  1696 0000132C 488B4350                	mov rax, qword [rbx + 80]
+  1697 00001330 4A8B44F808              	mov rax, qword [rax + r15 * 8 + 8]
+  1698 00001335 488B7328                	mov rsi, qword [rbx + 40]
+  1699 00001339 4889C7                  	mov rdi, rax
+  1700 0000133C E8E3FEFFFF              	call _Node.addtag_ch
+  1701                                  	b108:
+  1702                                  	b110:
+  1703 00001341 49FFC7                  	inc r15
+  1704 00001344 EB8A                    	jmp b96
+  1705                                  _Node.rot:
+  1706                                  	b111:
+  1707 00001346 55                      	push rbp
+  1708 00001347 4889E5                  	mov rbp, rsp
+  1709 0000134A 4156                    	push r14
+  1710 0000134C 53                      	push rbx
+  1711 0000134D 4157                    	push r15
+  1712 0000134F 4889FB                  	mov rbx, rdi
+  1713 00001352 4C8B7B58                	mov r15, qword [rbx + 88]
+  1714 00001356 4C89F8                  	mov rax, r15
+  1715 00001359 4889DE                  	mov rsi, rbx
+  1716 0000135C 4889C7                  	mov rdi, rax
+  1717 0000135F E898FCFFFF              	call _Node.judge
+  1718 00001364 4889C1                  	mov rcx, rax
+  1719 00001367 4C89F8                  	mov rax, r15
+  1720 0000136A 488B7050                	mov rsi, qword [rax + 80]
+  1721 0000136E 4889C8                  	mov rax, rcx
+  1722 00001371 4883F001                	xor rax, 1
+  1723 00001375 488B5350                	mov rdx, qword [rbx + 80]
+  1724 00001379 488B44C208              	mov rax, qword [rdx + rax * 8 + 8]
+  1725 0000137E 488944CE08              	mov qword [rsi + rcx * 8 + 8], rax
+  1726 00001383 4889CA                  	mov rdx, rcx
+  1727 00001386 4883F201                	xor rdx, 1
+  1728 0000138A 488B4350                	mov rax, qword [rbx + 80]
+  1729 0000138E 4C897CD008              	mov qword [rax + rdx * 8 + 8], r15
+  1730 00001393 4C89F8                  	mov rax, r15
+  1731 00001396 488B4050                	mov rax, qword [rax + 80]
+  1732 0000139A 48837CC80800            	cmp qword [rax + rcx * 8 + 8], 0
+  1733 000013A0 7410                    	je b112
+  1734                                  	b113:
+  1735 000013A2 4C89F8                  	mov rax, r15
+  1736 000013A5 488B4050                	mov rax, qword [rax + 80]
+  1737 000013A9 488B44C808              	mov rax, qword [rax + rcx * 8 + 8]
+  1738 000013AE 4C897858                	mov qword [rax + 88], r15
+  1739                                  	b112:
+  1740 000013B2 4C89F8                  	mov rax, r15
+  1741 000013B5 488B4058                	mov rax, qword [rax + 88]
+  1742 000013B9 48894358                	mov qword [rbx + 88], rax
+  1743 000013BD 4C89F8                  	mov rax, r15
+  1744 000013C0 48895858                	mov qword [rax + 88], rbx
+  1745 000013C4 48837B5800              	cmp qword [rbx + 88], 0
+  1746 000013C9 741C                    	je b114
+  1747                                  	b115:
+  1748 000013CB 4C8B7358                	mov r14, qword [rbx + 88]
+  1749 000013CF 488B4358                	mov rax, qword [rbx + 88]
+  1750 000013D3 4C89FE                  	mov rsi, r15
+  1751 000013D6 4889C7                  	mov rdi, rax
+  1752 000013D9 E81EFCFFFF              	call _Node.judge
+  1753 000013DE 498B4E50                	mov rcx, qword [r14 + 80]
+  1754 000013E2 48895CC108              	mov qword [rcx + rax * 8 + 8], rbx
+  1755                                  	b114:
+  1756 000013E7 4C89F8                  	mov rax, r15
+  1757 000013EA 4889C7                  	mov rdi, rax
+  1758 000013ED E83BFCFFFF              	call _Node.push_up
+  1759                                  	b116:
+  1760 000013F2 415F                    	pop r15
+  1761 000013F4 5B                      	pop rbx
+  1762 000013F5 415E                    	pop r14
+  1763 000013F7 C9                      	leave
+  1764 000013F8 C3                      	ret 
+  1765                                  _Node.rotto:
+  1766                                  	b117:
+  1767 000013F9 55                      	push rbp
+  1768 000013FA 4889E5                  	mov rbp, rsp
+  1769 000013FD 4155                    	push r13
+  1770 000013FF 4156                    	push r14
+  1771 00001401 53                      	push rbx
+  1772 00001402 4157                    	push r15
+  1773 00001404 4989FE                  	mov r14, rdi
+  1774 00001407 4989F5                  	mov r13, rsi
+  1775                                  	b118:
+  1776 0000140A 498B4E58                	mov rcx, qword [r14 + 88]
+  1777 0000140E 4C89E8                  	mov rax, r13
+  1778 00001411 4889C6                  	mov rsi, rax
+  1779 00001414 4889CF                  	mov rdi, rcx
+  1780 00001417 E832F5FFFF              	call _equ
+  1781 0000141C 4883F800                	cmp rax, 0
+  1782 00001420 757E                    	jne b119
+  1783                                  	b120:
+  1784 00001422 4D8B7E58                	mov r15, qword [r14 + 88]
+  1785 00001426 4C89F8                  	mov rax, r15
+  1786 00001429 488B4858                	mov rcx, qword [rax + 88]
+  1787 0000142D 4C89E8                  	mov rax, r13
+  1788 00001430 4889C6                  	mov rsi, rax
+  1789 00001433 4889CF                  	mov rdi, rcx
+  1790 00001436 E813F5FFFF              	call _equ
+  1791 0000143B 4883F800                	cmp rax, 0
+  1792 0000143F 7552                    	jne b121
+  1793                                  	b122:
+  1794 00001441 4C89F8                  	mov rax, r15
+  1795 00001444 488B4058                	mov rax, qword [rax + 88]
+  1796 00001448 4C89FE                  	mov rsi, r15
+  1797 0000144B 4889C7                  	mov rdi, rax
+  1798 0000144E E8A9FBFFFF              	call _Node.judge
+  1799 00001453 4889C3                  	mov rbx, rax
+  1800 00001456 4C89F8                  	mov rax, r15
+  1801 00001459 4C89F6                  	mov rsi, r14
+  1802 0000145C 4889C7                  	mov rdi, rax
+  1803 0000145F E898FBFFFF              	call _Node.judge
+  1804 00001464 4839C3                  	cmp rbx, rax
+  1805 00001467 7412                    	je b123
+  1806                                  	b124:
+  1807 00001469 4C89F7                  	mov rdi, r14
+  1808 0000146C E8D5FEFFFF              	call _Node.rot
+  1809 00001471 4C89F7                  	mov rdi, r14
+  1810 00001474 E8CDFEFFFF              	call _Node.rot
+  1811 00001479 EB13                    	jmp b125
+  1812                                  	b123:
+  1813 0000147B 4C89F8                  	mov rax, r15
+  1814 0000147E 4889C7                  	mov rdi, rax
+  1815 00001481 E8C0FEFFFF              	call _Node.rot
+  1816 00001486 4C89F7                  	mov rdi, r14
+  1817 00001489 E8B8FEFFFF              	call _Node.rot
+  1818                                  	b125:
+  1819 0000148E E977FFFFFF              	jmp b118
+  1820                                  	b121:
+  1821 00001493 4C89F7                  	mov rdi, r14
+  1822 00001496 E8ABFEFFFF              	call _Node.rot
+  1823 0000149B E96AFFFFFF              	jmp b118
+  1824                                  	b119:
+  1825 000014A0 4C89F7                  	mov rdi, r14
+  1826 000014A3 E885FBFFFF              	call _Node.push_up
+  1827 000014A8 49837E5800              	cmp qword [r14 + 88], 0
+  1828 000014AD 740C                    	je b126
+  1829                                  	b127:
+  1830 000014AF 498B4658                	mov rax, qword [r14 + 88]
+  1831 000014B3 4889C7                  	mov rdi, rax
+  1832 000014B6 E872FBFFFF              	call _Node.push_up
+  1833                                  	b126:
+  1834                                  	b128:
+  1835 000014BB 415F                    	pop r15
+  1836 000014BD 5B                      	pop rbx
+  1837 000014BE 415E                    	pop r14
+  1838 000014C0 415D                    	pop r13
+  1839 000014C2 C9                      	leave
+  1840 000014C3 C3                      	ret 
+  1841                                  _splay_tree.splay_tree:
+  1842                                  	b129:
+  1843 000014C4 55                      	push rbp
+  1844 000014C5 4889E5                  	mov rbp, rsp
+  1845 000014C8 4889F8                  	mov rax, rdi
+  1846 000014CB 48C70000000000          	mov qword [rax], 0
+  1847                                  	b130:
+  1848 000014D2 C9                      	leave
+  1849 000014D3 C3                      	ret 
+  1850                                  _splay_tree.build:
+  1851                                  	b131:
+  1852 000014D4 55                      	push rbp
+  1853 000014D5 4889E5                  	mov rbp, rsp
+  1854 000014D8 4883EC30                	sub rsp, 48
+  1855 000014DC 4154                    	push r12
+  1856 000014DE 4155                    	push r13
+  1857 000014E0 4156                    	push r14
+  1858 000014E2 53                      	push rbx
+  1859 000014E3 4157                    	push r15
+  1860 000014E5 4989FF                  	mov r15, rdi
+  1861 000014E8 4989F6                  	mov r14, rsi
+  1862 000014EB 4889D0                  	mov rax, rdx
+  1863 000014EE 488945E0                	mov qword [rbp - 32], rax
+  1864 000014F2 4989CD                  	mov r13, rcx
+  1865 000014F5 4C89C0                  	mov rax, r8
+  1866 000014F8 488945F0                	mov qword [rbp - 16], rax
+  1867 000014FC 488B1D(28000000)        	mov rbx, qword [g_3]
+  1868 00001503 4C8B25(20000000)        	mov r12, qword [g_9]
+  1869 0000150A 4C89E9                  	mov rcx, r13
+  1870 0000150D 488B45F0                	mov rax, qword [rbp - 16]
+  1871 00001511 4801C1                  	add rcx, rax
+  1872 00001514 4889C8                  	mov rax, rcx
+  1873 00001517 B901000000              	mov rcx, 1
+  1874 0000151C 48D3F8                  	sar rax, cl
+  1875 0000151F 488945F8                	mov qword [rbp - 8], rax
+  1876 00001523 BF60000000              	mov rdi, 96
+  1877 00001528 E8(00000000)            	call malloc
+  1878 0000152D 488945D8                	mov qword [rbp - 40], rax
+  1879 00001531 488B45D8                	mov rax, qword [rbp - 40]
+  1880 00001535 4889C1                  	mov rcx, rax
+  1881 00001538 49FFC4                  	inc r12
+  1882 0000153B 4C89E2                  	mov rdx, r12
+  1883 0000153E 488B45F8                	mov rax, qword [rbp - 8]
+  1884 00001542 488B74C308              	mov rsi, qword [rbx + rax * 8 + 8]
+  1885 00001547 4889CF                  	mov rdi, rcx
+  1886 0000154A E8FDF9FFFF              	call _Node.init
+  1887 0000154F 4C89F1                  	mov rcx, r14
+  1888 00001552 488B45D8                	mov rax, qword [rbp - 40]
+  1889 00001556 4889C6                  	mov rsi, rax
+  1890 00001559 4889CF                  	mov rdi, rcx
+  1891 0000155C E842F9FFFF              	call _Node.copy
+  1892 00001561 4C89F0                  	mov rax, r14
+  1893 00001564 488B4DE0                	mov rcx, qword [rbp - 32]
+  1894 00001568 48894858                	mov qword [rax + 88], rcx
+  1895 0000156C 488B45F8                	mov rax, qword [rbp - 8]
+  1896 00001570 4939C5                  	cmp r13, rax
+  1897 00001573 0F8D81000000            	jge b132
+  1898                                  	b133:
+  1899 00001579 4C89F0                  	mov rax, r14
+  1900 0000157C 488B4050                	mov rax, qword [rax + 80]
+  1901 00001580 488945E8                	mov qword [rbp - 24], rax
+  1902 00001584 BF60000000              	mov rdi, 96
+  1903 00001589 E8(00000000)            	call malloc
+  1904 0000158E 4889C1                  	mov rcx, rax
+  1905 00001591 488B45E8                	mov rax, qword [rbp - 24]
+  1906 00001595 48894808                	mov qword [rax + 8], rcx
+  1907 00001599 4C89F0                  	mov rax, r14
+  1908 0000159C 488B4050                	mov rax, qword [rax + 80]
+  1909 000015A0 488B4008                	mov rax, qword [rax + 8]
+  1910 000015A4 49FFC4                  	inc r12
+  1911 000015A7 4C89E2                  	mov rdx, r12
+  1912 000015AA BE00000000              	mov rsi, 0
+  1913 000015AF 4889C7                  	mov rdi, rax
+  1914 000015B2 E895F9FFFF              	call _Node.init
+  1915 000015B7 4C89F0                  	mov rax, r14
+  1916 000015BA 488B4050                	mov rax, qword [rax + 80]
+  1917 000015BE 488B7008                	mov rsi, qword [rax + 8]
+  1918 000015C2 4C89F2                  	mov rdx, r14
+  1919 000015C5 4C89E8                  	mov rax, r13
+  1920 000015C8 488B4DF8                	mov rcx, qword [rbp - 8]
+  1921 000015CC 4883E901                	sub rcx, 1
+  1922 000015D0 48891D(28000000)        	mov qword [g_3], rbx
+  1923 000015D7 4C8925(20000000)        	mov qword [g_9], r12
+  1924 000015DE 4989C8                  	mov r8, rcx
+  1925 000015E1 4889C1                  	mov rcx, rax
+  1926 000015E4 4C89FF                  	mov rdi, r15
+  1927 000015E7 E8E8FEFFFF              	call _splay_tree.build
+  1928 000015EC 4C8B25(20000000)        	mov r12, qword [g_9]
+  1929 000015F3 488B1D(28000000)        	mov rbx, qword [g_3]
+  1930                                  	b132:
+  1931 000015FA 488B4DF0                	mov rcx, qword [rbp - 16]
+  1932 000015FE 488B45F8                	mov rax, qword [rbp - 8]
+  1933 00001602 4839C1                  	cmp rcx, rax
+  1934 00001605 7E77                    	jle b134
+  1935                                  	b135:
+  1936 00001607 4C89F0                  	mov rax, r14
+  1937 0000160A 4C8B6850                	mov r13, qword [rax + 80]
+  1938 0000160E BF60000000              	mov rdi, 96
+  1939 00001613 E8(00000000)            	call malloc
+  1940 00001618 49894510                	mov qword [r13 + 16], rax
+  1941 0000161C 4C89F0                  	mov rax, r14
+  1942 0000161F 488B4050                	mov rax, qword [rax + 80]
+  1943 00001623 488B4010                	mov rax, qword [rax + 16]
+  1944 00001627 49FFC4                  	inc r12
+  1945 0000162A 4C89E2                  	mov rdx, r12
+  1946 0000162D BE00000000              	mov rsi, 0
+  1947 00001632 4889C7                  	mov rdi, rax
+  1948 00001635 E812F9FFFF              	call _Node.init
+  1949 0000163A 4C89F0                  	mov rax, r14
+  1950 0000163D 488B4050                	mov rax, qword [rax + 80]
+  1951 00001641 488B7010                	mov rsi, qword [rax + 16]
+  1952 00001645 4C89F2                  	mov rdx, r14
+  1953 00001648 488B45F8                	mov rax, qword [rbp - 8]
+  1954 0000164C 4883C001                	add rax, 1
+  1955 00001650 4889C1                  	mov rcx, rax
+  1956 00001653 488B45F0                	mov rax, qword [rbp - 16]
+  1957 00001657 48891D(28000000)        	mov qword [g_3], rbx
+  1958 0000165E 4C8925(20000000)        	mov qword [g_9], r12
+  1959 00001665 4989C0                  	mov r8, rax
+  1960 00001668 4C89FF                  	mov rdi, r15
+  1961 0000166B E864FEFFFF              	call _splay_tree.build
+  1962 00001670 4C8B25(20000000)        	mov r12, qword [g_9]
+  1963 00001677 488B1D(28000000)        	mov rbx, qword [g_3]
+  1964                                  	b134:
+  1965 0000167E 4C89F0                  	mov rax, r14
+  1966 00001681 4889C7                  	mov rdi, rax
+  1967 00001684 E8A4F9FFFF              	call _Node.push_up
+  1968                                  	b136:
+  1969 00001689 48891D(28000000)        	mov qword [g_3], rbx
+  1970 00001690 4C8925(20000000)        	mov qword [g_9], r12
+  1971 00001697 415F                    	pop r15
+  1972 00001699 5B                      	pop rbx
+  1973 0000169A 415E                    	pop r14
+  1974 0000169C 415D                    	pop r13
+  1975 0000169E 415C                    	pop r12
+  1976 000016A0 C9                      	leave
+  1977 000016A1 C3                      	ret 
+  1978                                  _splay_tree.build_tree:
+  1979                                  	b137:
+  1980 000016A2 55                      	push rbp
+  1981 000016A3 4889E5                  	mov rbp, rsp
+  1982 000016A6 4155                    	push r13
+  1983 000016A8 4156                    	push r14
+  1984 000016AA 53                      	push rbx
+  1985 000016AB 4157                    	push r15
+  1986 000016AD 4889FB                  	mov rbx, rdi
+  1987 000016B0 4989F6                  	mov r14, rsi
+  1988 000016B3 4989D5                  	mov r13, rdx
+  1989 000016B6 4C8B3D(20000000)        	mov r15, qword [g_9]
+  1990 000016BD BF60000000              	mov rdi, 96
+  1991 000016C2 E8(00000000)            	call malloc
+  1992 000016C7 488903                  	mov qword [rbx], rax
+  1993 000016CA 488B03                  	mov rax, qword [rbx]
+  1994 000016CD 49FFC7                  	inc r15
+  1995 000016D0 4C89FA                  	mov rdx, r15
+  1996 000016D3 BE00000000              	mov rsi, 0
+  1997 000016D8 4889C7                  	mov rdi, rax
+  1998 000016DB E86CF8FFFF              	call _Node.init
+  1999 000016E0 488B33                  	mov rsi, qword [rbx]
+  2000 000016E3 BA00000000              	mov rdx, 0
+  2001 000016E8 4C89F0                  	mov rax, r14
+  2002 000016EB 4C89E9                  	mov rcx, r13
+  2003 000016EE 4C893D(20000000)        	mov qword [g_9], r15
+  2004 000016F5 4989C8                  	mov r8, rcx
+  2005 000016F8 4889C1                  	mov rcx, rax
+  2006 000016FB 4889DF                  	mov rdi, rbx
+  2007 000016FE E8D1FDFFFF              	call _splay_tree.build
+  2008 00001703 4C8B3D(20000000)        	mov r15, qword [g_9]
+  2009                                  	b138:
+  2010 0000170A 4C893D(20000000)        	mov qword [g_9], r15
+  2011 00001711 415F                    	pop r15
+  2012 00001713 5B                      	pop rbx
+  2013 00001714 415E                    	pop r14
+  2014 00001716 415D                    	pop r13
+  2015 00001718 C9                      	leave
+  2016 00001719 C3                      	ret 
+  2017                                  _splay_tree.find:
+  2018                                  	b139:
+  2019 0000171A 55                      	push rbp
+  2020 0000171B 4889E5                  	mov rbp, rsp
+  2021 0000171E 4156                    	push r14
+  2022 00001720 53                      	push rbx
+  2023 00001721 4157                    	push r15
+  2024 00001723 4889F8                  	mov rax, rdi
+  2025 00001726 4889F3                  	mov rbx, rsi
+  2026 00001729 4C8B30                  	mov r14, qword [rax]
+  2027 0000172C 41BF00000000            	mov r15, 0
+  2028 00001732 4C89F0                  	mov rax, r14
+  2029 00001735 488B4050                	mov rax, qword [rax + 80]
+  2030 00001739 4883780800              	cmp qword [rax + 8], 0
+  2031 0000173E 7507                    	jne b140
+  2032                                  	b141:
+  2033 00001740 B901000000              	mov rcx, 1
+  2034 00001745 EB16                    	jmp b142
+  2035                                  	b140:
+  2036 00001747 4C89F0                  	mov rax, r14
+  2037 0000174A 488B4050                	mov rax, qword [rax + 80]
+  2038 0000174E 488B4008                	mov rax, qword [rax + 8]
+  2039 00001752 488B4010                	mov rax, qword [rax + 16]
+  2040 00001756 4883C001                	add rax, 1
+  2041 0000175A 4889C1                  	mov rcx, rax
+  2042                                  	b142:
+  2043                                  	b143:
+  2044 0000175D 4C89F8                  	mov rax, r15
+  2045 00001760 4801C8                  	add rax, rcx
+  2046 00001763 4839D8                  	cmp rax, rbx
+  2047 00001766 750A                    	jne b144
+  2048                                  	b145:
+  2049 00001768 4C89F0                  	mov rax, r14
+  2050                                  	b146:
+  2051 0000176B 415F                    	pop r15
+  2052 0000176D 5B                      	pop rbx
+  2053 0000176E 415E                    	pop r14
+  2054 00001770 C9                      	leave
+  2055 00001771 C3                      	ret 
+  2056                                  	b144:
+  2057 00001772 4C89F8                  	mov rax, r15
+  2058 00001775 4801C8                  	add rax, rcx
+  2059 00001778 4839C3                  	cmp rbx, rax
+  2060 0000177B 7C10                    	jl b147
+  2061                                  	b148:
+  2062 0000177D 4901CF                  	add r15, rcx
+  2063 00001780 4C89F0                  	mov rax, r14
+  2064 00001783 488B4050                	mov rax, qword [rax + 80]
+  2065 00001787 4C8B7010                	mov r14, qword [rax + 16]
+  2066 0000178B EB0B                    	jmp b149
+  2067                                  	b147:
+  2068 0000178D 4C89F0                  	mov rax, r14
+  2069 00001790 488B4050                	mov rax, qword [rax + 80]
+  2070 00001794 4C8B7008                	mov r14, qword [rax + 8]
+  2071                                  	b149:
+  2072 00001798 4C89F0                  	mov rax, r14
+  2073 0000179B 4889C7                  	mov rdi, rax
+  2074 0000179E E816FBFFFF              	call _Node.push_down
+  2075 000017A3 4C89F0                  	mov rax, r14
+  2076 000017A6 488B4050                	mov rax, qword [rax + 80]
+  2077 000017AA 4883780800              	cmp qword [rax + 8], 0
+  2078 000017AF 7507                    	jne b150
+  2079                                  	b151:
+  2080 000017B1 B901000000              	mov rcx, 1
+  2081 000017B6 EB16                    	jmp b152
+  2082                                  	b150:
+  2083 000017B8 4C89F0                  	mov rax, r14
+  2084 000017BB 488B4050                	mov rax, qword [rax + 80]
+  2085 000017BF 488B4008                	mov rax, qword [rax + 8]
+  2086 000017C3 488B4010                	mov rax, qword [rax + 16]
+  2087 000017C7 4883C001                	add rax, 1
+  2088 000017CB 4889C1                  	mov rcx, rax
+  2089                                  	b152:
+  2090 000017CE EB8D                    	jmp b143
+  2091                                  _splay_tree.dfs:
+  2092                                  	b153:
+  2093 000017D0 55                      	push rbp
+  2094 000017D1 4889E5                  	mov rbp, rsp
+  2095 000017D4 4156                    	push r14
+  2096 000017D6 53                      	push rbx
+  2097 000017D7 4157                    	push r15
+  2098 000017D9 4989FF                  	mov r15, rdi
+  2099 000017DC 4989F6                  	mov r14, rsi
+  2100 000017DF BB00000000              	mov rbx, 0
+  2101                                  	b154:
+  2102 000017E4 4883FB02                	cmp rbx, 2
+  2103 000017E8 7C07                    	jl b155
+  2104                                  	b156:
+  2105                                  	b157:
+  2106 000017EA 415F                    	pop r15
+  2107 000017EC 5B                      	pop rbx
+  2108 000017ED 415E                    	pop r14
+  2109 000017EF C9                      	leave
+  2110 000017F0 C3                      	ret 
+  2111                                  	b155:
+  2112 000017F1 4C89F0                  	mov rax, r14
+  2113 000017F4 488B4050                	mov rax, qword [rax + 80]
+  2114 000017F8 48837CD80800            	cmp qword [rax + rbx * 8 + 8], 0
+  2115 000017FE 7417                    	je b158
+  2116                                  	b159:
+  2117 00001800 4C89F0                  	mov rax, r14
+  2118 00001803 488B4050                	mov rax, qword [rax + 80]
+  2119 00001807 488B44D808              	mov rax, qword [rax + rbx * 8 + 8]
+  2120 0000180C 4889C6                  	mov rsi, rax
+  2121 0000180F 4C89FF                  	mov rdi, r15
+  2122 00001812 E8B9FFFFFF              	call _splay_tree.dfs
+  2123                                  	b158:
+  2124                                  	b160:
+  2125 00001817 4889D8                  	mov rax, rbx
+  2126 0000181A 48FFC3                  	inc rbx
+  2127 0000181D EBC5                    	jmp b154
+  2128                                  _splay_tree.del:
+  2129                                  	b161:
+  2130 0000181F 55                      	push rbp
+  2131 00001820 4889E5                  	mov rbp, rsp
+  2132 00001823 4156                    	push r14
+  2133 00001825 53                      	push rbx
+  2134 00001826 4157                    	push r15
+  2135 00001828 4989FF                  	mov r15, rdi
+  2136 0000182B 4989F6                  	mov r14, rsi
+  2137 0000182E 4889D0                  	mov rax, rdx
+  2138 00001831 4883C001                	add rax, 1
+  2139 00001835 4889C6                  	mov rsi, rax
+  2140 00001838 4C89FF                  	mov rdi, r15
+  2141 0000183B E8DAFEFFFF              	call _splay_tree.find
+  2142 00001840 4889C3                  	mov rbx, rax
+  2143 00001843 4889D8                  	mov rax, rbx
+  2144 00001846 BE00000000              	mov rsi, 0
+  2145 0000184B 4889C7                  	mov rdi, rax
+  2146 0000184E E8A6FBFFFF              	call _Node.rotto
+  2147 00001853 49891F                  	mov qword [r15], rbx
+  2148 00001856 4C89F0                  	mov rax, r14
+  2149 00001859 4883E801                	sub rax, 1
+  2150 0000185D 4889C6                  	mov rsi, rax
+  2151 00001860 4C89FF                  	mov rdi, r15
+  2152 00001863 E8B2FEFFFF              	call _splay_tree.find
+  2153 00001868 4889C3                  	mov rbx, rax
+  2154 0000186B 4889D8                  	mov rax, rbx
+  2155 0000186E 498B37                  	mov rsi, qword [r15]
+  2156 00001871 4889C7                  	mov rdi, rax
+  2157 00001874 E880FBFFFF              	call _Node.rotto
+  2158 00001879 4889D8                  	mov rax, rbx
+  2159 0000187C 488B4050                	mov rax, qword [rax + 80]
+  2160 00001880 4883781000              	cmp qword [rax + 16], 0
+  2161 00001885 7416                    	je b162
+  2162                                  	b163:
+  2163 00001887 4889D8                  	mov rax, rbx
+  2164 0000188A 488B4050                	mov rax, qword [rax + 80]
+  2165 0000188E 488B4010                	mov rax, qword [rax + 16]
+  2166 00001892 4889C6                  	mov rsi, rax
+  2167 00001895 4C89FF                  	mov rdi, r15
+  2168 00001898 E833FFFFFF              	call _splay_tree.dfs
+  2169                                  	b162:
+  2170 0000189D 4889D8                  	mov rax, rbx
+  2171 000018A0 488B4050                	mov rax, qword [rax + 80]
+  2172 000018A4 48C7401000000000        	mov qword [rax + 16], 0
+  2173 000018AC 4889D8                  	mov rax, rbx
+  2174 000018AF BE00000000              	mov rsi, 0
+  2175 000018B4 4889C7                  	mov rdi, rax
+  2176 000018B7 E83DFBFFFF              	call _Node.rotto
+  2177 000018BC 49891F                  	mov qword [r15], rbx
+  2178                                  	b164:
+  2179 000018BF 415F                    	pop r15
+  2180 000018C1 5B                      	pop rbx
+  2181 000018C2 415E                    	pop r14
+  2182 000018C4 C9                      	leave
+  2183 000018C5 C3                      	ret 
+  2184                                  _splay_tree.change:
+  2185                                  	b165:
+  2186 000018C6 55                      	push rbp
+  2187 000018C7 4889E5                  	mov rbp, rsp
+  2188 000018CA 4155                    	push r13
+  2189 000018CC 4156                    	push r14
+  2190 000018CE 53                      	push rbx
+  2191 000018CF 4157                    	push r15
+  2192 000018D1 4889FB                  	mov rbx, rdi
+  2193 000018D4 4989F5                  	mov r13, rsi
+  2194 000018D7 4889D0                  	mov rax, rdx
+  2195 000018DA 4989CE                  	mov r14, rcx
+  2196 000018DD 4883C001                	add rax, 1
+  2197 000018E1 4889C6                  	mov rsi, rax
+  2198 000018E4 4889DF                  	mov rdi, rbx
+  2199 000018E7 E82EFEFFFF              	call _splay_tree.find
+  2200 000018EC 4989C7                  	mov r15, rax
+  2201 000018EF 4C89F8                  	mov rax, r15
+  2202 000018F2 BE00000000              	mov rsi, 0
+  2203 000018F7 4889C7                  	mov rdi, rax
+  2204 000018FA E8FAFAFFFF              	call _Node.rotto
+  2205 000018FF 4C893B                  	mov qword [rbx], r15
+  2206 00001902 4C89E8                  	mov rax, r13
+  2207 00001905 4883E801                	sub rax, 1
+  2208 00001909 4889C6                  	mov rsi, rax
+  2209 0000190C 4889DF                  	mov rdi, rbx
+  2210 0000190F E806FEFFFF              	call _splay_tree.find
+  2211 00001914 4989C7                  	mov r15, rax
+  2212 00001917 4C89F8                  	mov rax, r15
+  2213 0000191A 488B33                  	mov rsi, qword [rbx]
+  2214 0000191D 4889C7                  	mov rdi, rax
+  2215 00001920 E8D4FAFFFF              	call _Node.rotto
+  2216 00001925 4C89F8                  	mov rax, r15
+  2217 00001928 488B4050                	mov rax, qword [rax + 80]
+  2218 0000192C 4C8B7810                	mov r15, qword [rax + 16]
+  2219 00001930 4C89F8                  	mov rax, r15
+  2220 00001933 4889C7                  	mov rdi, rax
+  2221 00001936 E87EF9FFFF              	call _Node.push_down
+  2222 0000193B 4C89F8                  	mov rax, r15
+  2223 0000193E 4C89F6                  	mov rsi, r14
+  2224 00001941 4889C7                  	mov rdi, rax
+  2225 00001944 E8DBF8FFFF              	call _Node.addtag_ch
+  2226 00001949 4C89F8                  	mov rax, r15
+  2227 0000194C 4889C7                  	mov rdi, rax
+  2228 0000194F E865F9FFFF              	call _Node.push_down
+  2229 00001954 4C89F8                  	mov rax, r15
+  2230 00001957 BE00000000              	mov rsi, 0
+  2231 0000195C 4889C7                  	mov rdi, rax
+  2232 0000195F E895FAFFFF              	call _Node.rotto
+  2233 00001964 4C893B                  	mov qword [rbx], r15
+  2234                                  	b166:
+  2235 00001967 415F                    	pop r15
+  2236 00001969 5B                      	pop rbx
+  2237 0000196A 415E                    	pop r14
+  2238 0000196C 415D                    	pop r13
+  2239 0000196E C9                      	leave
+  2240 0000196F C3                      	ret 
+  2241                                  _splay_tree.rol:
+  2242                                  	b167:
+  2243 00001970 55                      	push rbp
+  2244 00001971 4889E5                  	mov rbp, rsp
+  2245 00001974 4156                    	push r14
+  2246 00001976 53                      	push rbx
+  2247 00001977 4157                    	push r15
+  2248 00001979 4989FE                  	mov r14, rdi
+  2249 0000197C 4889F3                  	mov rbx, rsi
+  2250 0000197F 4889D0                  	mov rax, rdx
+  2251 00001982 4883C001                	add rax, 1
+  2252 00001986 4889C6                  	mov rsi, rax
+  2253 00001989 4C89F7                  	mov rdi, r14
+  2254 0000198C E889FDFFFF              	call _splay_tree.find
+  2255 00001991 4989C7                  	mov r15, rax
+  2256 00001994 4C89F8                  	mov rax, r15
+  2257 00001997 BE00000000              	mov rsi, 0
+  2258 0000199C 4889C7                  	mov rdi, rax
+  2259 0000199F E855FAFFFF              	call _Node.rotto
+  2260 000019A4 4D893E                  	mov qword [r14], r15
+  2261 000019A7 4889D8                  	mov rax, rbx
+  2262 000019AA 4883E801                	sub rax, 1
+  2263 000019AE 4889C6                  	mov rsi, rax
+  2264 000019B1 4C89F7                  	mov rdi, r14
+  2265 000019B4 E861FDFFFF              	call _splay_tree.find
+  2266 000019B9 4989C7                  	mov r15, rax
+  2267 000019BC 4C89F8                  	mov rax, r15
+  2268 000019BF 498B36                  	mov rsi, qword [r14]
+  2269 000019C2 4889C7                  	mov rdi, rax
+  2270 000019C5 E82FFAFFFF              	call _Node.rotto
+  2271 000019CA 4C89F8                  	mov rax, r15
+  2272 000019CD 488B4050                	mov rax, qword [rax + 80]
+  2273 000019D1 4C8B7810                	mov r15, qword [rax + 16]
+  2274 000019D5 4C89F8                  	mov rax, r15
+  2275 000019D8 4889C7                  	mov rdi, rax
+  2276 000019DB E8D9F8FFFF              	call _Node.push_down
+  2277 000019E0 4C89F8                  	mov rax, r15
+  2278 000019E3 4889C7                  	mov rdi, rax
+  2279 000019E6 E889F8FFFF              	call _Node.addtag_ro
+  2280 000019EB 4C89F8                  	mov rax, r15
+  2281 000019EE 4889C7                  	mov rdi, rax
+  2282 000019F1 E8C3F8FFFF              	call _Node.push_down
+  2283 000019F6 4C89F8                  	mov rax, r15
+  2284 000019F9 BE00000000              	mov rsi, 0
+  2285 000019FE 4889C7                  	mov rdi, rax
+  2286 00001A01 E8F3F9FFFF              	call _Node.rotto
+  2287 00001A06 4D893E                  	mov qword [r14], r15
+  2288                                  	b168:
+  2289 00001A09 415F                    	pop r15
+  2290 00001A0B 5B                      	pop rbx
+  2291 00001A0C 415E                    	pop r14
+  2292 00001A0E C9                      	leave
+  2293 00001A0F C3                      	ret 
+  2294                                  _splay_tree.getsum:
+  2295                                  	b169:
+  2296 00001A10 55                      	push rbp
+  2297 00001A11 4889E5                  	mov rbp, rsp
+  2298 00001A14 4156                    	push r14
+  2299 00001A16 53                      	push rbx
+  2300 00001A17 4157                    	push r15
+  2301 00001A19 4989FF                  	mov r15, rdi
+  2302 00001A1C 4989F6                  	mov r14, rsi
+  2303 00001A1F 4889D0                  	mov rax, rdx
+  2304 00001A22 4883C001                	add rax, 1
+  2305 00001A26 4889C6                  	mov rsi, rax
+  2306 00001A29 4C89FF                  	mov rdi, r15
+  2307 00001A2C E8E9FCFFFF              	call _splay_tree.find
+  2308 00001A31 4889C3                  	mov rbx, rax
+  2309 00001A34 4889D8                  	mov rax, rbx
+  2310 00001A37 BE00000000              	mov rsi, 0
+  2311 00001A3C 4889C7                  	mov rdi, rax
+  2312 00001A3F E8B5F9FFFF              	call _Node.rotto
+  2313 00001A44 49891F                  	mov qword [r15], rbx
+  2314 00001A47 4C89F0                  	mov rax, r14
+  2315 00001A4A 4883E801                	sub rax, 1
+  2316 00001A4E 4889C6                  	mov rsi, rax
+  2317 00001A51 4C89FF                  	mov rdi, r15
+  2318 00001A54 E8C1FCFFFF              	call _splay_tree.find
+  2319 00001A59 4889C3                  	mov rbx, rax
+  2320 00001A5C 4889D8                  	mov rax, rbx
+  2321 00001A5F 498B37                  	mov rsi, qword [r15]
+  2322 00001A62 4889C7                  	mov rdi, rax
+  2323 00001A65 E88FF9FFFF              	call _Node.rotto
+  2324 00001A6A 4889D8                  	mov rax, rbx
+  2325 00001A6D 488B4050                	mov rax, qword [rax + 80]
+  2326 00001A71 488B5810                	mov rbx, qword [rax + 16]
+  2327 00001A75 4889D8                  	mov rax, rbx
+  2328 00001A78 4889C7                  	mov rdi, rax
+  2329 00001A7B E839F8FFFF              	call _Node.push_down
+  2330 00001A80 4889D8                  	mov rax, rbx
+  2331 00001A83 4C8B7018                	mov r14, qword [rax + 24]
+  2332 00001A87 4889D8                  	mov rax, rbx
+  2333 00001A8A BE00000000              	mov rsi, 0
+  2334 00001A8F 4889C7                  	mov rdi, rax
+  2335 00001A92 E862F9FFFF              	call _Node.rotto
+  2336 00001A97 49891F                  	mov qword [r15], rbx
+  2337 00001A9A 4C89F0                  	mov rax, r14
+  2338                                  	b170:
+  2339 00001A9D 415F                    	pop r15
+  2340 00001A9F 5B                      	pop rbx
+  2341 00001AA0 415E                    	pop r14
+  2342 00001AA2 C9                      	leave
+  2343 00001AA3 C3                      	ret 
+  2344                                  _splay_tree.getMax:
+  2345                                  	b171:
+  2346 00001AA4 55                      	push rbp
+  2347 00001AA5 4889E5                  	mov rbp, rsp
+  2348 00001AA8 4157                    	push r15
+  2349 00001AAA 4989FF                  	mov r15, rdi
+  2350 00001AAD 498B07                  	mov rax, qword [r15]
+  2351 00001AB0 4889C7                  	mov rdi, rax
+  2352 00001AB3 E801F8FFFF              	call _Node.push_down
+  2353 00001AB8 498B07                  	mov rax, qword [r15]
+  2354 00001ABB 488B4048                	mov rax, qword [rax + 72]
+  2355                                  	b172:
+  2356 00001ABF 415F                    	pop r15
+  2357 00001AC1 C9                      	leave
+  2358 00001AC2 C3                      	ret 
+  2359                                  __init:
+  2360                                  	b173:
+  2361 00001AC3 55                      	push rbp
+  2362 00001AC4 4889E5                  	mov rbp, rsp
+  2363 00001AC7 4156                    	push r14
+  2364 00001AC9 53                      	push rbx
+  2365 00001ACA 4157                    	push r15
+  2366 00001ACC BB00CA9A3B              	mov rbx, 1000000000
+  2367 00001AD1 B80A093D00              	mov rax, 4000010
+  2368 00001AD6 41BF00000000            	mov r15, 0
+  2369 00001ADC 4989C6                  	mov r14, rax
+  2370 00001ADF 4A8D04F508000000        	lea rax, [r14 * 8 + 8]
+  2371 00001AE7 4889C7                  	mov rdi, rax
+  2372 00001AEA E8(00000000)            	call malloc
+  2373 00001AEF 4C8930                  	mov qword [rax], r14
+  2374                                  	b174:
+  2375 00001AF2 4983FE00                	cmp r14, 0
+  2376 00001AF6 7F51                    	jg b175
+  2377                                  	b176:
+  2378 00001AF8 4889C1                  	mov rcx, rax
+  2379 00001AFB 48BA-                   	mov rdx, g_10
+  2380 00001AFD [5D00000000000000] 
+  2381 00001B05 4C893D(20000000)        	mov qword [g_9], r15
+  2382 00001B0C 48890D(28000000)        	mov qword [g_3], rcx
+  2383 00001B13 48891D(00000000)        	mov qword [g_4], rbx
+  2384 00001B1A 488915(40000000)        	mov qword [g_6], rdx
+  2385 00001B21 E80DEFFFFF              	call _main
+  2386 00001B26 488B15(40000000)        	mov rdx, qword [g_6]
+  2387 00001B2D 488B1D(00000000)        	mov rbx, qword [g_4]
+  2388 00001B34 488B0D(28000000)        	mov rcx, qword [g_3]
+  2389 00001B3B 4C8B3D(20000000)        	mov r15, qword [g_9]
+  2390 00001B42 415F                    	pop r15
+  2391 00001B44 5B                      	pop rbx
+  2392 00001B45 415E                    	pop r14
+  2393 00001B47 C9                      	leave
+  2394 00001B48 C3                      	ret 
+  2395                                  	b175:
+  2396 00001B49 4AC704F000000000        	mov qword [rax + r14 * 8], 0
+  2397 00001B51 49FFCE                  	dec r14
+  2398 00001B54 EB9C                    	jmp b174
+  2399                                  	section .data
+  2400                                  g_4:
+  2401 00000000 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2402                                  g_11:
+  2403 00000008 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2404                                  g_1:
+  2405 00000010 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2406                                  g_5:
+  2407 00000018 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2408                                  g_9:
+  2409 00000020 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2410                                  g_3:
+  2411 00000028 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2412                                  g_2:
+  2413 00000030 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2414                                  g_0:
+  2415 00000038 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2416                                  g_6:
+  2417 00000040 0000000000000000        	db 00H, 00H, 00H, 00H, 00H, 00H, 00H, 00H
+  2418                                  g_7:
+  2419 00000048 0200000000000000        	dq 2
+  2420 00000050 300A00                  	db 30H, 0AH, 00H
+  2421                                  g_8:
+  2422 00000053 0100000000000000        	dq 1
+  2423 0000005B 0A00                    	db 0AH, 00H
+  2424                                  g_10:
+  2425 0000005D 0200000000000000        	dq 2
+  2426 00000065 494400                  	db 49H, 44H, 00H
